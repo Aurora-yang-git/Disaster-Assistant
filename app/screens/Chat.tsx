@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { Role, Message, useApi } from '../hooks/useApi';
+import { Role, Message } from '../hooks/useApi';
+import { useRAGApi as useApi } from '../hooks/useRAGApi';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import userImage from '../../assets/user.png';
 import aiImage from '../../assets/ai.png';
@@ -63,6 +64,10 @@ const ChatPage = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
+      <View style={styles.header}>
+        <Text style={styles.title}>🚨 Earthquake Survival Assistant</Text>
+        <Text style={styles.subtitle}>RAG + ChatGPT Integration</Text>
+      </View>
       <FlatList
         ref={flatListRef}
         data={messages}
@@ -100,6 +105,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0D0D0D',
+  },
+  header: {
+    padding: 16,
+    backgroundColor: '#1a1a1a',
+    borderBottomWidth: 1,
+    borderBottomColor: '#2F2F2F',
+  },
+  title: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    color: '#aaa',
+    fontSize: 14,
+    marginTop: 4,
   },
   inputContainer: {
     flexDirection: 'row',
