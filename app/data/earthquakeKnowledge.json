@@ -1,0 +1,179 @@
+{
+  "knowledge": [
+    {
+      "id": "during-earthquake",
+      "category": "during",
+      "title": "What to do during an earthquake",
+      "keywords": ["earthquake", "shaking", "during", "happening", "now", "地震"],
+      "content": "DROP to your hands and knees immediately. COVER your head and neck under a sturdy desk or table. If no table, cover your head with your arms. HOLD ON to your shelter and be prepared to move with it. Stay in position until shaking stops. Do NOT run outside during shaking - most injuries occur from falling debris.",
+      "priority": 1
+    },
+    {
+      "id": "indoors-during",
+      "category": "during",
+      "title": "If indoors during earthquake",
+      "keywords": ["inside", "indoors", "building", "room", "室内"],
+      "content": "Stay inside. DROP, COVER, and HOLD ON. Move away from windows, mirrors, and heavy objects that could fall. Do NOT use elevators. If in bed, stay there and cover your head with a pillow. If in a wheelchair, lock wheels and cover head and neck.",
+      "priority": 1
+    },
+    {
+      "id": "outdoors-during",
+      "category": "during",
+      "title": "If outdoors during earthquake",
+      "keywords": ["outside", "outdoors", "street", "outdoor", "室外"],
+      "content": "Move away from buildings, trees, streetlights, and power lines. DROP to the ground in an open area. Stay there until shaking stops. If driving, pull over to a safe spot away from overpasses, power lines, and buildings. Stay in vehicle with seatbelt on.",
+      "priority": 1
+    },
+    {
+      "id": "trapped-debris",
+      "category": "after",
+      "title": "If trapped under debris",
+      "keywords": ["trapped", "stuck", "debris", "rubble", "collapsed", "被困", "压住"],
+      "content": "Stay calm and conserve energy. Do not shout unless you hear rescuers - save your voice. Tap on pipes or walls to signal location. Use whistle if available. Cover mouth with cloth to avoid dust. Do not light matches or lighters. Move as little as possible to avoid kicking up dust.",
+      "priority": 1
+    },
+    {
+      "id": "find-water",
+      "category": "after",
+      "title": "Finding safe water after earthquake",
+      "keywords": ["water", "thirsty", "drink", "dehydrated", "水", "口渴"],
+      "content": "Safe water sources: 1) Water heater tank (turn off power/gas first), 2) Toilet tank (not bowl), 3) Ice cubes, 4) Canned goods liquid. To purify uncertain water: Boil vigorously for 1 minute, OR use 8 drops unscented bleach per gallon and wait 30 minutes, OR use water purification tablets.",
+      "priority": 1
+    },
+    {
+      "id": "treat-bleeding",
+      "category": "first-aid",
+      "title": "Treating severe bleeding",
+      "keywords": ["bleeding", "blood", "cut", "injury", "wound", "流血", "受伤"],
+      "content": "Apply direct pressure with clean cloth. Press firmly for 10-15 minutes without peeking. If blood soaks through, add more cloth without removing first layer. Elevate wound above heart if possible. For severe bleeding, apply tourniquet 2-3 inches above wound only as last resort. Never remove embedded objects.",
+      "priority": 1
+    },
+    {
+      "id": "aftershocks",
+      "category": "after",
+      "title": "Dealing with aftershocks",
+      "keywords": ["aftershock", "shaking again", "more earthquakes", "余震"],
+      "content": "Aftershocks can occur minutes, days, or weeks after main quake. When you feel one: DROP, COVER, and HOLD ON again. Be extra cautious around damaged buildings - they may collapse. If outdoors, stay in open area. Aftershocks are usually smaller but can cause additional damage to weakened structures.",
+      "priority": 1
+    },
+    {
+      "id": "check-injuries",
+      "category": "after",
+      "title": "Check for injuries after earthquake",
+      "keywords": ["check", "injuries", "hurt", "examine", "检查", "伤势"],
+      "content": "First check yourself, then others. Do not move seriously injured persons unless in immediate danger. Check for: bleeding, breathing problems, shock symptoms (pale, cold, clammy skin), broken bones. Cover injured with blankets. Provide first aid within your training. Call for help if available.",
+      "priority": 2
+    },
+    {
+      "id": "evacuation",
+      "category": "after",
+      "title": "When to evacuate",
+      "keywords": ["evacuate", "leave", "exit", "escape", "撤离", "离开"],
+      "content": "Evacuate if: building shows signs of damage (cracks, tilting), gas smell detected, authorities order evacuation, tsunami warning issued (if coastal). Use stairs, never elevators. Before leaving, turn off gas, electricity, and water if possible. Take emergency kit. Leave note indicating where you went.",
+      "priority": 2
+    },
+    {
+      "id": "gas-leak",
+      "category": "after",
+      "title": "Gas leak detection and response",
+      "keywords": ["gas", "smell", "leak", "fumes", "煤气", "燃气"],
+      "content": "Signs of gas leak: hissing sound, gas odor, dead plants. If suspected: Do NOT use matches, lighters, or electrical switches. Open windows and doors. Shut off main gas valve if safe. Evacuate immediately. Call gas company from outside. Never use candles for light - use flashlights only.",
+      "priority": 2
+    },
+    {
+      "id": "no-power",
+      "category": "after",
+      "title": "Dealing with power outage",
+      "keywords": ["power", "electricity", "blackout", "lights", "电", "停电"],
+      "content": "Use flashlights, not candles (fire hazard). Unplug appliances to prevent damage from power surge. Keep refrigerator/freezer closed. Use generators outdoors only - never inside. Have battery-powered radio for updates. Conserve phone battery. If power lines are down, stay at least 30 feet away.",
+      "priority": 2
+    },
+    {
+      "id": "communication",
+      "category": "after",
+      "title": "Emergency communication",
+      "keywords": ["call", "phone", "contact", "communicate", "联系", "通讯"],
+      "content": "Text messages often work when calls don't. Send one 'I'm OK' message to reduce network congestion. Use social media to mark yourself safe. Have out-of-area contact as family message center. Keep calls brief. Save battery by airplane mode when not using. Hand-crank or solar chargers useful.",
+      "priority": 2
+    },
+    {
+      "id": "shelter-temporary",
+      "category": "after",
+      "title": "Creating temporary shelter",
+      "keywords": ["shelter", "tent", "cover", "protection", "避难所", "庇护"],
+      "content": "If building unsafe: Set up in open area away from damaged structures, power lines, trees. Use tarps, blankets, or debris for basic shelter. Insulate from ground with cardboard, leaves. Protect from elements. Stay visible for rescuers. Group together for warmth. Mark location with bright colors.",
+      "priority": 3
+    },
+    {
+      "id": "food-safety",
+      "category": "after",
+      "title": "Food safety after earthquake",
+      "keywords": ["food", "eat", "hungry", "spoiled", "食物", "吃"],
+      "content": "Eat perishables first if no power. Discard food that was above 40°F for 2+ hours. When in doubt, throw it out. Canned goods safe unless damaged. Check for broken glass contamination. Eat high-calorie foods. Avoid salty foods if water scarce. Never taste food to check if spoiled.",
+      "priority": 3
+    },
+    {
+      "id": "sanitation",
+      "category": "after",
+      "title": "Sanitation without water",
+      "keywords": ["toilet", "bathroom", "sanitation", "waste", "卫生间", "厕所"],
+      "content": "If toilets don't flush: Line toilet bowl with plastic bag, add cat litter or dirt after use. Seal and dispose properly. Create latrine at least 100 feet from water sources. Use hand sanitizer or bleach solution (1:9 ratio). Bury human waste 6-8 inches deep. Mark contaminated areas.",
+      "priority": 3
+    },
+    {
+      "id": "children-safety",
+      "category": "special",
+      "title": "Protecting children during earthquake",
+      "keywords": ["children", "kids", "baby", "child", "孩子", "儿童"],
+      "content": "Practice DROP, COVER, HOLD ON with children regularly. During quake, protect infants by curling body around them. Teach children their full name, parents' names, and address. Keep comfort items accessible. Explain aftershocks simply. Maintain routines when possible. Watch for signs of trauma.",
+      "priority": 3
+    },
+    {
+      "id": "pets-safety",
+      "category": "special",
+      "title": "Pet safety during earthquake",
+      "keywords": ["pet", "dog", "cat", "animal", "宠物"],
+      "content": "Secure pets quickly after shaking stops - they may be frightened and run. Keep leashes/carriers accessible. Never leave pets tied up. Include pet supplies in emergency kit. Animals may behave strangely - approach carefully. Keep pets away from hazards. Have current photos for identification.",
+      "priority": 4
+    },
+    {
+      "id": "document-protection",
+      "category": "preparation",
+      "title": "Protecting important documents",
+      "keywords": ["documents", "papers", "ID", "passport", "文件", "证件"],
+      "content": "Keep copies of important documents in waterproof container: IDs, insurance policies, medical records, bank info. Store copies in multiple locations or cloud. Take photos of documents with phone. Have cash in small bills. Keep list of important phone numbers written down.",
+      "priority": 4
+    },
+    {
+      "id": "psychological-care",
+      "category": "recovery",
+      "title": "Managing stress and trauma",
+      "keywords": ["stress", "scared", "trauma", "anxiety", "fear", "恐惧", "焦虑"],
+      "content": "Normal reactions include fear, anxiety, difficulty sleeping. Take deep breaths to calm down. Talk about experiences. Maintain routines. Limit media exposure. Help others - it aids your recovery. Seek professional help if symptoms persist. Children may regress - be patient and reassuring.",
+      "priority": 4
+    },
+    {
+      "id": "building-inspection",
+      "category": "after",
+      "title": "Checking building safety",
+      "keywords": ["building", "house", "structure", "safe", "damage", "建筑", "房屋"],
+      "content": "Look for: visible cracks in walls/foundation, doors/windows that don't close properly, sagging ceilings, leaning walls, gaps between walls and floors. If any present, evacuate and get professional inspection. Check chimney from distance. Document damage with photos for insurance.",
+      "priority": 3
+    }
+  ],
+  "categories": {
+    "during": "During the earthquake",
+    "after": "Immediately after earthquake", 
+    "first-aid": "Medical and first aid",
+    "special": "Special situations",
+    "preparation": "Preparation and planning",
+    "recovery": "Recovery and psychological care"
+  },
+  "sources": [
+    "FEMA (Federal Emergency Management Agency)",
+    "American Red Cross",
+    "USGS (United States Geological Survey)",
+    "CDC (Centers for Disease Control and Prevention)",
+    "Ready.gov Emergency Preparedness"
+  ]
+}
