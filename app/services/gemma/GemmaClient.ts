@@ -1,4 +1,6 @@
 import { Message } from '../../hooks/useApi';
+import { RAGService } from '../rag/RAGService';
+import { ResponseValidator } from '../rag/ResponseValidator';
 
 interface GemmaConfig {
   modelPath?: string;
@@ -36,6 +38,8 @@ interface ChatCompletionResponse {
 export class GemmaClient {
   private config: GemmaConfig;
   private isModelLoaded: boolean = false;
+  private ragService: RAGService;
+  private validator: ResponseValidator;
 
   constructor(config: GemmaConfig = {}) {
     this.config = {
@@ -44,6 +48,8 @@ export class GemmaClient {
       temperature: config.temperature || 0.7,
       ...config
     };
+    this.ragService = RAGService.getInstance();
+    this.validator = ResponseValidator.getInstance();
   }
 
   async loadModel(): Promise<void> {
@@ -64,8 +70,24 @@ export class GemmaClient {
       .filter(msg => msg.role === 'user')
       .pop()?.content || '';
 
-    // Mock response for earthquake survival scenarios
-    const mockResponse = this.getMockResponse(lastUserMessage);
+    // Use RAG service to process the query
+    const ragContext = await this.ragService.processQuery(lastUserMessage);
+
+    // For now, simulate the response using the enhanced RAG context
+    let mockResponse = this.getMockResponseWithRAG(ragContext.contextualPrompt, ragContext);
+    
+    // Validate response for safety
+    const validationResult = this.validator.validateResponse(
+      lastUserMessage,
+      mockResponse,
+      ragContext.relevantKnowledge
+    );
+    
+    // If validation fails, use safe fallback
+    if (!validationResult.isValid) {
+      console.warn('Response validation failed:', validationResult.warnings);
+      mockResponse = this.validator.getSafeResponse(lastUserMessage, validationResult);
+    }
 
     // Simulate processing delay
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -84,43 +106,41 @@ export class GemmaClient {
         finish_reason: 'stop'
       }],
       usage: {
-        prompt_tokens: 10,
-        completion_tokens: 20,
-        total_tokens: 30
+        prompt_tokens: ragContext.contextualPrompt.length / 4, // Rough estimate
+        completion_tokens: mockResponse.length / 4,
+        total_tokens: (ragContext.contextualPrompt.length + mockResponse.length) / 4
       }
     };
   }
 
-  private getMockResponse(prompt: string): string {
-    const lowerPrompt = prompt.toLowerCase();
+  private getMockResponseWithRAG(contextualPrompt: string, ragContext: any): string {
+    // If no relevant knowledge found, use the enhanced "no information" response
+    if (ragContext.relevantKnowledge.length === 0) {
+      return `I don't have specific knowledge about this question in my earthquake survival database. I cannot provide accurate information for this query. Please rely on your own judgment and seek help from emergency personnel or official sources if this is an emergency situation.
 
-    // Earthquake during
-    if (lowerPrompt.includes('earthquake') && (lowerPrompt.includes('during') || lowerPrompt.includes('happening'))) {
-      return 'DROP to your hands and knees immediately. COVER your head and neck under a sturdy desk or table. HOLD ON to your shelter and be prepared to move with it. Stay in position until shaking stops. Do NOT run outside during shaking.';
+If you have other earthquake survival questions, I'd be happy to help with those.`;
     }
 
-    // Water finding
-    if (lowerPrompt.includes('water') || lowerPrompt.includes('thirsty') || lowerPrompt.includes('drink')) {
-      return 'After an earthquake: 1) Check water heater tank (turn off power first), 2) Toilet tank water (not bowl) is usually safe, 3) Ice cubes in freezer. To purify: Boil for 1 minute, or use 8 drops of bleach per gallon, wait 30 minutes.';
+    // Use the first relevant knowledge item as the response
+    const topKnowledge = ragContext.relevantKnowledge[0];
+    let response = topKnowledge.content;
+
+    // Add quick actions if available
+    if (ragContext.quickActions && ragContext.quickActions.length > 0) {
+      response += '\n\nQuick Actions:\n';
+      ragContext.quickActions.forEach((action: string, index: number) => {
+        response += `${index + 1}. ${action}\n`;
+      });
     }
 
-    // Bleeding/First aid
-    if (lowerPrompt.includes('bleeding') || lowerPrompt.includes('blood') || lowerPrompt.includes('injured')) {
-      return 'Apply direct pressure with clean cloth. Elevate the wound above heart if possible. Do NOT remove embedded objects. If blood soaks through, add more cloth without removing first layer. Call emergency services if available.';
+    // Add priority indicator for critical situations
+    if (ragContext.emergencyPriority === 'critical') {
+      response = `🚨 CRITICAL: ${response}`;
+    } else if (ragContext.emergencyPriority === 'urgent') {
+      response = `⚠️ URGENT: ${response}`;
     }
 
-    // Trapped
-    if (lowerPrompt.includes('trapped') || lowerPrompt.includes('stuck') || lowerPrompt.includes('被困')) {
-      return 'Stay calm and conserve energy. Tap on pipes or walls to signal rescuers. Use whistle if available. Avoid shouting except when you hear rescuers nearby. Cover your mouth with cloth to avoid dust inhalation. Do not light matches.';
-    }
-
-    // Aftershock
-    if (lowerPrompt.includes('aftershock') || lowerPrompt.includes('余震')) {
-      return 'Aftershocks are common after major earthquakes. When you feel one: DROP, COVER, and HOLD ON again. Stay away from damaged buildings. If outdoors, move to open area away from buildings, trees, and power lines.';
-    }
-
-    // Default response
-    return 'I can help with earthquake survival information. You can ask about: what to do during an earthquake, finding water, treating injuries, being trapped, or dealing with aftershocks.';
+    return response;
   }
 }
 
