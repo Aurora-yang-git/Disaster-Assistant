@@ -118,6 +118,63 @@ Gemma 3n能力："你可以: 1)多穿几层衣服 2)用毯子包裹 3)做运动�
 
 ## 🏗️ 技术实现架构
 
+### 当前RAG系统实现
+
+#### 系统架构
+```
+用户查询 → RAG服务处理 → 知识检索 → 生成增强提示 → ChatGPT API → 响应验证 → 最终答案
+```
+
+#### 核心组件
+
+**1. KnowledgeLoader** (`app/data/knowledgeLoader.ts`)
+- 单例模式管理知识库
+- 基于关键词匹配的搜索算法（非向量数据库）
+- 评分机制：关键词(10分) > 标题(5分) > 内容(1分)
+- 防止误匹配（如"art"不会匹配"earthquake"）
+
+**2. RAGService** (`app/services/rag/RAGService.ts`)
+- 处理查询管道
+- 紧急优先级判断（critical/urgent/important/normal）
+- 快速行动建议生成
+- 上下文提示词构建
+
+**3. ResponseValidator** (`app/services/rag/ResponseValidator.ts`)
+- 验证AI响应是否符合知识库内容
+- 检测不确定性语言
+- 防止幻觉和虚构内容
+- 医疗建议必须包含专业求助提示
+
+**4. useRAGApi Hook** (`app/hooks/useRAGApi.ts`)
+- 整合RAG处理流程
+- 调用OpenAI ChatGPT API
+- 响应验证和回退机制
+- 优先级标记（🚨/⚠️）
+
+#### 知识库结构
+```json
+{
+  "knowledge": [
+    {
+      "id": "during-earthquake",
+      "category": "during",
+      "title": "What to do during an earthquake",
+      "keywords": ["earthquake", "shaking", "地震"],
+      "content": "DROP, COVER, HOLD ON...",
+      "priority": 1
+    }
+  ],
+  "categories": {...},
+  "sources": [...]
+}
+```
+
+#### 当前实现特点
+- **轻量级本地RAG**：无需向量数据库，使用关键词检索
+- **严格验证机制**：确保回答不超出知识库范围
+- **多语言支持**：中英文关键词匹配
+- **实时响应验证**：防止AI幻觉和不准确信息
+
 ### 混合策略实现思路
 
 ```typescript
