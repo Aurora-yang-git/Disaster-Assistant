@@ -1,55 +1,91 @@
-# ChatGPT Assistant
+# 灾难救助助手
 
-ChatGPT Assistant is an application developed using Expo and TypeScript. It serves as a basic demonstration of utilizing OpenAI's models for text generation, image generation, and speech-to-text functionalities. Users can interact with these models through the application, which is compatible with **Android**, **iOS**, and **Web** platforms.
+灾难救助助手是一个基于React Native和Expo开发的离线应用，专为地震等自然灾害场景设计。应用集成了离线AI技术，能够为用户提供实时的救助建议和安全指导。
 
-## Features
+## 🚀 核心功能
 
-- **Text Generation:** Generate text using OpenAI's GPT models by providing prompts.
-- **Image Generation:** Generate images based on textual descriptions using OpenAI's DALL-E model.
-- **Speech-to-Text:** Convert spoken words into text using OpenAI's speech recognition model.
+- **地震救助对话**：基于用户当前情况提供针对性的安全建议
+- **智能记忆系统**：记住用户的位置、伤情、资源等关键信息
+- **语音交互**：支持语音输入和自动播报（紧急情况下的便捷操作）
+- **完全离线**：无需网络连接即可正常使用
 
-## Usage
+## 📱 支持平台
 
-To use the application, follow these steps:
+- **Android**（主要开发平台）
+- **iOS**（后续支持）
+- **Web**（开发测试）
 
-1. Clone the repository:
+## 🛠️ 技术栈
 
-```
-git clone https://github.com/falatekmen/ChatGPT-Assistant.git
-```
+- **前端**：React Native + Expo
+- **AI技术**：Gemma离线模型 + RAG技术
+- **本地存储**：AsyncStorage
+- **语音功能**：系统原生API
+- **状态管理**：React Context + Hooks
 
+## 📋 使用说明
 
-2. Install dependencies:
-
-```
-cd ChatGPT-Assistant
+### 安装依赖
+```bash
 npm install
 ```
 
+### 启动应用
+```bash
+# 启动开发服务器
+npx expo start
 
-3. Start the development server:
+# Android设备
+npx expo start --android
 
+# iOS设备
+npx expo start --ios
+
+# Web浏览器
+npx expo start --web
 ```
-expo start
-```
 
+### 使用指南
 
-4. Follow the instructions to run the application on your desired platform (Android, iOS, or web).
+1. **进入应用**：选择"地震救助"功能
+2. **描述情况**：详细告诉AI您的当前位置和状况
+3. **获取建议**：AI会基于您的情况提供针对性建议
+4. **持续对话**：AI会记住您的信息，提供连续的帮助
 
-## Demo Videos
+### 语音功能
 
-Check out the demonstration videos to see ChatGPT Assistant in action:
+- 🎤 **语音输入**：长按麦克风按钮录音
+- 🔊 **语音播报**：AI回复会自动播报
+- 📱 **离线处理**：所有语音功能均离线运行
 
-![0519](https://github.com/falatekmen/ChatGPT-Assistant/assets/81239267/0f9716b3-2a42-4dba-b5dc-d65faa837487)
+## 🎯 开发路线图
 
-![0519 (1)(1)](https://github.com/falatekmen/ChatGPT-Assistant/assets/81239267/5d1094a0-9367-4772-b520-a8841b0f412a)
+- [x] 基础聊天界面
+- [ ] 记忆管理系统
+- [ ] 语音录音功能
+- [ ] 真实AI接口集成
+- [ ] 系统语音转文字
+- [ ] 语音播报功能
+- [ ] 灾前准备清单
+- [ ] 多灾难场景支持
 
-## Contributing
+## 🤝 贡献指南
 
-Contributions are welcome! If you'd like to contribute to the project, feel free to fork the repository and submit a pull request with your changes.
+1. Fork项目
+2. 创建功能分支
+3. 提交变更
+4. 发起Pull Request
 
-Please note that the Whisper model for speech-to-text functionality may not work perfectly on web platforms. Contributions to improve this feature are especially appreciated.
+## 📄 许可证
 
-## License
+MIT License - 详见 [LICENSE](LICENSE) 文件
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🆘 紧急使用说明
+
+**本应用专为紧急情况设计，请确保：**
+- 设备电量充足
+- 应用已提前安装
+- 熟悉基本操作流程
+- 优先保证人身安全
+
+**注意**：本应用仅提供参考建议，紧急情况下请同时联系专业救援机构。

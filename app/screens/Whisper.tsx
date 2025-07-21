@@ -1,500 +1,441 @@
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  TouchableOpacity,
   Pressable,
-  ActivityIndicator,
-  Image,
-  FlatList,
-  Alert,
+  Animated,
   Platform,
-  Dimensions
+  Alert,
+  ScrollView,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { Message, Role, useApi } from '../hooks/useApi';
 import { useOfflineVoice } from '../hooks/useOfflineVoice';
-import userImage from '../../assets/user.png';
-import aiImage from '../../assets/ai.png';
+import { useApi } from '../hooks/useApi';
+import { Ionicons } from '@expo/vector-icons';
 
-const { width, height } = Dimensions.get('window');
-
-const WhisperPage = () => {
-
+export default function Whisper() {
   const [inputText, setInputText] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const { getCompletion, messages } = useApi();
-  const { 
-    isRecording, 
-    isAvailable, 
-    startRecording, 
-    stopRecording, 
-    cancelRecording 
+  const [response, setResponse] = useState('');
+  const [isLongPressing, setIsLongPressing] = useState(false);
+  const [showDebug, setShowDebug] = useState(true); // 默认显示调试信息
+  const { sendMessage } = useApi();
+  const {
+    isRecording,
+    isAvailable,
+    startRecording,
+    stopRecording,
+    cancelRecording,
+    voiceResults,
+    partialResults,
+    debugInfo,
   } = useOfflineVoice();
-  
-  const flatListRef = useRef<FlatList>(null);
 
-  // Start recording
-  const handleStartRecording = async () => {
+  // 动画值
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const rippleAnim = useRef(new Animated.Value(0)).current;
+
+  // 处理长按开始
+  const handlePressIn = async () => {
+    console.log('长按开始');
+    setIsLongPressing(true);
+    setInputText('');
+    setResponse('');
     const success = await startRecording();
-    if (!success) {
-      console.log('Failed to start recording');
+    if (success) {
+      // 开始录音动画
+      Animated.parallel([
+        Animated.spring(scaleAnim, {
+          toValue: 0.8,
+          useNativeDriver: true,
+        }),
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(rippleAnim, {
+              toValue: 1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+            Animated.timing(rippleAnim, {
+              toValue: 0,
+              duration: 0,
+              useNativeDriver: true,
+            }),
+          ])
+        ),
+      ]).start();
     }
   };
 
-  // Stop recording and handle speech recognition result
-  const handleStopRecording = async () => {
-    setLoading(true);
+  // 处理长按结束
+  const handlePressOut = async () => {
+    if (!isLongPressing) return;
+    
+    console.log('长按结束');
+    setIsLongPressing(false);
     const result = await stopRecording();
     
-    if (result.error) {
-      if (Platform.OS === 'web') {
-        window.alert(result.error);
-      } else {
-        Alert.alert('Speech Recognition Error', result.error);
-      }
-    } else if (result.text) {
+    // 重置动画
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+      Animated.timing(rippleAnim, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    console.log('语音识别结果:', result);
+
+    if (result.text) {
       setInputText(result.text);
+      try {
+        const aiResponse = await sendMessage(result.text);
+        setResponse(aiResponse);
+      } catch (error) {
+        console.error('发送消息失败:', error);
+        setResponse('抱歉，AI服务暂时不可用');
+      }
+    } else if (result.error) {
+      Alert.alert('提示', result.error);
     }
+  };
+
+  // 处理取消录音
+  const handlePressCancel = async () => {
+    console.log('取消录音');
+    setIsLongPressing(false);
+    await cancelRecording();
     
-    setLoading(false);
+    // 重置动画
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+      Animated.timing(rippleAnim, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
-  // Handle recording button press
-  const handleRecordingPress = () => {
-    console.log('Recording button pressed, isRecording:', isRecording);
-    console.log('isAvailable:', isAvailable);
-    
+  // 监听语音识别结果并实时显示
+  useEffect(() => {
     if (isRecording) {
-      console.log('Stopping recording...');
-      handleStopRecording();
-    } else {
-      console.log('Starting recording...');
-      handleStartRecording();
+      // 显示实时识别结果
+      if (partialResults.length > 0) {
+        const latestResult = partialResults[partialResults.length - 1];
+        console.log('显示实时结果:', latestResult);
+        setInputText(latestResult);
+      }
     }
-  };
+  }, [isRecording, partialResults]);
 
-  // Handle sending message
-  const handleSendMessage = async () => {
-    if (inputText.trim().length > 0) {
-      setTimeout(() => {
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-
-      const messageContent = inputText.trim();
-      setInputText('');
-      setLoading(true);
-      await getCompletion(messageContent);
-      setLoading(false);
-
-      setTimeout(() => {
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 100);
+  // 监听最终结果
+  useEffect(() => {
+    if (!isRecording && voiceResults.length > 0) {
+      const finalResult = voiceResults[voiceResults.length - 1];
+      console.log('显示最终结果:', finalResult);
+      setInputText(finalResult);
     }
+  }, [isRecording, voiceResults]);
+
+  // 波纹动画样式
+  const rippleStyle = {
+    transform: [
+      {
+        scale: rippleAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [1, 2],
+        }),
+      },
+    ],
+    opacity: rippleAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0.8, 0],
+    }),
   };
 
-  // Render single message
-  const renderMessage = ({ item }: { item: Message }) => {
-    const isUserMessage = item.role === Role.User;
-
-    return (
-      <View style={[
-        styles.messageContainer,
-        isUserMessage ? styles.userMessageContainer : styles.aiMessageContainer,
-      ]}>
-        <Image source={isUserMessage ? userImage : aiImage} style={styles.messageImage} />
-        <Text style={styles.messageText}>{item.content}</Text>
-      </View>
-    );
-  };
-
-  // Get microphone button style
-  const getMicButtonStyle = () => {
-    if (isRecording) {
-      return [styles.micButton, styles.micButtonRecording];
-    } else if (!isAvailable) {
-      return [styles.micButton, styles.micButtonDisabled];
-    } else {
-      return [styles.micButton, styles.micButtonActive];
-    }
-  };
-
-  const getMicIcon = () => {
-    if (isRecording) {
-      return 'stop-circle';
-    } else {
-      return 'mic';
-    }
-  };
-
+  // 获取当前显示的状态文本
   const getStatusText = () => {
-    if (!isAvailable) {
-      return 'Speech recognition unavailable';
-    } else if (isRecording) {
-      return 'Recording, please speak...';
-    } else if (loading) {
-      return 'Processing speech...';
+    if (isRecording) {
+      return '正在聆听...';
+    } else if (inputText) {
+      return inputText;
     } else {
-      return 'Tap microphone to start voice input';
-    }
-  };
-
-  const getStatusColor = () => {
-    if (!isAvailable) {
-      return '#ef4444';
-    } else if (isRecording) {
-      return '#10b981';
-    } else if (loading) {
-      return '#f59e0b';
-    } else {
-      return '#6b7280';
+      return '长按麦克风说话';
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Chat history area */}
-      <View style={styles.chatContainer}>
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          renderItem={renderMessage}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.chatContent}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Ionicons name="chatbubbles-outline" size={64} color="#4a5568" />
-              <Text style={styles.emptyText}>Start Voice Chat</Text>
-              <Text style={styles.emptySubText}>Communicate with AI using voice</Text>
-            </View>
-          }
-        />
+    <View style={styles.container}>
+      {/* 顶部调试信息切换按钮 */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={styles.debugToggle}
+          onPress={() => setShowDebug(!showDebug)}
+        >
+          <Text style={styles.debugToggleText}>
+            {showDebug ? '隐藏调试' : '显示调试'}
+          </Text>
+        </TouchableOpacity>
+        <Text style={[
+          styles.availabilityText,
+          { color: isAvailable ? '#27ae60' : '#e74c3c' }
+        ]}>
+          语音识别: {isAvailable ? '可用' : '不可用'}
+        </Text>
       </View>
 
-      {/* Voice control area */}
-      <View style={styles.voiceContainer}>
-        {/* Status display */}
+      {/* 调试信息面板 */}
+      {showDebug && (
+        <View style={styles.debugPanel}>
+          <Text style={styles.debugTitle}>调试信息:</Text>
+          <ScrollView style={styles.debugScrollView} nestedScrollEnabled>
+            <Text style={styles.debugText}>
+              平台: {Platform.OS} {Platform.Version}
+            </Text>
+            <Text style={styles.debugText}>
+              录音状态: {isRecording ? '录音中' : '未录音'}
+            </Text>
+            <Text style={styles.debugText}>
+              实时结果数量: {partialResults.length}
+            </Text>
+            <Text style={styles.debugText}>
+              最终结果数量: {voiceResults.length}
+            </Text>
+            <Text style={styles.debugText}>
+              当前实时结果: {partialResults.join(', ')}
+            </Text>
+            <Text style={styles.debugText}>
+              当前最终结果: {voiceResults.join(', ')}
+            </Text>
+            
+            <Text style={styles.debugSubTitle}>日志:</Text>
+            {debugInfo.map((log, index) => (
+              <Text key={index} style={styles.debugLogText}>
+                {log}
+              </Text>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
+      {/* 显示识别结果和AI回复 */}
+      <View style={styles.contentContainer}>
         <View style={styles.statusContainer}>
-          <Text style={[styles.statusText, { color: getStatusColor() }]}>
+          <Text style={[
+            styles.statusText,
+            { color: isRecording ? '#e74c3c' : '#333' }
+          ]}>
             {getStatusText()}
           </Text>
-          {Platform.OS === 'web' && (
-            <View style={styles.debugContainer}>
-              <Text style={styles.debugText}>
-                Web Speech API: {
-                  typeof window !== 'undefined' && 
-                  (window.SpeechRecognition || window.webkitSpeechRecognition) 
-                    ? 'Supported' : 'Not supported'
-                }
-              </Text>
-              <Text style={styles.debugText}>
-                Available: {isAvailable ? 'Yes' : 'No'}
-              </Text>
-              <Text style={styles.debugText}>
-                Recording: {isRecording ? 'Yes' : 'No'}
-              </Text>
-              <Text style={styles.debugText}>
-                Loading: {loading ? 'Yes' : 'No'}
-              </Text>
-            </View>
-          )}
         </View>
 
-        {/* Speech recognition result display */}
-        {inputText ? (
-          <View style={styles.resultContainer}>
-            <Text style={styles.resultLabel}>Recognition Result:</Text>
-            <Text style={styles.resultText}>{inputText}</Text>
-          </View>
-        ) : null}
-
-        {/* Test button for debugging */}
-        {Platform.OS === 'web' && (
-          <View style={styles.testContainer}>
-            <Pressable
-              style={styles.testButton}
-              onPress={() => {
-                console.log('Test button pressed');
-                setInputText('This is a test message from the test button');
-              }}
-            >
-              <Text style={styles.testButtonText}>Test Recognition</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.testButton, { backgroundColor: '#f59e0b', marginTop: 8 }]}
-              onPress={async () => {
-                console.log('Checking microphone permissions...');
-                try {
-                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                  console.log('Microphone access granted');
-                  stream.getTracks().forEach(track => track.stop());
-                  window.alert('Microphone access granted!');
-                } catch (error) {
-                  console.error('Microphone access denied:', error);
-                  window.alert('Microphone access denied. Please allow microphone access in your browser.');
-                }
-              }}
-            >
-              <Text style={styles.testButtonText}>Check Microphone</Text>
-            </Pressable>
-          </View>
-        )}
-
-        {/* Microphone button */}
-        <View style={styles.micContainer}>
-          <Pressable
-            style={getMicButtonStyle()}
-            onPress={handleRecordingPress}
-            disabled={!isAvailable || loading}
-          >
-            {loading ? (
-              <ActivityIndicator size="large" color="white" />
-            ) : (
-              <Ionicons name={getMicIcon()} size={48} color="white" />
+        {inputText && !isRecording ? (
+          <View style={styles.messageContainer}>
+            <View style={styles.userMessage}>
+              <Text style={styles.messageText}>{inputText}</Text>
+            </View>
+            {response && (
+              <View style={styles.aiMessage}>
+                <Text style={styles.messageText}>{response}</Text>
+              </View>
             )}
-          </Pressable>
-          
-          {/* Recording indicator */}
-          {isRecording && (
-            <View style={styles.recordingIndicator}>
-              <View style={[styles.ripple, styles.ripple1]} />
-              <View style={[styles.ripple, styles.ripple2]} />
-              <View style={[styles.ripple, styles.ripple3]} />
-            </View>
-          )}
-        </View>
-
-        {/* Send button */}
-        {inputText ? (
-          <View style={styles.actionContainer}>
-            <Pressable
-              style={styles.sendButton}
-              onPress={handleSendMessage}
-              disabled={loading || isRecording}
-            >
-              <Ionicons name="send" size={24} color="white" />
-              <Text style={styles.sendButtonText}>Send</Text>
-            </Pressable>
-            <Pressable
-              style={styles.clearButton}
-              onPress={() => setInputText('')}
-              disabled={loading || isRecording}
-            >
-              <Ionicons name="trash-outline" size={20} color="#6b7280" />
-            </Pressable>
           </View>
         ) : null}
       </View>
-    </SafeAreaView>
+
+      {/* 麦克风按钮和动画 */}
+      <View style={styles.bottomContainer}>
+        <View style={styles.micButtonContainer}>
+          <Animated.View style={[styles.ripple, rippleStyle]} />
+          <Pressable
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            onLongPress={() => {}}
+            delayLongPress={200}
+            style={({ pressed }) => [
+              styles.micButton,
+              {
+                backgroundColor: pressed || isRecording ? '#e74c3c' : '#3498db',
+              },
+            ]}
+          >
+            <Animated.View
+              style={[
+                {
+                  transform: [{ scale: scaleAnim }],
+                },
+              ]}
+            >
+              <Ionicons
+                name={isRecording ? 'mic' : 'mic-outline'}
+                size={40}
+                color="white"
+              />
+            </Animated.View>
+          </Pressable>
+        </View>
+
+        {/* 取消按钮 */}
+        {isLongPressing && (
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handlePressCancel}
+          >
+            <Text style={styles.cancelText}>取消</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0D0D0D',
+    backgroundColor: '#f5f5f5',
   },
-  chatContainer: {
-    flex: 1,
-    backgroundColor: '#0D0D0D',
-  },
-  chatContent: {
-    paddingVertical: 16,
-  },
-  messageContainer: {
+  topBar: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  userMessageContainer: {
-    backgroundColor: '#1e293b',
-    marginLeft: 20,
-    borderRadius: 16,
-    marginVertical: 4,
-  },
-  aiMessageContainer: {
-    backgroundColor: '#374151',
-    marginRight: 20,
-    borderRadius: 16,
-    marginVertical: 4,
-  },
-  messageImage: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-  },
-  messageText: {
-    fontSize: 16,
-    flex: 1,
-    color: '#fff',
-    lineHeight: 22,
-    userSelect: 'text',
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 60,
+    padding: 16,
+    paddingTop: 50,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   },
-  emptyText: {
-    fontSize: 24,
+  debugToggle: {
+    backgroundColor: '#3498db',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
+  },
+  debugToggleText: {
+    color: 'white',
+    fontSize: 12,
+  },
+  availabilityText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  debugPanel: {
+    backgroundColor: '#2c3e50',
+    padding: 12,
+    maxHeight: 200,
+  },
+  debugTitle: {
+    color: '#ecf0f1',
+    fontSize: 14,
     fontWeight: 'bold',
-    color: '#fff',
-    marginTop: 16,
+    marginBottom: 8,
   },
-  emptySubText: {
-    fontSize: 16,
-    color: '#6b7280',
+  debugSubTitle: {
+    color: '#bdc3c7',
+    fontSize: 12,
+    fontWeight: 'bold',
     marginTop: 8,
+    marginBottom: 4,
   },
-  voiceContainer: {
-    backgroundColor: '#1a1a1a',
-    paddingHorizontal: 24,
-    paddingVertical: 32,
-    borderTopWidth: 1,
-    borderTopColor: '#374151',
+  debugScrollView: {
+    maxHeight: 150,
+  },
+  debugText: {
+    color: '#ecf0f1',
+    fontSize: 11,
+    marginBottom: 2,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+  },
+  debugLogText: {
+    color: '#95a5a6',
+    fontSize: 10,
+    marginBottom: 1,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 16,
+    justifyContent: 'center',
   },
   statusContainer: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
   },
   statusText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '500',
     textAlign: 'center',
+    marginBottom: 16,
+  },
+  messageContainer: {
+    width: '100%',
+    marginTop: 16,
+  },
+  userMessage: {
+    backgroundColor: '#3498db',
+    padding: 12,
+    borderRadius: 16,
+    borderBottomRightRadius: 4,
+    marginLeft: '20%',
     marginBottom: 8,
   },
-  debugContainer: {
-    marginTop: 8,
+  aiMessage: {
+    backgroundColor: '#2ecc71',
+    padding: 12,
+    borderRadius: 16,
+    borderBottomLeftRadius: 4,
+    marginRight: '20%',
   },
-  debugText: {
-    fontSize: 12,
-    color: '#6b7280',
-    textAlign: 'center',
+  messageText: {
+    color: 'white',
+    fontSize: 16,
   },
-  resultContainer: {
-    backgroundColor: '#374151',
-    borderRadius: 12,
+  bottomContainer: {
     padding: 16,
-    marginBottom: 24,
-  },
-  resultLabel: {
-    fontSize: 14,
-    color: '#9ca3af',
-    marginBottom: 8,
-  },
-  resultText: {
-    fontSize: 16,
-    color: '#fff',
-    lineHeight: 22,
-  },
-  testContainer: {
     alignItems: 'center',
-    marginBottom: 24,
   },
-  testButton: {
-    backgroundColor: '#3b82f6',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  testButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  micContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    marginBottom: 24,
-  },
-  micButton: {
+  micButtonContainer: {
     width: 120,
     height: 120,
-    borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    ...(Platform.OS === 'web' ? {
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-    } : {
-      elevation: 8,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-    }),
-  },
-  micButtonActive: {
-    backgroundColor: '#3b82f6',
-  },
-  micButtonRecording: {
-    backgroundColor: '#ef4444',
-  },
-  micButtonDisabled: {
-    backgroundColor: '#6b7280',
-  },
-  recordingIndicator: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    pointerEvents: 'none',
   },
   ripple: {
     position: 'absolute',
-    borderWidth: 2,
-    borderColor: '#ef4444',
-    borderRadius: 100,
-    opacity: 0.6,
+    width: '100%',
+    height: '100%',
+    borderRadius: 60,
+    backgroundColor: '#3498db',
   },
-  ripple1: {
-    width: 140,
-    height: 140,
-  },
-  ripple2: {
-    width: 160,
-    height: 160,
-  },
-  ripple3: {
-    width: 180,
-    height: 180,
-  },
-  actionContainer: {
-    flexDirection: 'row',
+  micButton: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#3498db',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
-  sendButton: {
-    backgroundColor: '#10b981',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 25,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  cancelButton: {
+    marginTop: 16,
+    padding: 8,
   },
-  sendButtonText: {
-    color: '#fff',
+  cancelText: {
+    color: '#e74c3c',
     fontSize: 16,
-    fontWeight: '600',
-  },
-  clearButton: {
-    padding: 16,
-    borderRadius: 25,
-    backgroundColor: '#374151',
   },
 });
-
-export default WhisperPage;
