@@ -125,7 +125,7 @@ export const useApi = () => {
             });
 
             // Return the URL of the generated image
-            const imageUrl = response.data[0]?.url || 'An error occurred';
+            const imageUrl = response.data?.[0]?.url || 'An error occurred';
 
             // Create a new AI message with the AI's response
             const aiMessage: Message = {
@@ -150,9 +150,72 @@ export const useApi = () => {
         }
     };
 
+    // Function to send a message and get the response
+    const sendMessage = async (prompt: string): Promise<string> => {
+        // Check if API key is not found
+        if (!apiKey) {
+            const errorMessage = 'No API key found';
+            if (Platform.OS === 'web') {
+                window.alert(errorMessage);
+            } else {
+                Alert.alert('Error', errorMessage);
+            }
+            return errorMessage;
+        }
+
+        try {
+            // Create a new user message with the prompt
+            const userMessage: Message = {
+                content: prompt,
+                role: Role.User,
+            };
+
+            // Update messages state with the new user message
+            const chatHistory = [...messages, userMessage];
+            setMessages(chatHistory);
+
+            // Create OpenAI instance and request a chat completion
+            const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
+            const completion = await openai.chat.completions.create({
+                model: 'gpt-3.5-turbo',
+                messages: chatHistory,
+            });
+
+            // Extract the AI's response text
+            const aiResponse = completion.choices[0].message.content?.trim() || 'An error occurred';
+
+            // Create a new AI message with the AI's response
+            const aiMessage: Message = {
+                content: aiResponse,
+                role: Role.Assistant,
+            };
+
+            // Update messages state with the new AI message
+            setMessages((prevMessages) => [...prevMessages, aiMessage]);
+
+            return aiResponse;
+
+        } catch (error) {
+            // Handle any errors that occur during the completion request
+            const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+
+            // Create a new AI message with the error message
+            const aiMessage: Message = {
+                content: errorMessage,
+                role: Role.Assistant,
+            };
+
+            // Update messages state with the new AI message
+            setMessages((prevMessages) => [...prevMessages, aiMessage]);
+
+            return errorMessage;
+        }
+    };
+
     return {
         messages,
         getCompletion,
-        generateImage
+        generateImage,
+        sendMessage
     };
 };
