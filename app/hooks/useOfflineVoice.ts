@@ -139,20 +139,25 @@ export const useOfflineVoice = () => {
       
       let errorMessage = 'Speech recognition error';
       const errorCode: ExpoSpeechRecognitionErrorCode = event.error;
+      let shouldShowAlert = true; // 默认显示Alert
       
       // 根据错误代码显示友好的错误信息
       switch (errorCode) {
         case 'aborted':
           errorMessage = '语音识别被中止';
+          shouldShowAlert = false; // 中止是正常操作，不需要弹窗
           break;
         case 'audio-capture':
           errorMessage = '音频捕获失败，请检查麦克风权限';
           break;
         case 'bad-grammar':
           errorMessage = '语音语法错误';
+          shouldShowAlert = false; // 语法错误通常不需要用户干预
           break;
         case 'network':
           errorMessage = '网络错误，请检查网络连接';
+          // 如果是暂时的网络问题，不需要弹窗
+          shouldShowAlert = false;
           break;
         case 'not-allowed':
           errorMessage = '麦克风权限被拒绝，请在设置中允许';
@@ -162,25 +167,37 @@ export const useOfflineVoice = () => {
           break;
         case 'busy':
           errorMessage = '语音识别服务繁忙，请稍后再试';
+          shouldShowAlert = false; // 服务繁忙可以静默处理
           break;
         case 'client':
           errorMessage = '客户端错误';
+          shouldShowAlert = false; // 客户端错误通常是临时的
           break;
         case 'speech-timeout':
           errorMessage = '未检测到语音，请重试';
+          shouldShowAlert = false; // 超时很常见，不需要弹窗
           break;
         case 'unknown':
         default:
           errorMessage = event.message || '未知的语音识别错误';
+          shouldShowAlert = false; // 未知错误也静默处理
           break;
       }
       
       // 特殊处理语言不支持的错误
       if (event.message && event.message.includes('language')) {
         errorMessage = '不支持所选语言，请切换到英文或检查设备语言包';
+        shouldShowAlert = true; // 语言不支持需要提示用户
       }
       
-      Alert.alert('语音识别错误', errorMessage);
+      // 只有需要用户干预的错误才显示Alert
+      if (shouldShowAlert) {
+        Alert.alert('语音识别错误', errorMessage);
+      } else {
+        // 非关键错误只记录到调试信息
+        console.log(`Non-critical error (${errorCode}): ${errorMessage}`);
+        addDebugInfo(`Non-critical error: ${errorMessage}`);
+      }
     });
     listenersRef.current.push(errorListener);
 

@@ -100,7 +100,8 @@ export default function Whisper() {
         setResponse('抱歉，AI服务暂时不可用');
       }
     } else if (result.error) {
-      Alert.alert('提示', result.error);
+      // 错误已经在 useOfflineVoice 中处理，这里只记录日志
+      console.log('语音识别结果包含错误:', result.error);
     }
   };
 
