@@ -21,11 +21,17 @@ export const useOfflineVoice = () => {
   // 存储事件监听器的引用，以便后续移除
   const listenersRef = useRef<any[]>([]);
   
-  // 添加一个Promise来等待最终结果
-  const finalResultPromiseRef = useRef<{
-    resolve: (value: string) => void;
-    reject: (reason?: any) => void;
-  } | null>(null);
+  // 使用ref存储最新的识别结果，避免React状态异步更新问题
+  const latestResultsRef = useRef<{
+    voiceResults: string[];
+    partialResults: string[];
+  }>({
+    voiceResults: [],
+    partialResults: []
+  });
+  
+  // 自动结果处理回调
+  const autoResultCallbackRef = useRef<((text: string) => void) | null>(null);
 
   const addDebugInfo = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
@@ -90,8 +96,33 @@ export const useOfflineVoice = () => {
       console.log('=== Speech Recognition Ended ===');
       console.log('Final voice results:', voiceResults);
       console.log('Final partial results:', partialResults);
+      
+      // 使用ref中的最新结果
+      const currentVoiceResults = latestResultsRef.current.voiceResults;
+      const currentPartialResults = latestResultsRef.current.partialResults;
+      console.log('Latest voice results from ref in end event:', currentVoiceResults);
+      console.log('Latest partial results from ref in end event:', currentPartialResults);
+      
       addDebugInfo('Speech recognition ended');
       setIsRecording(false);
+      
+      // 如果有识别结果且没有通过stopRecording处理，自动处理结果
+      if (currentVoiceResults.length > 0 || currentPartialResults.length > 0) {
+        const finalText = currentVoiceResults.length > 0 
+          ? currentVoiceResults[currentVoiceResults.length - 1]
+          : currentPartialResults[currentPartialResults.length - 1];
+          
+        if (finalText && finalText.trim()) {
+          console.log('Auto-processing speech result:', finalText);
+          // 触发一个自定义事件来通知UI层处理结果
+          setTimeout(() => {
+            // 这里我们需要一个方法来通知UI层
+            if (autoResultCallbackRef.current) {
+              autoResultCallbackRef.current(finalText.trim());
+            }
+          }, 100);
+        }
+      }
     });
     listenersRef.current.push(endListener);
 
@@ -109,18 +140,14 @@ export const useOfflineVoice = () => {
           // 更新部分结果
           console.log('Setting partial results:', transcripts);
           setPartialResults(transcripts);
+          latestResultsRef.current.partialResults = transcripts;
         } else {
           // 更新最终结果
           console.log('Setting final results:', transcripts);
           setVoiceResults(transcripts);
+          latestResultsRef.current.voiceResults = transcripts;
           setPartialResults([]);
-          
-          // 如果有等待的Promise，解析它
-          if (finalResultPromiseRef.current) {
-            const finalText = transcripts[transcripts.length - 1] || '';
-            finalResultPromiseRef.current.resolve(finalText);
-            finalResultPromiseRef.current = null;
-          }
+          latestResultsRef.current.partialResults = [];
         }
         
         addDebugInfo(`Got ${event.isFinal ? 'final' : 'partial'} result: ${transcripts.join(', ')}`);
@@ -241,13 +268,15 @@ export const useOfflineVoice = () => {
       addDebugInfo('Starting recording...');
       setVoiceResults([]);
       setPartialResults([]);
+      latestResultsRef.current.voiceResults = [];
+      latestResultsRef.current.partialResults = [];
       
       const recognitionOptions = {
-        lang: "en-US", // 先使用英文，之后可以改为 "zh-CN"
-        interimResults: true, // 启用实时结果
+        lang: "en-US", // 使用中文识别
+        interimResults: true, // 启用实时结果显示
         maxAlternatives: 1,
-        continuous: false, // 不使用连续识别模式
-        requiresOnDeviceRecognition: false, // 使用在线识别
+        continuous: false, // 单次识别，不连续
+        requiresOnDeviceRecognition: false, // 使用离线识别
         addsPunctuation: true, // 添加标点符号
         contextualStrings: [], // 可以添加上下文提示词
       };
@@ -273,41 +302,37 @@ export const useOfflineVoice = () => {
       addDebugInfo('Stopping recording...');
       console.log('Stopping recording...');
       
-      // 创建一个Promise来等待最终结果
-      const finalResultPromise = new Promise<string>((resolve, reject) => {
-        finalResultPromiseRef.current = { resolve, reject };
-        
-        // 设置超时，防止无限等待
-        setTimeout(() => {
-          if (finalResultPromiseRef.current) {
-            console.log('Timeout waiting for final result');
-            finalResultPromiseRef.current.resolve('');
-            finalResultPromiseRef.current = null;
-          }
-        }, 3000); // 3秒超时
-      });
-      
       // 停止语音识别
       await ExpoSpeechRecognitionModule.stop();
       
-      // 等待最终结果或超时
-      const finalText = await finalResultPromise;
+      // 等待一小段时间让最终结果处理完成
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // 使用ref中的最新值，避免React状态异步更新问题
+      const currentVoiceResults = latestResultsRef.current.voiceResults;
+      const currentPartialResults = latestResultsRef.current.partialResults;
+      
+      console.log('Latest voice results from ref:', currentVoiceResults);
+      console.log('Latest partial results from ref:', currentPartialResults);
+      
+      // 检查是否有最终结果
+      let finalText = '';
+      
+      // 优先使用最终结果
+      if (currentVoiceResults.length > 0) {
+        finalText = currentVoiceResults[currentVoiceResults.length - 1];
+        console.log('Using final result from ref:', finalText);
+      } 
+      // 如果没有最终结果，使用部分结果
+      else if (currentPartialResults.length > 0) {
+        finalText = currentPartialResults[currentPartialResults.length - 1];
+        console.log('Using partial result as fallback from ref:', finalText);
+      }
       
       addDebugInfo(`Final text: ${finalText}`);
       console.log('Final recognized text:', finalText);
       
       if (!finalText || !finalText.trim()) {
-        // 如果没有最终结果，检查是否有部分结果
-        const fallbackText = partialResults.length > 0 
-          ? partialResults[partialResults.length - 1] 
-          : (voiceResults.length > 0 ? voiceResults[voiceResults.length - 1] : '');
-          
-        if (fallbackText && fallbackText.trim()) {
-          return {
-            text: fallbackText.trim()
-          };
-        }
-        
         return {
           text: '',
           error: 'No speech detected'
@@ -321,14 +346,9 @@ export const useOfflineVoice = () => {
       addDebugInfo(`Failed to stop recording: ${error}`);
       console.error('Failed to stop voice recognition:', error);
       
-      // 清理Promise引用
-      if (finalResultPromiseRef.current) {
-        finalResultPromiseRef.current = null;
-      }
-      
       return {
         text: '',
-        error: 'Failed to stop voice recognition'
+        error: `Recognition failed: ${error}`
       };
     }
   };
@@ -352,6 +372,10 @@ export const useOfflineVoice = () => {
     }
   };
 
+  const setAutoResultCallback = (callback: (text: string) => void) => {
+    autoResultCallbackRef.current = callback;
+  };
+
   return {
     isRecording,
     isAvailable,
@@ -361,5 +385,6 @@ export const useOfflineVoice = () => {
     voiceResults,
     partialResults,
     debugInfo,
+    setAutoResultCallback,
   };
 }; 

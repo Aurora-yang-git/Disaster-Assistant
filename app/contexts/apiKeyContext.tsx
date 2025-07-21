@@ -18,8 +18,16 @@ export const ApiKeyContextProvider: React.FC<{ children: React.ReactNode }> = ({
     // Load API key from storage on component mount
     useEffect(() => {
         const loadApiKey = async () => {
+            try {
             const key = await AsyncStorage.getItem('apiKey');
-            setApiKey(key || '');
+                console.log('从AsyncStorage加载的API Key:', key ? `存在(长度:${key.length})` : '不存在');
+                console.log('设置API Key状态:', key ? '有值' : '无值');
+                setApiKeyState(key || '');
+                console.log('API Key状态设置完成');
+            } catch (error) {
+                console.error('加载API Key失败:', error);
+                setApiKeyState('');
+            }
         };
 
         loadApiKey();

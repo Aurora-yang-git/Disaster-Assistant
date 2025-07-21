@@ -1,500 +1,298 @@
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  ActivityIndicator,
-  Image,
-  FlatList,
+  ScrollView,
+  TouchableOpacity,
   Alert,
-  Platform,
-  Dimensions
+  Dimensions,
+  Animated,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Message, Role, useApi } from '../hooks/useApi';
 import { useOfflineVoice } from '../hooks/useOfflineVoice';
-import userImage from '../../assets/user.png';
-import aiImage from '../../assets/ai.png';
+import { useApi } from '../hooks/useApi';
+import { useApiKeyContext } from '../contexts/apiKeyContext';
+import { COLORS } from '../colors';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const WhisperPage = () => {
+interface ChatMessage {
+  id: string;
+  text: string;
+  isUser: boolean;
+  timestamp: Date;
+}
 
-  const [inputText, setInputText] = useState('');
-  const [loading, setLoading] = useState(false);
+export default function Whisper() {
+  const { sendMessage } = useApi();
+  const { apiKey } = useApiKeyContext();
 
-  const { getCompletion, messages } = useApi();
-  const { 
-    isRecording, 
-    isAvailable, 
-    startRecording, 
-    stopRecording, 
-    cancelRecording 
+  const {
+    isRecording,
+    voiceResults,
+    partialResults,
+    startRecording,
+    stopRecording,
+    cancelRecording,
   } = useOfflineVoice();
-  
-  const flatListRef = useRef<FlatList>(null);
 
-  // Start recording
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [pulseAnim] = useState(new Animated.Value(1));
+
+  useEffect(() => {
+    if (isRecording) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.2,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    } else {
+      pulseAnim.setValue(1);
+    }
+  }, [isRecording]);
+
   const handleStartRecording = async () => {
     const success = await startRecording();
     if (!success) {
-      console.log('Failed to start recording');
+      Alert.alert('权限被拒绝', '需要麦克风权限才能使用语音功能');
     }
   };
 
-  // Stop recording and handle speech recognition result
   const handleStopRecording = async () => {
-    setLoading(true);
     const result = await stopRecording();
-    
-    if (result.error) {
-      if (Platform.OS === 'web') {
-        window.alert(result.error);
-      } else {
-        Alert.alert('Speech Recognition Error', result.error);
-      }
-    } else if (result.text) {
-      setInputText(result.text);
-    }
-    
-    setLoading(false);
-  };
-
-  // Handle recording button press
-  const handleRecordingPress = () => {
-    console.log('Recording button pressed, isRecording:', isRecording);
-    console.log('isAvailable:', isAvailable);
-    
-    if (isRecording) {
-      console.log('Stopping recording...');
-      handleStopRecording();
-    } else {
-      console.log('Starting recording...');
-      handleStartRecording();
-    }
-  };
-
-  // Handle sending message
-  const handleSendMessage = async () => {
-    if (inputText.trim().length > 0) {
+    if (result.text && result.text.trim()) {
+      const recognizedText = result.text;
+      const userMessage: ChatMessage = {
+        id: Date.now().toString(),
+        text: recognizedText,
+        isUser: true,
+        timestamp: new Date(),
+      };
+      setChatMessages(prev => [...prev, userMessage]);
+      setIsProcessing(true);
       setTimeout(() => {
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-
-      const messageContent = inputText.trim();
-      setInputText('');
-      setLoading(true);
-      await getCompletion(messageContent);
-      setLoading(false);
-
-      setTimeout(() => {
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 100);
+        const aiMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          text: `我收到了你的消息：「${recognizedText}」，等待接入RAG系统后会有智能回复。`,
+          isUser: false,
+          timestamp: new Date(),
+        };
+        setChatMessages(prev => [...prev, aiMessage]);
+        setIsProcessing(false);
+      }, 2000);
     }
   };
 
-  // Render single message
-  const renderMessage = ({ item }: { item: Message }) => {
-    const isUserMessage = item.role === Role.User;
-
-    return (
+  const renderChatMessage = (message: ChatMessage) => (
+    <View key={message.id} style={[
+      styles.messageContainer,
+      message.isUser ? styles.userMessageContainer : styles.aiMessageContainer
+    ]}>
       <View style={[
-        styles.messageContainer,
-        isUserMessage ? styles.userMessageContainer : styles.aiMessageContainer,
+        styles.messageBubble,
+        message.isUser ? styles.userMessageBubble : styles.aiMessageBubble
       ]}>
-        <Image source={isUserMessage ? userImage : aiImage} style={styles.messageImage} />
-        <Text style={styles.messageText}>{item.content}</Text>
+        <Text style={styles.messageText}>{message.text}</Text>
+        <Text style={styles.timestampText}>
+          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </Text>
       </View>
-    );
-  };
-
-  // Get microphone button style
-  const getMicButtonStyle = () => {
-    if (isRecording) {
-      return [styles.micButton, styles.micButtonRecording];
-    } else if (!isAvailable) {
-      return [styles.micButton, styles.micButtonDisabled];
-    } else {
-      return [styles.micButton, styles.micButtonActive];
-    }
-  };
-
-  const getMicIcon = () => {
-    if (isRecording) {
-      return 'stop-circle';
-    } else {
-      return 'mic';
-    }
-  };
-
-  const getStatusText = () => {
-    if (!isAvailable) {
-      return 'Speech recognition unavailable';
-    } else if (isRecording) {
-      return 'Recording, please speak...';
-    } else if (loading) {
-      return 'Processing speech...';
-    } else {
-      return 'Tap microphone to start voice input';
-    }
-  };
-
-  const getStatusColor = () => {
-    if (!isAvailable) {
-      return '#ef4444';
-    } else if (isRecording) {
-      return '#10b981';
-    } else if (loading) {
-      return '#f59e0b';
-    } else {
-      return '#6b7280';
-    }
-  };
+    </View>
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Chat history area */}
-      <View style={styles.chatContainer}>
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          renderItem={renderMessage}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.chatContent}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Ionicons name="chatbubbles-outline" size={64} color="#4a5568" />
-              <Text style={styles.emptyText}>Start Voice Chat</Text>
-              <Text style={styles.emptySubText}>Communicate with AI using voice</Text>
-            </View>
-          }
-        />
-      </View>
-
-      {/* Voice control area */}
-      <View style={styles.voiceContainer}>
-        {/* Status display */}
-        <View style={styles.statusContainer}>
-          <Text style={[styles.statusText, { color: getStatusColor() }]}>
-            {getStatusText()}
-          </Text>
-          {Platform.OS === 'web' && (
-            <View style={styles.debugContainer}>
-              <Text style={styles.debugText}>
-                Web Speech API: {
-                  typeof window !== 'undefined' && 
-                  (window.SpeechRecognition || window.webkitSpeechRecognition) 
-                    ? 'Supported' : 'Not supported'
-                }
-              </Text>
-              <Text style={styles.debugText}>
-                Available: {isAvailable ? 'Yes' : 'No'}
-              </Text>
-              <Text style={styles.debugText}>
-                Recording: {isRecording ? 'Yes' : 'No'}
-              </Text>
-              <Text style={styles.debugText}>
-                Loading: {loading ? 'Yes' : 'No'}
-              </Text>
-            </View>
-          )}
-        </View>
-
-        {/* Speech recognition result display */}
-        {inputText ? (
-          <View style={styles.resultContainer}>
-            <Text style={styles.resultLabel}>Recognition Result:</Text>
-            <Text style={styles.resultText}>{inputText}</Text>
+    <View style={styles.container}>
+      {/* 聊天区 */}
+      <ScrollView style={styles.chatArea} showsVerticalScrollIndicator={false}>
+        {chatMessages.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Ionicons name="chatbubbles-outline" size={64} color={COLORS.bubbleAI + '99'} />
+            <Text style={styles.emptyStateText}>开始对话</Text>
+            <Text style={styles.emptyStateSubtext}>长按录音按钮开始语音输入</Text>
           </View>
-        ) : null}
-
-        {/* Test button for debugging */}
-        {Platform.OS === 'web' && (
-          <View style={styles.testContainer}>
-            <Pressable
-              style={styles.testButton}
-              onPress={() => {
-                console.log('Test button pressed');
-                setInputText('This is a test message from the test button');
-              }}
-            >
-              <Text style={styles.testButtonText}>Test Recognition</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.testButton, { backgroundColor: '#f59e0b', marginTop: 8 }]}
-              onPress={async () => {
-                console.log('Checking microphone permissions...');
-                try {
-                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                  console.log('Microphone access granted');
-                  stream.getTracks().forEach(track => track.stop());
-                  window.alert('Microphone access granted!');
-                } catch (error) {
-                  console.error('Microphone access denied:', error);
-                  window.alert('Microphone access denied. Please allow microphone access in your browser.');
-                }
-              }}
-            >
-              <Text style={styles.testButtonText}>Check Microphone</Text>
-            </Pressable>
+        ) : (
+          chatMessages.map(renderChatMessage)
+        )}
+        {isProcessing && (
+          <View style={styles.processingContainer}>
+            <View style={styles.processingBubble}>
+              <View style={styles.typingIndicator}>
+                <View style={styles.typingDot} />
+                <View style={styles.typingDot} />
+                <View style={styles.typingDot} />
+              </View>
+              <Text style={styles.processingText}>AI正在思考中...</Text>
+            </View>
           </View>
         )}
-
-        {/* Microphone button */}
-        <View style={styles.micContainer}>
-          <Pressable
-            style={getMicButtonStyle()}
-            onPress={handleRecordingPress}
-            disabled={!isAvailable || loading}
-          >
-            {loading ? (
-              <ActivityIndicator size="large" color="white" />
-            ) : (
-              <Ionicons name={getMicIcon()} size={48} color="white" />
-            )}
-          </Pressable>
-          
-          {/* Recording indicator */}
-          {isRecording && (
-            <View style={styles.recordingIndicator}>
-              <View style={[styles.ripple, styles.ripple1]} />
-              <View style={[styles.ripple, styles.ripple2]} />
-              <View style={[styles.ripple, styles.ripple3]} />
-            </View>
-          )}
+      </ScrollView>
+      {/* 录音按钮和提示 */}
+      <View style={styles.controlPanel}>
+        <View style={styles.voiceButtonContainer}>
+          <Animated.View style={[
+            styles.recordButtonWrapper,
+            { transform: [{ scale: pulseAnim }] }
+          ]}>
+            <TouchableOpacity
+              style={[
+                styles.recordButton,
+                isRecording && styles.recordingButton
+              ]}
+              onPressIn={handleStartRecording}
+              onPressOut={handleStopRecording}
+              disabled={isProcessing}
+            >
+              <View style={styles.recordButtonContent}>
+                <Ionicons 
+                  name={isRecording ? "stop" : "mic"} 
+                  size={32} 
+                  color={COLORS.text} 
+                />
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+          <Text style={styles.instructionText}>
+            {isRecording ? '松开停止录音' : '长按开始录音'}
+          </Text>
         </View>
-
-        {/* Send button */}
-        {inputText ? (
-          <View style={styles.actionContainer}>
-            <Pressable
-              style={styles.sendButton}
-              onPress={handleSendMessage}
-              disabled={loading || isRecording}
-            >
-              <Ionicons name="send" size={24} color="white" />
-              <Text style={styles.sendButtonText}>Send</Text>
-            </Pressable>
-            <Pressable
-              style={styles.clearButton}
-              onPress={() => setInputText('')}
-              disabled={loading || isRecording}
-            >
-              <Ionicons name="trash-outline" size={20} color="#6b7280" />
-            </Pressable>
-          </View>
-        ) : null}
       </View>
-    </SafeAreaView>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0D0D0D',
+    backgroundColor: COLORS.background,
   },
-  chatContainer: {
+  chatArea: {
     flex: 1,
-    backgroundColor: '#0D0D0D',
+    paddingHorizontal: 20,
   },
-  chatContent: {
-    paddingVertical: 16,
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 100,
+  },
+  emptyStateText: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: COLORS.text,
+    marginTop: 20,
+  },
+  emptyStateSubtext: {
+    fontSize: 16,
+    color: COLORS.textSub,
+    marginTop: 8,
   },
   messageContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    alignItems: 'flex-start',
-    gap: 12,
+    marginBottom: 16,
   },
   userMessageContainer: {
-    backgroundColor: '#1e293b',
-    marginLeft: 20,
-    borderRadius: 16,
-    marginVertical: 4,
+    alignItems: 'flex-end',
   },
   aiMessageContainer: {
-    backgroundColor: '#374151',
-    marginRight: 20,
-    borderRadius: 16,
-    marginVertical: 4,
+    alignItems: 'flex-start',
   },
-  messageImage: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  messageBubble: {
+    maxWidth: width * 0.75,
+    padding: 16,
+    borderRadius: 20,
+  },
+  userMessageBubble: {
+    backgroundColor: COLORS.bubbleUser,
+    borderBottomRightRadius: 8,
+  },
+  aiMessageBubble: {
+    backgroundColor: COLORS.bubbleAI,
+    borderBottomLeftRadius: 8,
   },
   messageText: {
     fontSize: 16,
-    flex: 1,
-    color: '#fff',
     lineHeight: 22,
-    userSelect: 'text',
+    color: COLORS.text,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 60,
-  },
-  emptyText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginTop: 16,
-  },
-  emptySubText: {
-    fontSize: 16,
-    color: '#6b7280',
-    marginTop: 8,
-  },
-  voiceContainer: {
-    backgroundColor: '#1a1a1a',
-    paddingHorizontal: 24,
-    paddingVertical: 32,
-    borderTopWidth: 1,
-    borderTopColor: '#374151',
-  },
-  statusContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  statusText: {
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  debugContainer: {
-    marginTop: 8,
-  },
-  debugText: {
+  timestampText: {
     fontSize: 12,
-    color: '#6b7280',
-    textAlign: 'center',
+    color: COLORS.textSub,
+    marginTop: 4,
+    textAlign: 'right',
   },
-  resultContainer: {
-    backgroundColor: '#374151',
-    borderRadius: 12,
+  processingContainer: {
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  processingBubble: {
+    backgroundColor: COLORS.bubbleAI,
     padding: 16,
-    marginBottom: 24,
+    borderRadius: 20,
+    borderBottomLeftRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  resultLabel: {
+  typingIndicator: {
+    flexDirection: 'row',
+    marginRight: 12,
+  },
+  typingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: COLORS.textSub,
+    marginHorizontal: 2,
+  },
+  processingText: {
+    color: COLORS.textSub,
     fontSize: 14,
-    color: '#9ca3af',
-    marginBottom: 8,
   },
-  resultText: {
-    fontSize: 16,
-    color: '#fff',
-    lineHeight: 22,
+  controlPanel: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
   },
-  testContainer: {
+  voiceButtonContainer: {
     alignItems: 'center',
     marginBottom: 24,
   },
-  testButton: {
-    backgroundColor: '#3b82f6',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
+  recordButtonWrapper: {
+    marginBottom: 16,
   },
-  testButtonText: {
-    color: '#fff',
+  recordButton: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    elevation: 8,
+    shadowColor: COLORS.bubbleUser,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    backgroundColor: COLORS.button,
+  },
+  recordingButton: {
+    shadowColor: COLORS.buttonActive,
+    backgroundColor: COLORS.buttonActive,
+  },
+  recordButtonContent: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  instructionText: {
     fontSize: 16,
-    fontWeight: '600',
-  },
-  micContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    marginBottom: 24,
-  },
-  micButton: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...(Platform.OS === 'web' ? {
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-    } : {
-      elevation: 8,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-    }),
-  },
-  micButtonActive: {
-    backgroundColor: '#3b82f6',
-  },
-  micButtonRecording: {
-    backgroundColor: '#ef4444',
-  },
-  micButtonDisabled: {
-    backgroundColor: '#6b7280',
-  },
-  recordingIndicator: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    pointerEvents: 'none',
-  },
-  ripple: {
-    position: 'absolute',
-    borderWidth: 2,
-    borderColor: '#ef4444',
-    borderRadius: 100,
-    opacity: 0.6,
-  },
-  ripple1: {
-    width: 140,
-    height: 140,
-  },
-  ripple2: {
-    width: 160,
-    height: 160,
-  },
-  ripple3: {
-    width: 180,
-    height: 180,
-  },
-  actionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 16,
-  },
-  sendButton: {
-    backgroundColor: '#10b981',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 25,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  sendButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  clearButton: {
-    padding: 16,
-    borderRadius: 25,
-    backgroundColor: '#374151',
+    color: COLORS.text,
+    fontWeight: '500',
   },
 });
-
-export default WhisperPage;
