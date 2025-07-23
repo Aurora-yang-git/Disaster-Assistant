@@ -17,6 +17,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.voiceassistant.app",
+      "bundleResource": [
+        "./assets/models/tinyllama.gguf"
+      ],
       "infoPlist": {
         "NSMicrophoneUsageDescription": "需要使用麦克风进行语音识别",
         "NSSpeechRecognitionUsageDescription": "需要使用语音识别功能将语音转换为文字"

@@ -2,6 +2,7 @@ import { LlamaContext, initLlama } from "llama.rn";
 import { Message } from "../../hooks/useApi";
 import { RAGService } from "../rag/RAGService";
 import { ResponseValidator } from "../rag/ResponseValidator";
+import * as FileSystem from 'expo-file-system';
 
 interface GemmaConfig {
   modelPath?: string; // This will now point to the asset path
@@ -37,7 +38,6 @@ export interface ChatCompletionResponse {
   };
 }
 
-const MODEL_ASSET_PATH = "models/gemma-3n-E2B-it-Q4_K_M.gguf";
 
 export class GemmaClient {
   private config: GemmaConfig;
@@ -64,18 +64,36 @@ export class GemmaClient {
       return;
     }
     this.isLoading = true;
-    console.log("Loading Gemma model from path:", MODEL_ASSET_PATH);
+    console.log("Loading TinyLlama model...");
     try {
+      const documentsDirectory = FileSystem.documentDirectory;
+      const localModelPath = documentsDirectory + 'tinyllama.gguf';
+      
+      console.log("=== SIMULATOR DOCUMENT DIRECTORY ===");
+      console.log("Document directory:", documentsDirectory);
+      console.log("Expected model path:", localModelPath);
+      console.log("=====================================");
+      
+      // Check if model exists in document directory
+      const fileInfo = await FileSystem.getInfoAsync(localModelPath);
+      
+      if (!fileInfo.exists) {
+        throw new Error(`Model not found at ${localModelPath}. Please manually copy tinyllama.gguf to this location.`);
+      }
+      
+      console.log("Initializing Llama with model at:", localModelPath);
       const llama = await initLlama({
-        model: MODEL_ASSET_PATH,
-        use_mlock: true, // Keep model in memory
-        n_ctx: 2048, // Context size
+        model: localModelPath,
+        use_mlock: true,
+        n_ctx: 2048,
+        n_batch: 512,
+        n_threads: 4,
       });
       this.context = llama;
       this.isModelLoaded = true;
-      console.log("Gemma model loaded successfully");
+      console.log("TinyLlama model loaded successfully");
     } catch (e) {
-      console.error("Failed to load Gemma model:", e);
+      console.error("Failed to load TinyLlama model:", e);
       this.isModelLoaded = false;
     } finally {
       this.isLoading = false;
@@ -111,10 +129,18 @@ export class GemmaClient {
           "Gemma model is not loaded. Cannot generate a response.";
       } else {
         try {
-          // Use full conversation history for better context understanding
+          // TinyLlama chat format
+          const prompt = `<|system|>
+You are a helpful disaster response assistant. Provide clear, actionable guidance in Chinese.
+<|user|>
+${lastUserMessage}
+<|assistant|>`;
+          
           const completion = await this.context.completion({
-            prompt: conversationHistory + lastUserMessage,
+            prompt: prompt,
             temperature: 0.7,
+            n_predict: 256, // Max tokens to generate
+            stop: ["<|user|>", "<|system|>"], // Stop sequences
           });
           responseContent = completion.text;
         } catch (e) {
@@ -125,21 +151,27 @@ export class GemmaClient {
       }
     }
 
+    // TEMPORARILY DISABLED ResponseValidator for debugging
     // Validate response for safety
-    const validationResult = this.validator.validateResponse(
-      lastUserMessage,
-      responseContent,
-      ragContext.relevantKnowledge
-    );
+    // const validationResult = this.validator.validateResponse(
+    //   lastUserMessage,
+    //   responseContent,
+    //   ragContext.relevantKnowledge
+    // );
 
-    // If validation fails, use safe fallback
-    if (!validationResult.isValid) {
-      console.warn("Response validation failed:", validationResult.warnings);
-      responseContent = this.validator.getSafeResponse(
-        lastUserMessage,
-        validationResult
-      );
-    }
+    // // If validation fails, use safe fallback
+    // if (!validationResult.isValid) {
+    //   console.warn("Response validation failed:", validationResult.warnings);
+    //   responseContent = this.validator.getSafeResponse(
+    //     lastUserMessage,
+    //     validationResult
+    //   );
+    // }
+
+    console.log("=== RAW AI RESPONSE (Validator Disabled) ===");
+    console.log("User Query:", lastUserMessage);
+    console.log("AI Response:", responseContent);
+    console.log("===========================================");
 
     // Simulate processing delay
     await new Promise((resolve) => setTimeout(resolve, 500));
