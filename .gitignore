@@ -1,5 +1,26 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+# Large model files
+*.gguf
+assets/models/
+
+# Dependencies
+/node_modules
+
+# Expo
+.expo/
+
+# Build outputs
+/android/app/build
+/ios/build
+
+# Misc
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
 # dependencies
 node_modules/
 

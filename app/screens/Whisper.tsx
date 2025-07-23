@@ -8,11 +8,15 @@ import {
   Alert,
   Dimensions,
   Animated,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useOfflineVoice } from '../hooks/useOfflineVoice';
-import { useApi } from '../hooks/useApi';
-import { useApiKeyContext } from '../contexts/apiKeyContext';
+// import { KnowledgeLoader } from '../data/knowledgeLoader'; // Replaced by GemmaClient
+import { GemmaOpenAIWrapper } from '../services/gemma/GemmaClient';
+import { Message, Role } from '../hooks/useApi'; // GemmaClient uses this type
 import { COLORS } from '../colors';
 
 const { width } = Dimensions.get('window');
@@ -25,8 +29,7 @@ interface ChatMessage {
 }
 
 export default function Whisper() {
-  const { sendMessage } = useApi();
-  const { apiKey } = useApiKeyContext();
+
 
   const {
     isRecording,
@@ -40,6 +43,8 @@ export default function Whisper() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [pulseAnim] = useState(new Animated.Value(1));
+  const [textInput, setTextInput] = useState('');
+  const [gemmaClient] = useState(() => new GemmaOpenAIWrapper({}));
 
   useEffect(() => {
     if (isRecording) {
@@ -69,28 +74,74 @@ export default function Whisper() {
     }
   };
 
+  const processMessage = (text: string) => {
+    if (!text || text.trim().length === 0) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      text: text,
+      isUser: true,
+      timestamp: new Date(),
+    };
+    setChatMessages(prev => [...prev, userMessage]);
+    setIsProcessing(true);
+
+    // Convert chat history to the format GemmaClient expects
+    const history: Message[] = chatMessages.map(msg => ({
+      role: msg.isUser ? Role.User : Role.Assistant,
+      content: msg.text,
+    }));
+
+    // Add the new user message to the history for the API call
+    const messages: Message[] = [
+      ...history,
+      { role: Role.User, content: text },
+    ];
+
+    // Call the GemmaClient (which currently simulates the decision engine)
+    gemmaClient.chat.completions.create({
+      model: 'gemma-3n',
+      messages: messages,
+    }).then(completion => {
+      const aiResponseText = completion.choices[0]?.message?.content || "Sorry, I couldn't generate a response.";
+      
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        text: aiResponseText,
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      // Use a short timeout to allow the UI to update before the AI message appears
+      setTimeout(() => {
+        setChatMessages(prev => [...prev, aiMessage]);
+        setIsProcessing(false);
+      }, 500);
+
+    }).catch(error => {
+      console.error("Error getting completion from GemmaClient:", error);
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        text: 'An error occurred while processing your request.',
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setChatMessages(prev => [...prev, errorMessage]);
+      setIsProcessing(false);
+    });
+  };
+
+
+
+  const handleSendText = () => {
+    processMessage(textInput);
+    setTextInput('');
+  };
+
   const handleStopRecording = async () => {
     const result = await stopRecording();
     if (result.text && result.text.trim()) {
-      const recognizedText = result.text;
-      const userMessage: ChatMessage = {
-        id: Date.now().toString(),
-        text: recognizedText,
-        isUser: true,
-        timestamp: new Date(),
-      };
-      setChatMessages(prev => [...prev, userMessage]);
-      setIsProcessing(true);
-      setTimeout(() => {
-        const aiMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          text: `我收到了你的消息：「${recognizedText}」，等待接入RAG系统后会有智能回复。`,
-          isUser: false,
-          timestamp: new Date(),
-        };
-        setChatMessages(prev => [...prev, aiMessage]);
-        setIsProcessing(false);
-      }, 2000);
+      processMessage(result.text);
     }
   };
 
@@ -137,6 +188,26 @@ export default function Whisper() {
           </View>
         )}
       </ScrollView>
+
+      {/* Input Panel */}
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"} 
+        style={styles.inputContainer}
+        keyboardVerticalOffset={90}
+      >
+        <TextInput
+          style={styles.textInput}
+          placeholder="或在此输入文字测试..."
+          placeholderTextColor={COLORS.textSub}
+          value={textInput}
+          onChangeText={setTextInput}
+          onSubmitEditing={handleSendText} // Allow sending with keyboard 'return' key
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={handleSendText} disabled={!textInput.trim()}>
+          <Ionicons name="send" size={20} color={COLORS.text} />
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+
       {/* 录音按钮和提示 */}
       <View style={styles.controlPanel}>
         <View style={styles.voiceButtonContainer}>
@@ -294,5 +365,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text,
     fontWeight: '500',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderTopWidth: 1,
+    borderColor: COLORS.bubbleAI,
+  },
+  textInput: {
+    flex: 1,
+    height: 40,
+    backgroundColor: COLORS.bubbleAI,
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    color: COLORS.text,
+    fontSize: 16,
+  },
+  sendButton: {
+    marginLeft: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.bubbleUser,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
