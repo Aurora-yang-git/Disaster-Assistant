@@ -1,91 +1,148 @@
-# 灾难救助助手
+# Disaster Response Assistant
 
-灾难救助助手是一个基于React Native和Expo开发的离线应用，专为地震等自然灾害场景设计。应用集成了离线AI技术，能够为用户提供实时的救助建议和安全指导。
+A React Native + Expo offline application designed for earthquake and natural disaster scenarios. This app integrates offline AI technology to provide real-time survival advice and safety guidance without requiring internet connectivity.
 
-## 🚀 核心功能
+## 🚀 Core Features
 
-- **地震救助对话**：基于用户当前情况提供针对性的安全建议
-- **智能记忆系统**：记住用户的位置、伤情、资源等关键信息
-- **语音交互**：支持语音输入和自动播报（紧急情况下的便捷操作）
-- **完全离线**：无需网络连接即可正常使用
+- **Disaster Response Chat**: Provides targeted safety advice based on user's current situation
+- **Intelligent Memory System**: Remembers user's location, injuries, resources, and other critical information
+- **Voice Interaction**: Supports voice input and automatic speech output for hands-free operation during emergencies
+- **Fully Offline**: Works without any network connection
 
-## 📱 支持平台
+## 📱 Supported Platforms
 
-- **Android**（主要开发平台）
-- **iOS**（后续支持）
-- **Web**（开发测试）
+- **Android** (Primary development platform)
+- **iOS** (Full support)
+- **Web** (Development and testing)
 
-## 🛠️ 技术栈
+## 🛠️ Tech Stack
 
-- **前端**：React Native + Expo
-- **AI技术**：Gemma离线模型 + RAG技术
-- **本地存储**：AsyncStorage
-- **语音功能**：系统原生API
-- **状态管理**：React Context + Hooks
+- **Frontend**: React Native + Expo
+- **AI Technology**: Gemma offline model + RAG (Retrieval-Augmented Generation)
+- **Local Storage**: AsyncStorage
+- **Voice Features**: Native system APIs
+- **State Management**: React Context + Hooks
 
-## 📋 使用说明
+## 📋 Getting Started
 
-### 安装依赖
+### Prerequisites
+
+- Node.js 18+ and npm/yarn
+- Expo CLI: `npm install -g expo-cli`
+- For iOS: macOS with Xcode 14+
+- For Android: Android Studio
+- ~4GB free storage for AI model
+
+### Installation
+
 ```bash
+# Clone the repository
+git clone [repository-url]
+cd gemma-3n
+
+# Install dependencies
 npm install
+
+# iOS specific (macOS only)
+cd ios && pod install && cd ..
 ```
 
-### 启动应用
+### Model Deployment
+
+Since the AI model is >2GB, it must be deployed using native tools:
+
 ```bash
-# 启动开发服务器
-npx expo start
+# Run the deployment script
+./scripts/deploy-model.sh
 
-# Android设备
-npx expo start --android
-
-# iOS设备
-npx expo start --ios
-
-# Web浏览器
-npx expo start --web
+# Follow the prompts to deploy to iOS/Android
 ```
 
-### 使用指南
+For detailed instructions, see [MODEL_DEPLOYMENT.md](docs/MODEL_DEPLOYMENT.md)
 
-1. **进入应用**：选择"地震救助"功能
-2. **描述情况**：详细告诉AI您的当前位置和状况
-3. **获取建议**：AI会基于您的情况提供针对性建议
-4. **持续对话**：AI会记住您的信息，提供连续的帮助
+### Running the App
 
-### 语音功能
+```bash
+# Start development server
+npx expo start --dev-client
 
-- 🎤 **语音输入**：长按麦克风按钮录音
-- 🔊 **语音播报**：AI回复会自动播报
-- 📱 **离线处理**：所有语音功能均离线运行
+# Or run directly on platform
+npx expo run:ios      # iOS
+npx expo run:android  # Android
+```
 
-## 🎯 开发路线图
+For complete running instructions, see [RUNNING_GUIDE.md](docs/RUNNING_GUIDE.md)
 
-- [x] 基础聊天界面
-- [ ] 记忆管理系统
-- [ ] 语音录音功能
-- [ ] 真实AI接口集成
-- [ ] 系统语音转文字
-- [ ] 语音播报功能
-- [ ] 灾前准备清单
-- [ ] 多灾难场景支持
+## 💡 Usage Guide
 
-## 🤝 贡献指南
+1. **Launch the app** and grant microphone permissions
+2. **Describe your situation** using voice or text input
+3. **Receive AI guidance** based on your specific circumstances
+4. **Continue the conversation** - the AI remembers context for follow-up questions
 
-1. Fork项目
-2. 创建功能分支
-3. 提交变更
-4. 发起Pull Request
+### Voice Features
 
-## 📄 许可证
+- 🎤 **Voice Input**: Long press the microphone button to record
+- 🔊 **Voice Output**: AI responses are automatically spoken
+- 📱 **Offline Processing**: All voice features work without internet
 
-MIT License - 详见 [LICENSE](LICENSE) 文件
+## 🎯 Development Roadmap
 
-## 🆘 紧急使用说明
+- [x] Basic chat interface
+- [x] RAG knowledge system
+- [x] Voice recording functionality
+- [x] Offline AI integration (Gemma/TinyLlama)
+- [x] Speech-to-text system
+- [ ] Text-to-speech functionality
+- [ ] Pre-disaster preparation checklist
+- [ ] Multi-disaster scenario support
+- [ ] Multilingual support
 
-**本应用专为紧急情况设计，请确保：**
-- 设备电量充足
-- 应用已提前安装
-- 熟悉基本操作流程
-- 优先保证人身安全
+## 🏗️ Architecture
 
-**注意**：本应用仅提供参考建议，紧急情况下请同时联系专业救援机构。
+- **Offline-First Design**: All critical features work without internet
+- **Modular Services**: Separate services for AI, RAG, and voice
+- **Platform-Specific Implementations**: Optimized for each platform
+- **Efficient Model Loading**: Lazy loading with progress indicators
+
+See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical details.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
+
+Quick steps:
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details
+
+## 🆘 Emergency Usage Notice
+
+**This app is designed for emergency situations. Please ensure:**
+- Device is adequately charged
+- App is installed before emergencies occur
+- You are familiar with basic operations
+- Personal safety remains the top priority
+
+**Disclaimer**: This app provides reference suggestions only. In emergencies, please also contact professional rescue services when possible.
+
+## 📚 Documentation
+
+- [Running Guide](docs/RUNNING_GUIDE.md) - How to run the project
+- [Model Deployment](docs/MODEL_DEPLOYMENT.md) - Deploy AI models to devices
+- [Architecture](docs/ARCHITECTURE.md) - Technical architecture overview
+- [API Reference](docs/API_REFERENCE.md) - Component and service documentation
+- [Contributing](docs/CONTRIBUTING.md) - How to contribute
+
+## 🔗 Resources
+
+- [Expo Documentation](https://docs.expo.dev)
+- [React Native Docs](https://reactnative.dev)
+- [Gemma Model Info](https://ai.google.dev/gemma)
+- [llama.rn Library](https://github.com/mybigday/llama.rn)
