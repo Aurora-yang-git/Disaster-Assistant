@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Alert, Platform } from 'react-native';
-import { GemmaOpenAIWrapper } from '../services/gemma/GemmaClient';
+import { GemmaClient } from '../services/gemma/GemmaClient';
 
 // Enum for message roles
 export enum Role {
@@ -35,9 +35,9 @@ export const useGemmaApi = () => {
 
         try {
             // Create Gemma instance (no API key needed for local model)
-            const gemma = new GemmaOpenAIWrapper({});
-            const completion = await gemma.chat.completions.create({
-                model: 'gemma-3n',
+            const gemma = new GemmaClient();
+            const completion = await gemma.createChatCompletion({
+                model: 'google/gemma-3n-E2B-it',
                 messages: chatHistory,
             });
 

@@ -17,8 +17,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Markdown from 'react-native-markdown-display';
 import { useOfflineVoice } from "../hooks/useOfflineVoice";
+import { OnlineGemmaClient } from '../services/gemma/OnlineGemmaClient';
 // import { KnowledgeLoader } from '../data/knowledgeLoader'; // Replaced by GemmaClient
-import { GemmaOpenAIWrapper } from '../services/gemma/GemmaClient';
+import { GemmaClient } from '../services/gemma/GemmaClient.native';
 import { Message, Role } from "../hooks/useApi"; // GemmaClient uses this type
 import { COLORS } from "../colors";
 import { useUserContext } from "../hooks/useUserContext";
@@ -48,9 +49,9 @@ export default function Whisper() {
   const [textInput, setTextInput] = useState("");
   const { updateContext, formatContextForPrompt, context } = useUserContext();
   const scrollViewRef = useRef<ScrollView>(null);
-  const gemmaClientRef = useRef<GemmaOpenAIWrapper | null>(null);
+  const gemmaClientRef = useRef<OnlineGemmaClient | null>(null);
   if (!gemmaClientRef.current) {
-    gemmaClientRef.current = new GemmaOpenAIWrapper();
+    gemmaClientRef.current = new OnlineGemmaClient();
   }
   const gemmaClient = gemmaClientRef.current;
 
@@ -116,17 +117,23 @@ export default function Whisper() {
     // Get formatted context for the prompt
     const userContext = formatContextForPrompt();
 
-    // Call the GemmaClient with user context
-    gemmaClient.chat.completions
-      .create({
-        model: "gemma-3n",
+    // Call the GemmaClient (which uses online API)
+    gemmaClient
+      .createChatCompletion({
+        model: "google/gemma-3n-E2B-it",
         messages: messages,
-        userContext: userContext,
       })
       .then((completion: any) => {
+        console.log('API Response:', completion);
+        console.log('Choices:', completion.choices);
+        console.log('First choice:', completion.choices?.[0]);
+        console.log('Message content:', completion.choices?.[0]?.message?.content);
+        
         const aiResponseText =
           completion.choices[0]?.message?.content ||
           "Sorry, I couldn't generate a response.";
+
+        console.log('Final AI response text:', aiResponseText);
 
         const aiMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
@@ -147,9 +154,29 @@ export default function Whisper() {
       })
       .catch((error: any) => {
         console.error("Error getting completion from GemmaClient:", error);
+        
+        // 根据错误类型提供更友好的错误信息
+        let errorText = "处理请求时发生错误。";
+        
+        if (error.message) {
+          if (error.message.includes('API密钥未配置')) {
+            errorText = "API密钥未配置。请检查环境变量设置。";
+          } else if (error.message.includes('模型不可用')) {
+            errorText = "模型暂时不可用，请稍后重试。";
+          } else if (error.message.includes('401')) {
+            errorText = "API密钥无效，请检查配置。";
+          } else if (error.message.includes('429')) {
+            errorText = "请求频率过高，请稍后重试。";
+          } else if (error.message.includes('503')) {
+            errorText = "服务暂时不可用，模型正在加载中。";
+          } else if (error.message.includes('网络')) {
+            errorText = "网络连接失败，请检查网络设置。";
+          }
+        }
+        
         const errorMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
-          text: "An error occurred while processing your request.",
+          text: errorText,
           isUser: false,
           timestamp: new Date(),
         };

@@ -1,9 +1,997 @@
 {
   "knowledge": [
     {
+      "id": "science-what-causes-earthquakes",
+      "category": "science-concepts",
+      "title": "What Causes Earthquakes? 地震的成因",
+      "keywords": ["cause", "fault", "plate tectonics", "science", "成因", "断层", "板块构造"],
+      "content": "Earthquakes result from movement of blocks of the Earth's crust. When a block of the crust is pushed past another along a fault, friction between the blocks keeps them from moving. Eventually, the force of the pushing will overcome the friction, and the blocks will move past each other releasing energy in waves that we feel as the earthquake. The driving force behind the motion is plate tectonics.",
+      "priority": 4
+    },
+    {
+      "id": "science-magnitude-vs-intensity",
+      "category": "science-concepts",
+      "title": "Magnitude vs. Shaking Intensity 震级与烈度",
+      "keywords": ["magnitude", "intensity", "mmi", "measure", "震级", "烈度", "测量"],
+      "content": "Magnitude is a number that describes the total energy released in an earthquake. The amount of energy released increases exponentially as the magnitude increases. Shaking Intensity describes the level of shaking and damage at a specific location. The Modified Mercalli Intensity (MMI) scale is used. Intensity is generally lower farther away from the fault.",
+      "priority": 4
+    },
+    {
+      "id": "science-plate-boundaries-subduction",
+      "category": "science-concepts",
+      "title": "Plate Boundaries: Subduction Zones 板块边界：俯冲带",
+      "keywords": ["subduction zone", "plate tectonics", "oceanic crust", "trench", "俯冲带", "板块构造", "海沟"],
+      "content": "At subduction zones, one plate goes underneath the other, pushing up the top plate. When an ocean floor runs into a continent, the heavier ocean floor gets pushed under the lighter continent and goes back down into the mantle. The deep trenches of the oceans are all there because of subduction zones.",
+      "priority": 4
+    },
+    {
+      "id": "science-plate-boundaries-transform",
+      "category": "science-concepts",
+      "title": "Plate Boundaries: Transform Boundaries 板块边界：转换边界",
+      "keywords": ["transform boundary", "plate tectonics", "san andreas", "slide past", "转换边界", "板块构造", "圣安德烈斯"],
+      "content": "At transform boundaries, one plate moves past the other. In California, the North American Plate slides past the Pacific Plate, forming a 'transform boundary.' Most of this motion happens on the San Andreas Fault system.",
+      "priority": 4
+    },
+    {
+      "id": "science-plate-boundaries-spreading",
+      "category": "science-concepts",
+      "title": "Plate Boundaries: Spreading Boundaries 板块边界：扩张边界",
+      "keywords": ["spreading boundary", "extensional", "plate tectonics", "mid-ocean ridge", "扩张边界", "板块构造", "洋中脊"],
+      "content": "At spreading boundaries or extensional boundaries, lava comes up to form new plates and the plates move apart from each other. Hot rock comes up from the mantle at mid-ocean ridges and cools, creating new sea floor that moves out.",
+      "priority": 4
+    },
+    {
+      "id": "science-p-waves-s-waves",
+      "category": "science-concepts",
+      "title": "P-waves and S-waves P波与S波",
+      "keywords": ["p-wave", "s-wave", "seismic wave", "compressional", "shear", "P波", "S波", "地震波"],
+      "content": "Earthquakes produce two main types of waves—the P-wave (a compressional wave), and the S-wave (a shear wave). The S-wave is both slower and larger than the P-wave, and it does most of the damage. In a P-wave, the ground particles are moving with the wave. In an S-wave, the ground particles are pushed sideways relative to the wave.",
+      "priority": 4
+    },
+    {
+      "id": "science-earthquake-detection",
+      "category": "science-concepts",
+      "title": "How Earthquakes are Detected 地震如何被探测",
+      "keywords": ["detect", "seismograph", "seismic station", "usgs", "measure", "探测", "地震仪", "地震台"],
+      "content": "When an earthquake happens, it is recorded by the United States Geological Survey (USGS). As the wave passes by a seismic station, that piece of ground vibrates and the vibration is recorded. By comparing the times the shaking was recorded at several stations, seismologists can calculate the time the earthquake occurred and its location.",
+      "priority": 4
+    },
+    {
+      "id": "science-rupture-surface",
+      "category": "science-concepts",
+      "title": "Rupture Surface 破裂面",
+      "keywords": ["rupture surface", "fault area", "slip", "energy release", "破裂面", "断层"],
+      "content": "Earthquakes happen over an area of the fault, called the rupture surface. Just as you snap your fingers with the whole area of your fingertip and thumb, the earthquake slip releases energy across this entire surface.",
+      "priority": 4
+    },
+    {
+      "id": "science-shaking-factor-distance",
+      "category": "science-concepts",
+      "title": "Shaking Factor: Distance 摇晃因素：距离",
+      "keywords": ["distance", "shaking", "intensity", "waves", "attenuation", "距离", "摇晃", "烈度", "衰减"],
+      "content": "Earthquake waves die off as they travel through the ground, so earthquake shaking is less intense farther from the fault. Low-frequency waves diminish less rapidly with distance than high-frequency waves. Farther away, you will feel a rolling motion.",
+      "priority": 4
+    },
+    {
+      "id": "science-shaking-factor-soil",
+      "category": "science-concepts",
+      "title": "Shaking Factor: Soil Conditions 摇晃因素：土壤条件",
+      "keywords": ["soil", "amplify", "shaking", "rock", "soft soil", "土壤", "放大", "摇晃", "场地效应"],
+      "content": "Soils can greatly amplify the shaking in an earthquake. Passing from rock to soil, seismic waves slow down but get bigger. Hence a softer, loose soil may shake more violently than harder rock at the same distance from the same earthquake.",
+      "priority": 4
+    },
+    {
+      "id": "science-shaking-factor-directivity",
+      "category": "science-concepts",
+      "title": "Shaking Factor: Directivity 摇晃因素：方向性效应",
+      "keywords": ["directivity", "rupture direction", "focus energy", "shaking", "方向性", "破裂方向", "能量"],
+      "content": "When the earthquake rupture moves along the fault, it focuses energy in the direction it is moving so that a location in that direction will receive more shaking than a site at the same distance from the fault but in the opposite direction. This is called directivity.",
+      "priority": 4
+    },
+    {
+      "id": "science-wave-frequency",
+      "category": "science-concepts",
+      "title": "Wave Frequencies and Building Damage 波频与建筑损害",
+      "keywords": ["frequency", "high frequency", "low frequency", "building damage", "波频", "高频", "低频", "建筑"],
+      "content": "The amount of damage to a building does not depend solely on how hard it is shaken. In general, smaller buildings, such as houses, are damaged more by higher frequencies. Larger structures, such as high-rises and bridges, are damaged more by lower frequencies and will be more noticeably affected by larger earthquakes, even at considerable distances.",
+      "priority": 4
+    },
+    {
+      "id": "science-seiche",
+      "category": "science-concepts",
+      "title": "What is a Seiche? 什么是湖震或湾振",
+      "keywords": ["seiche", "lake", "bay", "sloshing", "wave", "湖震", "湾振", "晃荡"],
+      "content": "A seiche is similar to a tsunami, but takes the form of sloshing water in closed lakes or bays and has the potential to cause serious damage, though occurrences have been very rare.",
+      "priority": 4
+    },
+    {
+      "id": "science-intraplate-earthquakes",
+      "category": "science-concepts",
+      "title": "Intraplate Earthquakes 板内地震",
+      "keywords": ["intraplate", "within plate", "new madrid", "板内地震", "板块内部"],
+      "content": "Intraplate earthquakes are earthquakes that happen within a plate where the relative motion is very small. Most scientists believe these earthquakes result from residual stresses and are most likely to occur at locations of weakness in the crust. The New Madrid earthquakes of 1811-1812 are a famous example.",
+      "priority": 4
+    },
+    {
+      "id": "science-induced-earthquakes",
+      "category": "science-concepts",
+      "title": "Induced (Human-Made) Earthquakes 诱发（人为）地震",
+      "keywords": ["induced", "human-made", "fracking", "wastewater", "pumping", "诱发地震", "人为地震", "水力压裂"],
+      "content": "Human-made earthquakes happen when the stress pushing sideways on the fault overcomes the friction caused by stress pushing the fault together. The frictional resistance is reduced by the pressure of water in the pores of the rock, often due to pumping fluids into the ground for wastewater disposal or geothermal energy production.",
+      "priority": 4
+    },
+    {
+      "id": "science-hawaii-hot-spot",
+      "category": "science-concepts",
+      "title": "Hawaiian Earthquakes and Hot Spots 夏威夷地震与热点",
+      "keywords": ["hawaii", "hot spot", "mantle plume", "volcano", "夏威夷", "热点", "地幔柱", "火山"],
+      "content": "Hawaii is in the middle of the Pacific Ocean Plate with no plate boundary. The theory is that 'mantle plumes' (places where the mantle is extra hot) break through the crust, creating volcanoes. Earthquakes in Hawaii result from the passage of magma or from slumping along the flanks of the volcano due to its immense weight.",
+      "priority": 4
+    },
+    {
+      "id": "science-cascadia-subduction-zone",
+      "category": "science-concepts",
+      "title": "Cascadia Subduction Zone 卡斯卡迪亚俯冲带",
+      "keywords": ["cascadia", "pacific northwest", "subduction zone", "ghost forest", "卡斯卡迪亚", "俯冲带", "幽灵森林"],
+      "content": "A subduction zone 650 miles long lies off the Pacific Northwest from Northern California to British Columbia: the Cascadia subduction zone. Evidence from 'ghost forests' (dead trees lowered into saltwater by an earthquake) and Japanese 'orphan tsunami' records show a magnitude 9.0 earthquake occurred here in 1700.",
+      "priority": 4
+    },
+    {
+      "id": "science-east-vs-west-shaking",
+      "category": "science-concepts",
+      "title": "Shaking in Eastern vs. Western US 美国东西部地震摇晃差异",
+      "keywords": ["eastern us", "western us", "shaking area", "crust", "felt area", "美国东部", "美国西部", "地壳"],
+      "content": "The rocks in the western United States are relatively young, warm, and broken up by many faults. In contrast, the rocks in the East are old, cold, and solid. Seismic energy traveling through the many faults of the West dies off more quickly than energy traveling through the solid old crust of the East. Therefore, an eastern US earthquake is felt over a much larger area than a western one of the same magnitude.",
+      "priority": 4
+    },
+    {
+      "id": "science-sand-blows",
+      "category": "science-concepts",
+      "title": "Sand Blows as Evidence 喷沙（作为证据）",
+      "keywords": ["sand blow", "liquefaction", "evidence", "geology", "喷沙", "液化", "证据", "地质"],
+      "content": "When the loose soil that liquefies is buried under a denser soil, the quicksand can break through the overlying soil and spurt into the air like a fountain. It falls back to the earth and can be seen as circular sandblows. Finding old, buried sandblows is geological evidence of large, prehistoric earthquakes.",
+      "priority": 4
+    },
+    {
+      "id": "science-earthquake-proof-fallacy",
+      "category": "science-concepts",
+      "title": "Fallacy of 'Earthquake Proof' “防震”的谬误",
+      "keywords": ["earthquake proof", "fallacy", "damage", "building codes", "防震", "谬误", "建筑规范"],
+      "content": "There is no such thing as 'earthquake proof.' Even homes designed to the latest building codes may sustain earthquake damage. Homes that have fared well in past earthquakes may not have been in the area of highest shaking.",
+      "priority": 4
+    },
+    {
+      "id": "science-liquefaction",
+      "category": "secondary-hazards",
+      "title": "What is Liquefaction? 什么是土壤液化",
+      "keywords": ["liquefaction", "soil", "sand", "quicksand", "foundation", "土壤液化", "地基"],
+      "content": "When loose, water-saturated soil is shaken by an earthquake, it can lose its strength and behave like a liquid. This is called liquefaction. The soil can no longer support structures above, causing buildings to shift, sink, or collapse. It is a major cause of earthquake damage.",
+      "priority": 2
+    },
+  
+    {
+      "id": "during-drop-cover-hold-on",
+      "category": "during",
+      "title": "Core Action: Drop, Cover, and Hold On! 核心行动：趴下、掩护、稳住！",
+      "keywords": ["what to do", "how to protect", "procedure", "action", "drop cover hold on", "怎么办", "如何保护", "趴下掩护稳住", "核心动作"],
+      "content": "DROP where you are onto your hands and knees. This position protects you from being knocked down and also allows you to stay low and crawl to shelter if nearby. COVER your head and neck with one arm and hand. If a sturdy table or desk is nearby, crawl underneath it for shelter. HOLD ON to your shelter with one hand and be ready to move with it if it moves during shaking. Hold on until the shaking has stopped.",
+      "priority": 1
+    },
+    {
+      "id": "during-indoors-no-shelter",
+      "category": "during",
+      "title": "Indoors Without Shelter 室内无遮蔽物时",
+      "keywords": ["no table", "no shelter", "safe spot", "interior wall", "indoors", "没有桌子", "没地方躲", "安全位置", "室内躲避"],
+      "content": "If there aren't enough sturdy pieces of furniture to get under, kneel next to an interior wall but away from windows, overhead light fixtures, and tall pieces of furniture that might fall over. Stay on your knees and bend over to protect vital organs. Clasp your hands on the back of your neck to protect your face.",
+      "priority": 1
+    },
+    {
+      "id": "during-in-bed",
+      "category": "during",
+      "title": "If in Bed 如果在床上",
+      "keywords": ["in bed", "sleeping", "pillow", "protect in bed", "床上怎么办", "睡觉时", "枕头保护"],
+      "content": "Do not get out of bed. Lie face down to protect vital organs and Cover your head and neck with a pillow, keeping your arms as close to your head as possible, while you Hold On to your head and neck with both hands until the shaking has stopped.",
+      "priority": 1
+    },
+    {
+      "id": "during-in-vehicle",
+      "category": "during",
+      "title": "If in a Vehicle 如果在车内",
+      "keywords": ["driving", "in car", "in vehicle", "pull over", "safe in car", "开车时", "车里怎么办", "停车避险"],
+      "content": "Pull over to the side of the road, stop, and set the parking brake. Avoid overpasses, powerlines, trees, large sign structures and other hazards overhead. Remain in your car until the shaking has stopped, then proceed carefully.",
+      "priority": 1
+    },
+    {
+      "id": "during-outdoors-open-area",
+      "category": "during",
+      "title": "If Outdoors 如果在室外",
+      "keywords": ["outdoors", "outside", "open area", "away from buildings", "safe outside", "室外怎么办", "户外", "开阔地带"],
+      "content": "Move into the open, away from buildings, fences, trees, tall playground equipment, utility wires, and street lights. Kneel or sit on the ground and cover your head and face with your hands. Once in the open, stay there until the shaking stops.",
+      "priority": 1
+    },
+    {
+      "id": "during-high-rise",
+      "category": "during",
+      "title": "If in a High-Rise Building 如果在高层建筑中",
+      "keywords": ["high-rise", "tall building", "skyscraper", "elevator", "高层建筑", "摩天大楼", "电梯安全"],
+      "content": "If you are in a high-rise building, expect fire alarms and sprinklers to go off. Do not use elevators. Drop, Cover, and Hold On away from windows.",
+      "priority": 1
+    },
+    {
+      "id": "during-mobility-disabilities",
+      "category": "during",
+      "title": "For People with Mobility Disabilities 行动不便者须知",
+      "keywords": ["disability", "wheelchair", "walker", "cane", "limited mobility", "残障人士", "轮椅", "助行器", "行动不便"],
+      "content": "Persons using wheelchairs: lock your wheels, bend forward, and Cover your head with your arms and Hold On to your head and neck with both hands until the shaking has stopped. For those with limited mobility, if seated and unable to drop, bend forward, Cover your head with your arms and Hold On to your neck.",
+      "priority": 1
+    },
+    {
+      "id": "during-warning-dont-run-outside",
+      "category": "during",
+      "title": "Warning: Do NOT Run Outside 警告：不要跑到室外",
+      "keywords": ["run outside", "exit building", "falling debris", "danger outside", "跑出去", "离开建筑", "坠落物", "室外危险"],
+      "content": "Do NOT run outside. Stay where you are until the shaking has stopped. Many people are killed just outside of buildings by falling bricks and other debris. If there is damage, be very careful how you exit the building after the shaking stops.",
+      "priority": 1
+    },
+    {
+      "id": "during-warning-doorway",
+      "category": "during",
+      "title": "Warning: Do NOT Use a Doorway 警告：不要躲在门口",
+      "keywords": ["doorway safe", "hide in doorway", "doorframe", "门口安全吗", "躲在门口", "门框"],
+      "content": "Don't try to take cover in a doorway during an earthquake. The door may slam on you. In modern homes, doorways are no stronger than any other part of the house and do not protect you from falling or flying objects.",
+      "priority": 1
+    },
+    {
+      "id": "during-near-slopes",
+      "category": "during",
+      "title": "If Near Slopes or Mountains 如果靠近斜坡或山区",
+      "keywords": ["mountains", "hills", "slopes", "cliffs", "landslide risk", "山区", "山坡", "悬崖", "滑坡风险"],
+      "content": "If near slopes, cliffs, or mountains, be alert for falling rocks and landslides which can be triggered by earthquake shaking.",
+      "priority": 2
+    },
+    {
+      "id": "during-in-classroom",
+      "category": "during",
+      "title": "If in a Classroom 如果在教室内",
+      "keywords": ["at school", "in classroom", "under desk", "teacher student safety", "在学校", "教室里", "课桌下", "师生安全"],
+      "content": "In a classroom: Drop, Cover, and Hold On. The desk provides the safest shelter in a classroom environment. Do Not Go Outside. Wait until the shaking has stopped before carefully exiting the building. Follow the instructions and directions from teachers and administrators.",
+      "priority": 1
+    },
+    {
+      "id": "during-child-care-first-action",
+      "category": "during",
+      "title": "First Action for Child Care Providers 儿童保育员的首要行动",
+      "keywords": ["child care", "daycare", "protect children", "kids safety", "儿童保育", "幼儿园", "保护儿童", "孩子安全"],
+      "content": "At the first sign of shaking, give clear and distinct commands. Speak in a calm voice. At the command of 'earthquake,' you and the children should immediately: Drop, Cover, and Hold.",
+      "priority": 1
+    },
+    {
+      "id": "after-wait-and-assess",
+      "category": "after",
+      "title": "First Action: Wait and Assess 首先：等待并评估",
+      "keywords": ["after shaking stops", "what to do first", "look for danger", "remain calm", "摇晃停止后", "第一步做什么", "观察危险"],
+      "content": "Once the shaking has stopped, remain calm and wait before getting up to look around you for debris or other dangers. Look around for possible hazards to determine if it is safe for you to move before getting up and helping others.",
+      "priority": 1
+    },
+    {
+      "id": "after-check-for-injuries",
+      "category": "after",
+      "title": "Check for Injuries 检查伤情",
+      "keywords": ["check injuries", "help injured", "first aid", "bleeding", "do not move injured", "检查伤势", "帮助伤员", "急救"],
+      "content": "Check yourself for injury, then help others if you have proper training. Do not move seriously injured persons unless they are in immediate danger of further injury. If a person is bleeding, put direct pressure on the wound. Cover them with a sturdy table or whatever is available and send someone for medical help after the shaking stops.",
+      "priority": 1
+    },
+    {
+      "id": "after-expect-aftershocks",
+      "category": "after",
+      "title": "Expect Aftershocks 谨防余震",
+      "keywords": ["aftershocks", "more shaking", "weakened building", "余震", "再次摇晃", "受损建筑"],
+      "content": "Be prepared for aftershocks. Aftershocks are follow-up earthquakes that are usually smaller than the first one. They are dangerous because they can cause things that were weakened in the first earthquake to fall down. You may need to Drop, Cover, and Hold again.",
+      "priority": 1
+    },
+    {
+      "id": "after-check-gas-leak",
+      "category": "after",
+      "title": "Check for Gas Leaks 检查燃气泄漏",
+      "keywords": ["gas leak", "smell gas", "hissing sound", "shut off gas", "燃气泄漏", "闻到煤气味", "关闭燃气"],
+      "content": "If you smell gas or hear a blowing or hissing noise, open a window and then quickly leave with the children, and shut the gas off at the outside main meter. A rapidly spinning gas meter is also a direct indication of a gas leak. Do not turn the gas on again if you turned it off; let the gas company do it.",
+      "priority": 1
+    },
+    {
+      "id": "after-check-electrical-damage",
+      "category": "after",
+      "title": "Check for Electrical Damage 检查电力损坏",
+      "keywords": ["electrical damage", "sparks", "frayed wires", "shut off power", "main breaker", "电力损坏", "电火花", "关闭电源"],
+      "content": "If you suspect electrical wiring damage or observe sparking, turn off power to your home at the main breaker panel by switching the main breaker to off. Unplug appliances and electronics to prevent damage from a power surge when power is restored.",
+      "priority": 2
+    },
+    {
+      "id": "after-check-water-damage",
+      "category": "after",
+      "title": "Check for Water Leaks 检查水管泄漏",
+      "keywords": ["water leak", "broken pipes", "shut off water", "flooding", "水管泄漏", "管道破裂", "关闭水源"],
+      "content": "Check for liquid dripping or puddling that could be a sign of damaged water pipes. Look in vicinity of kitchen and bathroom fixtures, and other appliances using water. If necessary, turn off the water supply for the entire home at the main valve.",
+      "priority": 2
+    },
+    {
+      "id": "after-put-out-small-fires",
+      "category": "after",
+      "title": "Extinguish Small Fires 扑灭小火",
+      "keywords": ["small fire", "fire extinguisher", "put out fire", "fire hazard", "扑灭小火", "灭火器", "火灾隐患"],
+      "content": "Put out small fires if a fire extinguisher is available. If there is a small fire that can be put out with the fire extinguisher, do that. Evacuate if a large fire is present. Notify the fire department and alert neighbors if you are unable to put out the fire.",
+      "priority": 1
+    },
+    {
+      "id": "after-evacuate-damaged-building",
+      "category": "after",
+      "title": "Evacuate if Building is Damaged 如果建筑受损则疏散",
+      "keywords": ["evacuate", "damaged building", "safe exit", "reunite", "疏散", "建筑受损", "安全出口", "集合点"],
+      "content": "If in a damaged building, go outside and quickly move away from the building. Any of the following require immediate evacuation: fire, damage to structure, a gas leak, or hazardous materials spill. Get out of the building and to your designated safe gathering place, taking the emergency kit along.",
+      "priority": 1
+    },
+    {
+      "id": "after-if-trapped",
+      "category": "after",
+      "title": "If You Are Trapped 如果被困",
+      "keywords": ["trapped", "signal for help", "whistle", "tap on pipe", "cover mouth", "被困", "求救信号", "吹哨子", "敲击管道"],
+      "content": "If you are trapped, send a text or bang on a pipe or wall. Cover your mouth with a handkerchief or clothing for protection and instead of shouting, use a whistle. Do not move about if it creates additional dust.",
+      "priority": 1
+    },
+    {
+      "id": "after-communication-and-reunification",
+      "category": "after",
+      "title": "Communication and Reunification 通讯与家人团聚",
+      "keywords": ["phone calls", "text message", "emergency contact", "reunite", "打电话", "发短信", "紧急联系人"],
+      "content": "Save phone calls for emergencies; you could tie up the lines needed for emergency response. Use text messaging rather than cellular calls. Execute your Post-Event Communication and Reunification Plan to let your Primary Communication Safety Contact know that you are safe.",
+      "priority": 2
+    },
+    {
+      "id": "after-reassure-children",
+      "category": "after",
+      "title": "Reassure Children 安抚儿童",
+      "keywords": ["reassure children", "comfort kids", "calm children", "scared", "安抚儿童", "安慰孩子", "害怕"],
+      "content": "Reassure the children. Tell them that their parents will come for them as soon as they can, that their parents know everyone will be safe with you, and that you are all together. Let the children know that you understand why they are scared. Comfort them with a hug or reassuring words.",
+      "priority": 2
+    },
+    {
+      "id": "after-wear-protective-clothing",
+      "category": "after",
+      "title": "Wear Protective Clothing 穿戴防护衣物",
+      "keywords": ["sturdy shoes", "work gloves", "broken glass", "debris", "防护鞋", "工作手套", "碎玻璃"],
+      "content": "Wear sturdy shoes and work gloves to avoid injury from broken glass and debris. Keep a flashlight with fresh batteries and a pair of sturdy shoes by each bed in your home.",
+      "priority": 2
+    },
+    {
+      "id": "after-listen-for-information",
+      "category": "after",
+      "title": "Listen for Information 收听信息",
+      "keywords": ["radio", "emergency information", "instructions", "stay informed", "收音机", "紧急信息", "指令"],
+      "content": "Listen to a battery-operated radio for instructions and the latest emergency information. Monitor local news reports for emergency information and instructions.",
+      "priority": 3
+    },
+    {
+      "id": "after-reenter-with-caution",
+      "category": "after",
+      "title": "Re-enter with Caution 谨慎返回室内",
+      "keywords": ["re-enter", "caution", "open cabinets", "falling objects", "返回室内", "小心", "打开柜子"],
+      "content": "After a minor earthquake or after you are informed by emergency responders that it is safe to re-enter the building, open cabinets cautiously and beware of objects that might fall off shelves.",
+      "priority": 3
+    },
+    {
+      "id": "after-clean-spills",
+      "category": "after",
+      "title": "Clean Hazardous Spills 清理危险泼洒物",
+      "keywords": ["clean spills", "hazardous materials", "bleach", "chemicals", "清理泼洒物", "危险品", "化学品"],
+      "content": "Clean or contain spills of medicines, drugs, or other potentially harmful materials such as bleach, lye, and gasoline or other hazardous materials if equipped to do so.",
+      "priority": 2
+    },
+    {
+      "id": "after-chimney-inspection",
+      "category": "after",
+      "title": "Inspect Chimneys 检查烟囱",
+      "keywords": ["chimney damage", "inspect chimney", "fireplace safety", "masonry", "烟囱损坏", "检查烟囱", "壁炉安全"],
+      "content": "Approach chimneys, particularly masonry, very cautiously to inspect for damage. The damage could have weakened the chimney which could topple during aftershocks. Do not use the fireplace if the chimney is damaged or you see debris inside the fireplace.",
+      "priority": 2
+    },
+    {
+      "id": "prepare-family-plan",
+      "category": "preparation",
+      "title": "Create a Family Emergency Plan 制定家庭应急计划",
+      "keywords": ["family plan", "emergency plan", "meeting place", "reunite", "家庭计划", "应急计划", "集合点"],
+      "content": "Create a family emergency communication plan that has an out-of-state contact. Plan where to meet if you get separated. Identify safe spots in your home. Plan several routes for getting out of the building and practice evacuation drills regularly.",
+      "priority": 1
+    },
+    {
+      "id": "prepare-emergency-kit",
+      "category": "preparation",
+      "title": "Build an Emergency Kit 准备应急包",
+      "keywords": ["emergency kit", "supply kit", "disaster supplies", "what to pack", "应急包", "物资", "准备什么"],
+      "content": "Make a supply kit that includes enough food and water for several days (at least one gallon of water per person per day), a flashlight, a fire extinguisher, a whistle, a portable battery-operated radio, first aid kit, medications, and a wrench to turn off utilities. Consider each person's specific needs.",
+      "priority": 1
+    },
+    {
+      "id": "prepare-practice-drills",
+      "category": "preparation",
+      "title": "Practice 'Drop, Cover, and Hold On' Drills 练习“趴下、掩护、稳住”",
+      "keywords": ["practice drill", "shakeout", "drop cover hold on drill", "演习", "练习", "趴下掩护稳住"],
+      "content": "Just as you conduct drills for other types of emergencies, you should conduct earthquake drills. Practice Drop, Cover, and Hold On with family and coworkers. Participate in your state or region's Great ShakeOut earthquake drill.",
+      "priority": 1
+    },
+    {
+      "id": "prepare-hazard-hunt",
+      "category": "preparation",
+      "title": "Conduct a Home Hazard Hunt 开展家庭隐患排查",
+      "keywords": ["hazard hunt", "secure home", "falling objects", "safe space", "隐患排查", "固定家具", "坠落物"],
+      "content": "Go through your home or facility, room by room, looking for objects or situations that might cause damage or injury. Imagine which objects or pieces of furniture might fall over or fly through the air. Remove, move, fasten, or latch items that are likely to break, fall over, cause a fire, or hurt people.",
+      "priority": 2
+    },
+    {
+      "id": "prepare-secure-furniture",
+      "category": "preparation",
+      "title": "Secure Tall Furniture 固定高大家具",
+      "keywords": ["secure furniture", "bookcase", "cabinet", "anchor to wall", "固定家具", "书柜", "橱柜", "固定在墙上"],
+      "content": "Fasten to wall studs: bookcases, shelves, tall cabinets. Bolt down and secure to the wall studs: water heater, furnace, gas appliances, refrigerator. Anchor top-heavy furniture items to wall studs directly or with straps or tethers.",
+      "priority": 2
+    },
+    {
+      "id": "prepare-utility-shutoff",
+      "category": "preparation",
+      "title": "Know How to Shut Off Utilities 学习关闭水电燃气",
+      "keywords": ["shut off utilities", "gas valve", "water main", "electrical panel", "关闭水电", "燃气阀门", "总水阀", "电闸"],
+      "content": "Locate the gas and water 'shut-off' valves and master electrical switch. Learn how to turn these off and train your staff or family to do so. Make sure you have a crescent or pipe wrench near the gas and water valves and in your emergency supplies.",
+      "priority": 2
+    },
+    {
+      "id": "prepare-communication-plan",
+      "category": "preparation",
+      "title": "Have a Communication Plan 制定通讯计划",
+      "keywords": ["communication plan", "out-of-state contact", "emergency contact", "通讯计划", "外地联系人", "紧急联系人"],
+      "content": "Identify a family member, relative or friend who is geographically located a large distance from your home's location as an emergency contact that all family members can check in with to communicate each other's safety status and location. After an earthquake, it may be easier to make out-of-state and long-distance calls.",
+      "priority": 2
+    },
+    {
+      "id": "prepare-identify-safe-spots",
+      "category": "preparation",
+      "title": "Identify Safe Spots in Each Room 确定每个房间的安全点",
+      "keywords": ["safe spots", "safe places", "under table", "interior wall", "安全点", "安全位置", "桌子下", "内墙"],
+      "content": "Identify the safe places in each room: under sturdy furniture like a heavy desk or table; against an inside wall, away from windows, mirrors, pictures, bookcases, or other heavy objects that might fall.",
+      "priority": 2
+    },
+    {
+      "id": "prepare-child-care-plan",
+      "category": "preparation",
+      "title": "Plan for Child Care Providers 儿童保育员须知",
+      "keywords": ["child care", "daycare", "reuniting families", "school plan", "儿童保育", "幼儿园", "家人团聚", "学校计划"],
+      "content": "Parents need to know what you plan to do in an earthquake. Develop a plan for reuniting families after a disaster. Maintain up-to-date rosters of students with contact information for parents and emergency contacts. Encourage parents to identify an out-of-state contact.",
+      "priority": 2
+    },
+    {
+      "id": "prepare-secure-documents",
+      "category": "preparation",
+      "title": "Secure Important Documents 保护重要文件",
+      "keywords": ["important documents", "id", "insurance policy", "records", "waterproof container", "重要文件", "身份证", "保险单", "防水容器"],
+      "content": "Keep copies of essential documents, such as identification, insurance policies, and financial records, in a secure, waterproof container, and keep copies of the essential documents with your disaster supplies. Include a household inventory of your belongings.",
+      "priority": 3
+    },
+    {
+      "id": "prepare-earthquake-insurance",
+      "category": "preparation",
+      "title": "Consider Earthquake Insurance 考虑购买地震保险",
+      "keywords": ["earthquake insurance", "homeowners policy", "financial protection", "cover damage", "地震保险", "房屋保险", "经济保障"],
+      "content": "Standard homeowner's insurance does not cover earthquake damage. Consider purchasing earthquake insurance to protect the financial investment you have in your home and personal property. Renters may also want to consider earthquake insurance as most renters' policies do not cover earthquake damage to belongings.",
+      "priority": 4
+    },
+    {
+      "id": "prepare-structural-retrofit",
+      "category": "preparation",
+      "title": "Consider a Structural Retrofit 考虑结构加固",
+      "keywords": ["retrofit", "structural issues", "foundation", "vulnerable building", "结构加固", "地基", "房屋加固"],
+      "content": "Consider a retrofit of your building if it has structural issues that make it vulnerable to collapse during an earthquake. This can include strengthening weak cripple walls, anchoring the house to its foundation, or bracing homes supported on posts and piers.",
+      "priority": 4
+    },
+    {
+      "id": "first-aid-initial-check",
+      "category": "first-aid",
+      "title": "Initial Injury Check 初始伤情检查",
+      "keywords": ["check for injuries", "assess victim", "first steps", "检查伤势", "评估伤员", "急救步骤"],
+      "content": "Unless you must evacuate immediately, check all children and adults for injuries and give first aid for injuries before evacuating. Do not move seriously injured persons unless they are in immediate danger of further injury (fire and flooding).",
+      "priority": 1
+    },
+    {
+      "id": "first-aid-airway-breathing",
+      "category": "first-aid",
+      "title": "Airway and Breathing Emergency 呼吸道急救",
+      "keywords": ["not breathing", "airway", "cpr", "rescue breathing", "没有呼吸", "人工呼吸", "心肺复苏"],
+      "content": "If a person is unconscious, clear their airway of any foreign objects. Tilt the head back and lift the chin. If they are not breathing, begin rescue breathing (mouth-to-mouth). If there is no pulse, start chest compressions. Alternate 30 compressions with 2 breaths until help arrives or the person starts breathing.",
+      "priority": 1
+    },
+    {
+      "id": "first-aid-severe-bleeding",
+      "category": "first-aid",
+      "title": "Treating Severe Bleeding 处理严重出血",
+      "keywords": ["severe bleeding", "direct pressure", "stop bleeding", "wound care", "tourniquet", "严重出血", "直接压迫", "止血", "伤口处理"],
+      "content": "If a person is bleeding, put direct pressure on the wound. Use a clean cloth and press firmly. If blood soaks through, add more cloth without removing the first layer. Elevate the wound above the heart if possible. Use a tourniquet only for severe, life-threatening bleeding on a limb as a last resort.",
+      "priority": 1
+    },
+    {
+      "id": "first-aid-calling-for-help",
+      "category": "first-aid",
+      "title": "Calling for Help 呼叫援助",
+      "keywords": ["call for help", "emergency number", "medical emergency", "get help", "呼叫援助", "紧急电话", "医疗急救"],
+      "content": "Call your local emergency number (e.g., 120, 119, 911) for any fire or medical emergency. If the phone doesn't work, send someone for help. Use emergency lines only for life-threatening distress.",
+      "priority": 1
+    },
+    {
+      "id": "first-aid-kit-essentials",
+      "category": "first-aid",
+      "title": "First Aid Kit Essentials 急救包必备品",
+      "keywords": ["first aid kit", "medical supplies", "bandages", "antiseptics", "急救包", "医疗用品", "绷带"],
+      "content": "Your emergency kit should include a first aid kit and manual. Include essential medicines and medical supplies, prescription and non-prescription or over-the-counter medications and other immediate medical supplies required by anyone in the household.",
+      "priority": 2
+    },
+    {
+      "id": "first-aid-shock-management",
+      "category": "first-aid",
+      "title": "Managing Shock 休克处理",
+      "keywords": ["shock symptoms", "keep warm", "prevent shock", "pale skin", "休克症状", "保暖", "防止休克"],
+      "content": "Check for shock symptoms (pale, cold, clammy skin). Keep injured persons warm to prevent shock. Have them lie flat and elevate their legs if possible, unless you suspect a head, neck, or back injury.",
+      "priority": 2
+    },
+    {
+      "id": "first-aid-fracture-immobilization",
+      "category": "first-aid",
+      "title": "Fracture Immobilization 骨折固定",
+      "keywords": ["fracture", "broken bone", "splint", "immobilize", "骨折", "夹板", "固定"],
+      "content": "If a fracture is suspected, immobilize the injured limb with splints or available materials like boards or rolled magazines. Pad the splint and secure it. For an upper limb, use a sling. For a lower limb, you can tie it to the healthy leg if no splint is available. Control any bleeding before immobilization.",
+      "priority": 2
+    },
+    {
+      "id": "first-aid-burns-scalds",
+      "category": "first-aid",
+      "title": "Treating Burns and Scalds 烧伤烫伤处理",
+      "keywords": ["burns", "scalds", "cool water", "blisters", "烧伤", "烫伤", "冷却", "水泡"],
+      "content": "For minor burns, cool the area with clean, cool water immediately. Cover with a sterile gauze or clean cloth. Do not break blisters or apply ointments, butter, or ice. For severe burns, do not remove stuck clothing. Cover with a clean cloth and seek medical help immediately.",
+      "priority": 2
+    },
+    {
+      "id": "first-aid-mutual-rescue",
+      "category": "first-aid",
+      "title": "Principles of Mutual Rescue 互救原则",
+      "keywords": ["mutual aid", "rescue others", "golden hour", "互救", "救援他人", "黄金时间"],
+      "content": "The first 24 hours after a disaster are critical for survival (the 'golden hour'). Check yourself for injuries first, then help others. Organize group rescue efforts to save as many people as possible. Use available materials for rescue and provide first aid to the best of your ability.",
+      "priority": 2
+    },
+    {
+      "id": "first-aid-cpr-training",
+      "category": "first-aid",
+      "title": "Importance of First Aid/CPR Training 急救/心肺复苏培训的重要性",
+      "keywords": ["cpr", "first aid training", "certification", "get trained", "心肺复苏", "急救培训", "认证"],
+      "content": "Take a first aid, Cardiopulmonary Resuscitation (CPR), Until Help Arrives, or Community Emergency Response Team (CERT) training course. Preparing for an earthquake includes maintaining your certifications for first aid and CPR.",
+      "priority": 3
+    },
+    {
+      "id": "first-aid-casualty-transport",
+      "category": "first-aid",
+      "title": "Transporting an Injured Person 伤员搬运",
+      "keywords": ["transport", "move victim", "stretcher", "spinal injury", "搬运伤员", "移动", "担架", "脊柱损伤"],
+      "content": "Move injured persons only if they are in immediate danger. Use stretchers, boards, or improvised materials. Keep the spine straight, especially for suspected neck or back injuries. For long distances, immobilize fractures and cover the patient to keep them warm.",
+      "priority": 3
+    },
+    {
+      "id": "special-populations-children-drills",
+      "category": "special-populations",
+      "title": "Teaching Children 'Drop, Cover, and Hold On' 教导儿童“趴下、掩护、稳住”",
+      "keywords": ["teach children", "kids drill", "school safety", "child care", "教孩子", "儿童演习", "学校安全", "幼儿园"],
+      "content": "Teach the children to Drop, Cover, and Hold. During an earthquake, the most important thing for any child or adult to remember is to Drop, Cover, and Hold. Spend time explaining the drill and demonstrate what you want them to do. Get the children's attention and give clear and distinct commands. Speak in a calm voice.",
+      "priority": 1
+    },
+    {
+      "id": "special-populations-infant-protection",
+      "category": "special-populations",
+      "title": "Protecting Infants 保护婴儿",
+      "keywords": ["protect infant", "baby safety", "cover baby", "保护婴儿", "宝宝安全"],
+      "content": "During a quake, protect infants by curling your body around them while you Drop, Cover, and Hold On.",
+      "priority": 1
+    },
+    {
+      "id": "special-populations-disabilities-plan",
+      "category": "special-populations",
+      "title": "Planning for People with Disabilities 为残障人士做计划",
+      "keywords": ["disability plan", "special needs", "support network", "accessibility", "残障计划", "特殊需求", "互助网络"],
+      "content": "If you or a family member is a person with a disability or has special needs requiring additional assistance, work with your family or personal support network to include them as part of your plan.",
+      "priority": 2
+    },
+    {
+      "id": "special-populations-disabilities-action",
+      "category": "special-populations",
+      "title": "Action for People with Mobility Disabilities 行动不便者的应对动作",
+      "keywords": ["disability action", "wheelchair safety", "limited mobility", "walker cane", "残障人士", "轮椅安全", "行动不便"],
+      "content": "Persons using wheelchairs: lock your wheels, bend forward, and Cover your head with your arms and Hold On to your head and neck with both hands until the shaking has stopped. If using a walker or cane, lock wheels if possible, drop to the floor or a seated position, and cover your head.",
+      "priority": 1
+    },
+    {
+      "id": "special-populations-pets-plan",
+      "category": "special-populations",
+      "title": "Pet Safety Planning 宠物安全计划",
+      "keywords": ["pet safety", "animal emergency kit", "pet carrier", "pet id", "宠物安全", "动物应急包", "宠物身份"],
+      "content": "Include pet supplies in your emergency kit, such as food, water, medications, leashes, and carriers. Ensure your pet has proper identification tags. Animals may be frightened and run; keep them secure.",
+      "priority": 3
+    },
+    {
+      "id": "special-populations-children-emotional-support",
+      "category": "special-populations",
+      "title": "Emotional Support for Children 儿童情绪支持",
+      "keywords": ["children fear", "reassure kids", "child trauma", "calm children", "儿童恐惧", "安抚孩子", "儿童创伤"],
+      "content": "After a disaster, children are most afraid that the event will happen again, someone will be injured, or they will be separated from family. Let the children know that you understand why they are scared. Comfort them with a hug or reassuring words. Return to routine as soon as possible.",
+      "priority": 2
+    },
+    {
+      "id": "special-populations-child-care-kit",
+      "category": "special-populations",
+      "title": "Emergency Kit for Child Care 儿童保育应急包",
+      "keywords": ["child care kit", "daycare supplies", "diapers", "wipes", "formula", "儿童应急包", "幼儿园物资", "尿布"],
+      "content": "Your emergency kit for child care should include: a roster of children with emergency contacts, water, non-perishable food, first aid kit, essential medicines, diapers and wipes, blankets, and comfort items like games or toys.",
+      "priority": 2
+    },
+    {
+      "id": "recovery-restarting-utilities",
+      "category": "recovery",
+      "title": "Restarting Utilities Safely 安全地重启水电燃气",
+      "keywords": ["restart utilities", "turn on gas", "turn on electricity", "water safety", "重启水电", "开燃气", "恢复供电", "用水安全"],
+      "content": "Once damage to utilities has been repaired, take steps to restart them. Gas: If your gas was shut off, contact the gas company to restart it and relight pilot lights. Electricity: If shut off, turn the main incoming power back on first, then individual breakers. Water: If a water main was broken, run water for a few minutes until it is clear. Check local news for any boil water advisories.",
+      "priority": 1
+    },
+    {
+      "id": "recovery-hiring-contractor",
+      "category": "recovery",
+      "title": "Hiring a Contractor for Repairs 聘请承包商进行维修",
+      "keywords": ["hiring contractor", "repair home", "find contractor", "license check", "payment", "聘请承包商", "房屋维修", "检查执照", "付款"],
+      "content": "When making home repairs, find a good contractor. Interview and get proposals from several. Check their contractor's license number, prior experience, references, and insurance coverage. Establish a written contract detailing the scope of work and payment schedule. Do not pay in full upfront; pay for work as it is completed.",
+      "priority": 2
+    },
+    {
+      "id": "recovery-psychological-care",
+      "category": "recovery",
+      "title": "Managing Stress and Trauma 管理压力与创伤",
+      "keywords": ["stress", "anxiety", "trauma", "feeling scared", "mental health", "压力", "焦虑", "心理创伤", "害怕"],
+      "content": "An earthquake and its aftermath can be both physically and emotionally overwhelming. Talk with your family about how they are feeling. Children and older adults are of special concern. Contact local volunteer agencies, professionals, or faith-based organizations for counseling if needed.",
+      "priority": 2
+    },
+    {
+      "id": "recovery-children-emotional-support",
+      "category": "recovery",
+      "title": "Emotional Support for Children 儿童情绪支持",
+      "keywords": ["children fear", "reassure kids", "child trauma", "calm children", "regression", "儿童恐惧", "安抚孩子", "儿童创伤", "行为倒退"],
+      "content": "Encourage children to talk about their fears and help them sort out what is real from unreal. It is common for children to 'regress' or act younger when stressed (e.g., thumb-sucking, bed-wetting). Do not criticize this behavior. Reassure them that with support, most children will recover without any lasting problems.",
+      "priority": 2
+    },
+    {
+      "id": "recovery-permits-and-inspections",
+      "category": "recovery",
+      "title": "Building Permits and Inspections 建筑许可与检查",
+      "keywords": ["building permit", "inspection", "repair regulations", "building code", "建筑许可", "检查", "维修规定", "建筑规范"],
+      "content": "Any repair that goes beyond typical maintenance activities is regulated by local building codes, and a building permit is required. The building department will review repair plans. During the work, an inspector will visit to ensure work conforms to the approved plans. It is very important that the permit is properly closed out upon completion.",
+      "priority": 3
+    },
+    {
+      "id": "recovery-paying-for-repairs",
+      "category": "recovery",
+      "title": "Paying for Repairs 支付维修费用",
+      "keywords": ["paying for repairs", "insurance claim", "disaster loan", "financial assistance", "维修费用", "保险理赔", "灾害贷款", "经济援助"],
+      "content": "If you have earthquake insurance, contact your insurance company as soon as possible. Whether or not you have insurance, contact local assistance centers to find out about resources that might be available, such as United States Small Business Administration (SBA) loans and low-interest disaster loans.",
+      "priority": 3
+    },
+    {
+      "id": "recovery-working-with-professionals",
+      "category": "recovery",
+      "title": "Working with Engineers and Architects 与工程师和建筑师合作",
+      "keywords": ["hire engineer", "hire architect", "damage assessment", "repair plans", "聘请工程师", "聘请建筑师", "损害评估", "维修计划"],
+      "content": "When the scope extends beyond simple repairs, it may be necessary to involve an engineer or an architect. They will conduct an assessment of the required repairs or retrofits and develop plans that can be used to obtain bids from contractors and be submitted for a permit.",
+      "priority": 3
+    },
+    {
+      "id": "recovery-building-back-better",
+      "category": "recovery",
+      "title": "Building Back Better 恢复重建应更胜以往",
+      "keywords": ["build back better", "mitigation", "strengthen home", "voluntary upgrade", "重建", "减灾", "加固房屋"],
+      "content": "When a damaged home is being repaired, this can provide an opportunity to voluntarily build back better and stronger. This might include repairing to a recent building code instead of just its pre-earthquake condition, or implementing retrofit measures to provide cost-effective strengthening.",
+      "priority": 4
+    },
+    {
+      "id": "recovery-retaining-records",
+      "category": "recovery",
+      "title": "Retaining Repair Records 保留维修记录",
+      "keywords": ["keep records", "repair documents", "permit records", "proof of work", "保留记录", "维修文件", "许可记录"],
+      "content": "It is recommended that all records regarding damage assessment and repair or retrofit be retained by the homeowner for future reference. Most important are permit records, plans, and contracts with contractors, architects, and engineers. This information is useful for future work or upon sale of the home.",
+      "priority": 4
+    },
+    {
+      "id": "science-what-causes-earthquakes",
+      "category": "science-concepts",
+      "title": "What Causes Earthquakes? 地震的成因",
+      "keywords": ["cause", "fault", "plate tectonics", "science", "成因", "断层", "板块构造"],
+      "content": "Earthquakes result from movement of blocks of the Earth's crust. When a block of the crust is pushed past another along a fault, friction between the blocks keeps them from moving. Eventually, the force of the pushing will overcome the friction, and the blocks will move past each other releasing energy in waves that we feel as the earthquake. The driving force behind the motion is plate tectonics.",
+      "priority": 4
+    },
+    {
+      "id": "science-magnitude-vs-intensity",
+      "category": "science-concepts",
+      "title": "Magnitude vs. Shaking Intensity 震级与烈度",
+      "keywords": ["magnitude", "intensity", "mmi", "measure", "震级", "烈度", "测量"],
+      "content": "Magnitude is a number that describes the total energy released in an earthquake. The amount of energy released increases exponentially as the magnitude increases. Shaking Intensity describes the level of shaking and damage at a specific location. The Modified Mercalli Intensity (MMI) scale is used. Intensity is generally lower farther away from the fault.",
+      "priority": 4
+    },
+    {
+      "id": "science-plate-boundaries-subduction",
+      "category": "science-concepts",
+      "title": "Plate Boundaries: Subduction Zones 板块边界：俯冲带",
+      "keywords": ["subduction zone", "plate tectonics", "oceanic crust", "trench", "俯冲带", "板块构造", "海沟"],
+      "content": "At subduction zones, one plate goes underneath the other, pushing up the top plate. When an ocean floor runs into a continent, the heavier ocean floor gets pushed under the lighter continent and goes back down into the mantle. The deep trenches of the oceans are all there because of subduction zones.",
+      "priority": 4
+    },
+    {
+      "id": "science-plate-boundaries-transform",
+      "category": "science-concepts",
+      "title": "Plate Boundaries: Transform Boundaries 板块边界：转换边界",
+      "keywords": ["transform boundary", "plate tectonics", "san andreas", "slide past", "转换边界", "板块构造", "圣安德烈斯"],
+      "content": "At transform boundaries, one plate moves past the other. In California, the North American Plate slides past the Pacific Plate, forming a 'transform boundary.' Most of this motion happens on the San Andreas Fault system.",
+      "priority": 4
+    },
+    {
+      "id": "science-plate-boundaries-spreading",
+      "category": "science-concepts",
+      "title": "Plate Boundaries: Spreading Boundaries 板块边界：扩张边界",
+      "keywords": ["spreading boundary", "extensional", "plate tectonics", "mid-ocean ridge", "扩张边界", "板块构造", "洋中脊"],
+      "content": "At spreading boundaries or extensional boundaries, lava comes up to form new plates and the plates move apart from each other. Hot rock comes up from the mantle at mid-ocean ridges and cools, creating new sea floor that moves out.",
+      "priority": 4
+    },
+    {
+      "id": "science-p-waves-s-waves",
+      "category": "science-concepts",
+      "title": "P-waves and S-waves P波与S波",
+      "keywords": ["p-wave", "s-wave", "seismic wave", "compressional", "shear", "P波", "S波", "地震波"],
+      "content": "Earthquakes produce two main types of waves—the P-wave (a compressional wave), and the S-wave (a shear wave). The S-wave is both slower and larger than the P-wave, and it does most of the damage. In a P-wave, the ground particles are moving with the wave. In an S-wave, the ground particles are pushed sideways relative to the wave.",
+      "priority": 4
+    },
+    {
+      "id": "science-earthquake-detection",
+      "category": "science-concepts",
+      "title": "How Earthquakes are Detected 地震如何被探测",
+      "keywords": ["detect", "seismograph", "seismic station", "usgs", "measure", "探测", "地震仪", "地震台"],
+      "content": "When an earthquake happens, it is recorded by the United States Geological Survey (USGS). As the wave passes by a seismic station, that piece of ground vibrates and the vibration is recorded. By comparing the times the shaking was recorded at several stations, seismologists can calculate the time the earthquake occurred and its location.",
+      "priority": 4
+    },
+    {
+      "id": "science-rupture-surface",
+      "category": "science-concepts",
+      "title": "Rupture Surface 破裂面",
+      "keywords": ["rupture surface", "fault area", "slip", "energy release", "破裂面", "断层"],
+      "content": "Earthquakes happen over an area of the fault, called the rupture surface. Just as you snap your fingers with the whole area of your fingertip and thumb, the earthquake slip releases energy across this entire surface.",
+      "priority": 4
+    },
+    {
+      "id": "science-shaking-factor-distance",
+      "category": "science-concepts",
+      "title": "Shaking Factor: Distance 摇晃因素：距离",
+      "keywords": ["distance", "shaking", "intensity", "waves", "attenuation", "距离", "摇晃", "烈度", "衰减"],
+      "content": "Earthquake waves die off as they travel through the ground, so earthquake shaking is less intense farther from the fault. Low-frequency waves diminish less rapidly with distance than high-frequency waves. Farther away, you will feel a rolling motion.",
+      "priority": 4
+    },
+    {
+      "id": "science-shaking-factor-soil",
+      "category": "science-concepts",
+      "title": "Shaking Factor: Soil Conditions 摇晃因素：土壤条件",
+      "keywords": ["soil", "amplify", "shaking", "rock", "soft soil", "土壤", "放大", "摇晃", "场地效应"],
+      "content": "Soils can greatly amplify the shaking in an earthquake. Passing from rock to soil, seismic waves slow down but get bigger. Hence a softer, loose soil may shake more violently than harder rock at the same distance from the same earthquake.",
+      "priority": 4
+    },
+    {
+      "id": "science-shaking-factor-directivity",
+      "category": "science-concepts",
+      "title": "Shaking Factor: Directivity 摇晃因素：方向性效应",
+      "keywords": ["directivity", "rupture direction", "focus energy", "shaking", "方向性", "破裂方向", "能量"],
+      "content": "When the earthquake rupture moves along the fault, it focuses energy in the direction it is moving so that a location in that direction will receive more shaking than a site at the same distance from the fault but in the opposite direction. This is called directivity.",
+      "priority": 4
+    },
+    {
+      "id": "science-wave-frequency",
+      "category": "science-concepts",
+      "title": "Wave Frequencies and Building Damage 波频与建筑损害",
+      "keywords": ["frequency", "high frequency", "low frequency", "building damage", "波频", "高频", "低频", "建筑"],
+      "content": "The amount of damage to a building does not depend solely on how hard it is shaken. In general, smaller buildings, such as houses, are damaged more by higher frequencies. Larger structures, such as high-rises and bridges, are damaged more by lower frequencies and will be more noticeably affected by larger earthquakes, even at considerable distances.",
+      "priority": 4
+    },
+    {
+      "id": "science-seiche",
+      "category": "science-concepts",
+      "title": "What is a Seiche? 什么是湖震或湾振",
+      "keywords": ["seiche", "lake", "bay", "sloshing", "wave", "湖震", "湾振", "晃荡"],
+      "content": "A seiche is similar to a tsunami, but takes the form of sloshing water in closed lakes or bays and has the potential to cause serious damage, though occurrences have been very rare.",
+      "priority": 4
+    },
+    {
+      "id": "science-intraplate-earthquakes",
+      "category": "science-concepts",
+      "title": "Intraplate Earthquakes 板内地震",
+      "keywords": ["intraplate", "within plate", "new madrid", "板内地震", "板块内部"],
+      "content": "Intraplate earthquakes are earthquakes that happen within a plate where the relative motion is very small. Most scientists believe these earthquakes result from residual stresses and are most likely to occur at locations of weakness in the crust. The New Madrid earthquakes of 1811-1812 are a famous example.",
+      "priority": 4
+    },
+    {
+      "id": "science-induced-earthquakes",
+      "category": "science-concepts",
+      "title": "Induced (Human-Made) Earthquakes 诱发（人为）地震",
+      "keywords": ["induced", "human-made", "fracking", "wastewater", "pumping", "诱发地震", "人为地震", "水力压裂"],
+      "content": "Human-made earthquakes happen when the stress pushing sideways on the fault overcomes the friction caused by stress pushing the fault together. The frictional resistance is reduced by the pressure of water in the pores of the rock, often due to pumping fluids into the ground for wastewater disposal or geothermal energy production.",
+      "priority": 4
+    },
+    {
+      "id": "science-hawaii-hot-spot",
+      "category": "science-concepts",
+      "title": "Hawaiian Earthquakes and Hot Spots 夏威夷地震与热点",
+      "keywords": ["hawaii", "hot spot", "mantle plume", "volcano", "夏威夷", "热点", "地幔柱", "火山"],
+      "content": "Hawaii is in the middle of the Pacific Ocean Plate with no plate boundary. The theory is that 'mantle plumes' (places where the mantle is extra hot) break through the crust, creating volcanoes. Earthquakes in Hawaii result from the passage of magma or from slumping along the flanks of the volcano due to its immense weight.",
+      "priority": 4
+    },
+    {
+      "id": "science-cascadia-subduction-zone",
+      "category": "science-concepts",
+      "title": "Cascadia Subduction Zone 卡斯卡迪亚俯冲带",
+      "keywords": ["cascadia", "pacific northwest", "subduction zone", "ghost forest", "卡斯卡迪亚", "俯冲带", "幽灵森林"],
+      "content": "A subduction zone 650 miles long lies off the Pacific Northwest from Northern California to British Columbia: the Cascadia subduction zone. Evidence from 'ghost forests' (dead trees lowered into saltwater by an earthquake) and Japanese 'orphan tsunami' records show a magnitude 9.0 earthquake occurred here in 1700.",
+      "priority": 4
+    },
+    {
+      "id": "science-east-vs-west-shaking",
+      "category": "science-concepts",
+      "title": "Shaking in Eastern vs. Western US 美国东西部地震摇晃差异",
+      "keywords": ["eastern us", "western us", "shaking area", "crust", "felt area", "美国东部", "美国西部", "地壳"],
+      "content": "The rocks in the western United States are relatively young, warm, and broken up by many faults. In contrast, the rocks in the East are old, cold, and solid. Seismic energy traveling through the many faults of the West dies off more quickly than energy traveling through the solid old crust of the East. Therefore, an eastern US earthquake is felt over a much larger area than a western one of the same magnitude.",
+      "priority": 4
+    },
+    {
+      "id": "science-sand-blows",
+      "category": "science-concepts",
+      "title": "Sand Blows as Evidence 喷沙（作为证据）",
+      "keywords": ["sand blow", "liquefaction", "evidence", "geology", "喷沙", "液化", "证据", "地质"],
+      "content": "When the loose soil that liquefies is buried under a denser soil, the quicksand can break through the overlying soil and spurt into the air like a fountain. It falls back to the earth and can be seen as circular sandblows. Finding old, buried sandblows is geological evidence of large, prehistoric earthquakes.",
+      "priority": 4
+    },
+    {
+      "id": "science-earthquake-proof-fallacy",
+      "category": "science-concepts",
+      "title": "Fallacy of 'Earthquake Proof' “防震”的谬误",
+      "keywords": ["earthquake proof", "fallacy", "damage", "building codes", "防震", "谬误", "建筑规范"],
+      "content": "There is no such thing as 'earthquake proof.' Even homes designed to the latest building codes may sustain earthquake damage. Homes that have fared well in past earthquakes may not have been in the area of highest shaking.",
+      "priority": 4
+    },
+  
+    {
+      "id": "secondary-hazards-tsunami",
+      "category": "secondary-hazards",
+      "title": "Tsunami Response 海啸应对",
+      "keywords": ["tsunami warning", "coastal safety", "after shaking", "high ground", "海啸预警", "沿海安全", "撤离到高地"],
+      "content": "Tsunamis happen when the shape of the seafloor changes, displacing the water that is on top of it. If you are in an area that may experience tsunamis, go inland or to higher ground immediately after the shaking stops. The largest earthquakes, over magnitude 8.5, can create tsunamis large enough to cause damage on the other side of the ocean.",
+      "priority": 1
+    },
+    {
+      "id": "secondary-hazards-landslide",
+      "category": "secondary-hazards",
+      "title": "Landslides and Rockfalls 山体滑坡与落石",
+      "keywords": ["landslide risk", "rockfall", "mountain safety", "steep slopes", "滑坡风险", "落石", "山区安全", "陡坡"],
+      "content": "Earthquakes can trigger landslides and avalanches. If near slopes, cliffs, or mountains, be alert for falling rocks and landslides. Very large earthquakes in mountainous areas can trigger numerous landslides.",
+      "priority": 1
+    },
+    {
+      "id": "secondary-hazards-fire",
+      "category": "secondary-hazards",
+      "title": "Fire Hazards 火灾危险",
+      "keywords": ["fire risk", "gas line break", "electrical fire", "extinguisher", "火灾风险", "燃气管道", "电气火灾", "灭火器"],
+      "content": "Earthquakes can cause fires. This is often due to broken or exposed electrical wiring or a gas leak. If you see a small fire, use a fire extinguisher to put it out. If a fire is large, evacuate immediately. Any of the following require immediate evacuation: fire, damage to structure, a gas leak, or hazardous materials spill.",
+      "priority": 1
+    },
+    {
+      "id": "secondary-hazards-liquefaction",
+      "category": "secondary-hazards",
+      "title": "Soil Liquefaction 土壤液化",
+      "keywords": ["liquefaction", "sinking building", "quicksand", "soft soil", "foundation damage", "土壤液化", "建筑下沉", "流沙", "地基损坏"],
+      "content": "When loose, water-saturated soil is shaken by an earthquake, it will compact. The pressure in the water goes up and the soil becomes a temporary quicksand in a process called liquefaction. During that time, the soil can no longer support structures above, causing buildings to shift and sometimes sink.",
+      "priority": 2
+    },
+    {
+      "id": "secondary-hazards-seiche",
+      "category": "secondary-hazards",
+      "title": "Seiches in Lakes and Bays 湖泊与海湾的湖震/湾振",
+      "keywords": ["seiche", "lake wave", "bay sloshing", "enclosed water", "湖震", "湾振", "内湖波浪"],
+      "content": "A seiche is similar to a tsunami, but takes the form of sloshing water in closed lakes or bays and has the potential to cause serious damage, though occurrences have been very rare.",
+      "priority": 3
+    },
+    {
+      "id": "secondary-hazards-damaged-roads",
+      "category": "secondary-hazards",
+      "title": "Damaged Roads and Bridges 道路与桥梁损坏",
+      "keywords": ["road damage", "bridge collapse", "travel safety", "cracked pavement", "道路损坏", "桥梁坍塌", "出行安全"],
+      "content": "Earthquakes can cause damage to roads. When driving after an earthquake, proceed carefully by avoiding bridges and overpasses, fallen debris, and cracked or shifted pavement.",
+      "priority": 2
+    },
+    {
+      "id": "structural-hazards-water-heater",
+      "category": "structural-hazards",
+      "title": "Unrestrained Water Heaters 未固定的热水器",
+      "keywords": ["water heater falls", "secure water heater", "gas line fire", "water damage", "热水器倒塌", "固定热水器", "燃气火灾"],
+      "content": "Water heaters are a common source of damage, ranging from fire ignited by damaged gas lines, to water damage that occurs when the tank fractures and leaks. Water heaters should be braced to adjacent walls and flexible lines should be provided for water and gas connections. Premanufactured seismic strapping kits are available.",
+      "priority": 1
+    },
+    {
+      "id": "structural-hazards-cripple-walls",
+      "category": "structural-hazards",
+      "title": "Weak Cripple Walls 薄弱的矮墙基础",
+      "keywords": ["house slides off foundation", "cripple wall collapse", "strengthen foundation", "crawlspace", "房屋滑离地基", "矮墙倒塌", "加固地基"],
+      "content": "A cripple wall is a short, flexible wood foundation wall that is vulnerable to damage. Inadequately anchored homes can slide off of their foundations, and inadequately braced cripple walls can rack or deflect horizontally, causing significant damage and potentially collapse. These can be retrofitted by strengthening the walls and anchoring to the foundations.",
+      "priority": 2
+    },
+    {
+      "id": "structural-hazards-soft-story",
+      "category": "structural-hazards",
+      "title": "Living Space Over Garage (Soft Story) 车库上方的居住空间（软层）",
+      "keywords": ["garage collapse", "soft story", "living space over garage", "weak first floor", "车库倒塌", "软层结构", "一楼脆弱"],
+      "content": "The garage area of a home often has less earthquake bracing than other areas, particularly at the garage door opening. Homes with living spaces over a garage can sway sideways, resulting in significant damage and possible collapse. These homes can be retrofit by strengthening existing walls around the garage perimeter.",
+      "priority": 2
+    },
+    {
+      "id": "structural-hazards-masonry-chimney",
+      "category": "structural-hazards",
+      "title": "Unreinforced Masonry Chimneys 未加固的砖石烟囱",
+      "keywords": ["chimney collapse", "brick chimney", "falling bricks", "fireplace hazard", "烟囱倒塌", "砖砌烟囱", "砖块掉落"],
+      "content": "Masonry (brick or stone) chimneys are frequently damaged and can collapse in moderate to large earthquakes, posing a risk of injury if they fall. Older masonry chimneys are particularly vulnerable. The best retrofit is partial or complete removal of the masonry above the roofline.",
+      "priority": 2
+    },
+    {
+      "id": "structural-hazards-unreinforced-masonry",
+      "category": "structural-hazards",
+      "title": "Unreinforced Masonry Walls (URM) 未加固的砖石墙",
+      "keywords": ["brick wall collapse", "URM building", "unreinforced masonry", "wall separation", "砖墙倒塌", "无筋砖房", "墙体分离"],
+      "content": "Without horizontal and vertical steel reinforcing, masonry, stone, and adobe have very limited strength to resist earthquake forces. Heavy exterior walls can detach from the wood roof and floor beam systems due to outward movement and can collapse.",
+      "priority": 3
+    },
+    {
+      "id": "structural-hazards-post-and-pier",
+      "category": "structural-hazards",
+      "title": "Homes on Posts and Piers 柱墩支撑的房屋",
+      "keywords": ["house on stilts", "post and pier foundation", "elevated house", "foundation collapse", "高脚屋", "柱墩地基", "房屋倒塌"],
+      "content": "Homes supported only by posts are particularly susceptible to sideways motion and can be significantly damaged and possibly collapse during earthquakes. Retrofit solutions include adding continuous foundation systems and sheathed cripple walls.",
+      "priority": 3
+    },
+    {
+      "id": "structural-hazards-hillside-home",
+      "category": "structural-hazards",
+      "title": "Hillside Homes 山坡上的房屋",
+      "keywords": ["hillside home", "sloping lot", "uneven foundation", "house slides down hill", "山坡住宅", "斜坡地基", "房屋滑坡"],
+      "content": "With earthquake ground shaking, hillside homes can pull away from the uphill foundation, resulting in significant damage and possibly collapse of the home. These homes are retrofit by strengthening the anchorage of the home to the uphill foundation and by adding or strengthening walls surrounding the under-floor space.",
+      "priority": 3
+    },
+    {
+      "id": "structural-hazards-unreinforced-foundation",
+      "category": "structural-hazards",
+      "title": "Unreinforced Stone/Masonry Foundations 未加固的砖石地基",
+      "keywords": ["stone foundation", "old foundation", "foundation crumble", "unreinforced", "石头地基", "老旧地基", "地基破碎"],
+      "content": "Older homes may be built on unreinforced masonry brick or stone foundations. These lack continuous steel reinforcement and can be weak, especially if the mortar has deteriorated. Damage can vary from minor to extreme. Retrofitting may involve partial or complete foundation replacement.",
+      "priority": 3
+    },
+    {
+      "id": "structural-hazards-decks-porches",
+      "category": "structural-hazards",
+      "title": "Elevated Decks and Porches 高架露台和门廊",
+      "keywords": ["deck collapse", "porch safety", "unbraced deck", "carport", "露台倒塌", "门廊安全", "车棚"],
+      "content": "Elevated decks, porch roofs, carports, and trellises can endanger lives if not properly braced, anchored to the ground, or firmly secured to an adjacent dwelling. They may separate from the house and possibly collapse under large sideways motion. Retrofitting involves adding diagonal bracing and strengthening connections.",
+      "priority": 4
+    },
+        
+
+    {
       "id": "during-earthquake",
       "category": "during",
-      "title": "What to do during an earthquake",
+      "title": "What to do during an earthquake 地震发生时该怎么办",
       "keywords": ["earthquake", "shaking", "during", "happening", "now", "地震"],
       "content": "DROP to your hands and knees immediately. COVER your head and neck under a sturdy desk or table. If no table, cover your head with your arms. HOLD ON to your shelter and be prepared to move with it. Stay in position until shaking stops. Do NOT run outside during shaking - most injuries occur from falling debris.",
       "priority": 1
@@ -11,7 +999,7 @@
     {
       "id": "indoors-during",
       "category": "during",
-      "title": "If indoors during earthquake",
+      "title": "If indoors during an earthquake 如果在室内发生地震",
       "keywords": ["inside", "indoors", "building", "room", "室内"],
       "content": "Stay inside. DROP, COVER, and HOLD ON. Move away from windows, mirrors, and heavy objects that could fall. Do NOT use elevators. If in bed, stay there and cover your head with a pillow. If in a wheelchair, lock wheels and cover head and neck.",
       "priority": 1
@@ -19,7 +1007,7 @@
     {
       "id": "outdoors-during",
       "category": "during",
-      "title": "If outdoors during earthquake",
+      "title": "If outdoors during an earthquake 如果在室外发生地震",
       "keywords": ["outside", "outdoors", "street", "outdoor", "室外"],
       "content": "Move away from buildings, trees, streetlights, and power lines. DROP to the ground in an open area. Stay there until shaking stops. If driving, pull over to a safe spot away from overpasses, power lines, and buildings. Stay in vehicle with seatbelt on.",
       "priority": 1
@@ -27,7 +1015,7 @@
     {
       "id": "trapped-debris",
       "category": "after",
-      "title": "If trapped under debris",
+      "title": "If trapped under debris 如果被困在废墟下",
       "keywords": ["trapped", "stuck", "debris", "rubble", "collapsed", "被困", "压住"],
       "content": "Stay calm and conserve energy. Do not shout unless you hear rescuers - save your voice. Tap on pipes or walls to signal location. Use whistle if available. Cover mouth with cloth to avoid dust. Do not light matches or lighters. Move as little as possible to avoid kicking up dust.",
       "priority": 1
@@ -35,7 +1023,7 @@
     {
       "id": "find-water",
       "category": "after",
-      "title": "Finding safe water after earthquake",
+      "title": "Finding safe water after an earthquake 地震后寻找安全水源",
       "keywords": ["water", "thirsty", "drink", "dehydrated", "水", "口渴"],
       "content": "Safe water sources: 1) Water heater tank (turn off power/gas first), 2) Toilet tank (not bowl), 3) Ice cubes, 4) Canned goods liquid. To purify uncertain water: Boil vigorously for 1 minute, OR use 8 drops unscented bleach per gallon and wait 30 minutes, OR use water purification tablets.",
       "priority": 1
@@ -43,137 +1031,231 @@
     {
       "id": "treat-bleeding",
       "category": "first-aid",
-      "title": "Treating severe bleeding",
+      "title": "Treating severe bleeding 处理严重出血",
       "keywords": ["bleeding", "blood", "cut", "injury", "wound", "流血", "受伤"],
-      "content": "Apply direct pressure with clean cloth. Press firmly for 10-15 minutes without peeking. If blood soaks through, add more cloth without removing first layer. Elevate wound above heart if possible. For severe bleeding, apply tourniquet 2-3 inches above wound only as last resort. Never remove embedded objects.",
+      "content": "Apply direct pressure with a clean cloth. Press firmly for 10-15 minutes without peeking. If blood soaks through, add more cloth without removing the first layer. Elevate the wound above the heart if possible. For severe bleeding, apply a tourniquet 2-3 inches above the wound only as a last resort. Never remove embedded objects.",
       "priority": 1
     },
     {
       "id": "aftershocks",
       "category": "after",
-      "title": "Dealing with aftershocks",
+      "title": "Dealing with aftershocks 应对余震",
       "keywords": ["aftershock", "shaking again", "more earthquakes", "余震"],
-      "content": "Aftershocks can occur minutes, days, or weeks after main quake. When you feel one: DROP, COVER, and HOLD ON again. Be extra cautious around damaged buildings - they may collapse. If outdoors, stay in open area. Aftershocks are usually smaller but can cause additional damage to weakened structures.",
+      "content": "Aftershocks can occur minutes, days, or weeks after the main quake. When you feel one: DROP, COVER, and HOLD ON again. Be extra cautious around damaged buildings - they may collapse. If outdoors, stay in an open area. Aftershocks are usually smaller but can cause additional damage to weakened structures.",
       "priority": 1
     },
     {
       "id": "check-injuries",
       "category": "after",
-      "title": "Check for injuries after earthquake",
+      "title": "Check for injuries after an earthquake 地震后检查伤势",
       "keywords": ["check", "injuries", "hurt", "examine", "检查", "伤势"],
-      "content": "First check yourself, then others. Do not move seriously injured persons unless in immediate danger. Check for: bleeding, breathing problems, shock symptoms (pale, cold, clammy skin), broken bones. Cover injured with blankets. Provide first aid within your training. Call for help if available.",
+      "content": "First check yourself, then others. Do not move seriously injured persons unless they are in immediate danger. Check for: bleeding, breathing problems, shock symptoms (pale, cold, clammy skin), broken bones. Cover the injured with blankets. Provide first aid within your training. Call for help if available.",
       "priority": 2
     },
     {
       "id": "evacuation",
       "category": "after",
-      "title": "When to evacuate",
+      "title": "When to evacuate 何时疏散",
       "keywords": ["evacuate", "leave", "exit", "escape", "撤离", "离开"],
-      "content": "Evacuate if: building shows signs of damage (cracks, tilting), gas smell detected, authorities order evacuation, tsunami warning issued (if coastal). Use stairs, never elevators. Before leaving, turn off gas, electricity, and water if possible. Take emergency kit. Leave note indicating where you went.",
+      "content": "Evacuate if: the building shows signs of damage (cracks, tilting), a gas smell is detected, authorities order evacuation, or a tsunami warning is issued (if coastal). Use stairs, never elevators. Before leaving, turn off gas, electricity, and water if possible. Take your emergency kit. Leave a note indicating where you went.",
       "priority": 2
     },
     {
       "id": "gas-leak",
       "category": "after",
-      "title": "Gas leak detection and response",
+      "title": "Gas leak detection and response 燃气泄漏检测与应对",
       "keywords": ["gas", "smell", "leak", "fumes", "煤气", "燃气"],
-      "content": "Signs of gas leak: hissing sound, gas odor, dead plants. If suspected: Do NOT use matches, lighters, or electrical switches. Open windows and doors. Shut off main gas valve if safe. Evacuate immediately. Call gas company from outside. Never use candles for light - use flashlights only.",
+      "content": "Signs of a gas leak: hissing sound, gas odor (like rotten eggs), dead plants. If suspected: Do NOT use matches, lighters, or electrical switches. Open windows and doors. Shut off the main gas valve if safe to do so. Evacuate immediately. Call the gas company from outside. Never use candles for light - use flashlights only.",
+      "priority": 1
+    },
+    {
+      "id": "home-safety-check-after",
+      "category": "after",
+      "title": "Post-earthquake home safety check 地震后检查房屋安全",
+      "keywords": ["inspect", "safety check", "damage", "gas", "electrical", "water", "hazards", "检查", "房屋安全", "燃气", "水电"],
+      "content": "Check for the smell of gas. Check for damaged electrical lines. Check for liquid dripping or puddling from water pipes. Check for masonry chimneys that have cracked or shifted. Check for walls that are visibly racked or leaning, or doors and windows that are stuck. If significant damage is suspected, request a home safety evaluation.",
       "priority": 2
     },
     {
       "id": "no-power",
       "category": "after",
-      "title": "Dealing with power outage",
+      "title": "Dealing with a power outage 应对停电",
       "keywords": ["power", "electricity", "blackout", "lights", "电", "停电"],
-      "content": "Use flashlights, not candles (fire hazard). Unplug appliances to prevent damage from power surge. Keep refrigerator/freezer closed. Use generators outdoors only - never inside. Have battery-powered radio for updates. Conserve phone battery. If power lines are down, stay at least 30 feet away.",
+      "content": "Use flashlights, not candles (fire hazard). Unplug appliances to prevent damage from a power surge. Keep refrigerator/freezer doors closed. Use generators outdoors only - never inside. Have a battery-powered radio for updates. Conserve your phone battery. If power lines are down, stay at least 30 feet away.",
       "priority": 2
     },
     {
-      "id": "communication",
-      "category": "after",
-      "title": "Emergency communication",
-      "keywords": ["call", "phone", "contact", "communicate", "联系", "通讯"],
-      "content": "Text messages often work when calls don't. Send one 'I'm OK' message to reduce network congestion. Use social media to mark yourself safe. Have out-of-area contact as family message center. Keep calls brief. Save battery by airplane mode when not using. Hand-crank or solar chargers useful.",
+      "id": "communication-plan",
+      "category": "preparation",
+      "title": "Create a communication plan 制定通讯计划",
+      "keywords": ["call", "phone", "contact", "communicate", "out-of-state", "联系", "通讯", "计划"],
+      "content": "Text messages often work when calls don't. Send one 'I'm OK' message to reduce network congestion. Designate an out-of-state contact for all family members to call or text. This contact can relay information among separated family members. Keep calls brief. Save battery by using airplane mode when not using your phone. Hand-crank or solar chargers are useful.",
       "priority": 2
-    },
-    {
-      "id": "shelter-temporary",
-      "category": "after",
-      "title": "Creating temporary shelter",
-      "keywords": ["shelter", "tent", "cover", "protection", "避难所", "庇护"],
-      "content": "If building unsafe: Set up in open area away from damaged structures, power lines, trees. Use tarps, blankets, or debris for basic shelter. Insulate from ground with cardboard, leaves. Protect from elements. Stay visible for rescuers. Group together for warmth. Mark location with bright colors.",
-      "priority": 3
     },
     {
       "id": "food-safety",
       "category": "after",
-      "title": "Food safety after earthquake",
+      "title": "Food safety after an earthquake 地震后食品安全",
       "keywords": ["food", "eat", "hungry", "spoiled", "食物", "吃"],
-      "content": "Eat perishables first if no power. Discard food that was above 40°F for 2+ hours. When in doubt, throw it out. Canned goods safe unless damaged. Check for broken glass contamination. Eat high-calorie foods. Avoid salty foods if water scarce. Never taste food to check if spoiled.",
+      "content": "Eat perishables first if there is no power. Discard food that was above 40°F (4°C) for 2+ hours. When in doubt, throw it out. Canned goods are safe unless the can is damaged. Check for broken glass contamination. Eat high-calorie foods. Avoid salty foods if water is scarce. Never taste food to check if it is spoiled.",
       "priority": 3
     },
     {
-      "id": "sanitation",
-      "category": "after",
-      "title": "Sanitation without water",
-      "keywords": ["toilet", "bathroom", "sanitation", "waste", "卫生间", "厕所"],
-      "content": "If toilets don't flush: Line toilet bowl with plastic bag, add cat litter or dirt after use. Seal and dispose properly. Create latrine at least 100 feet from water sources. Use hand sanitizer or bleach solution (1:9 ratio). Bury human waste 6-8 inches deep. Mark contaminated areas.",
-      "priority": 3
+      "id": "child-care-provider-prep",
+      "category": "special-populations",
+      "title": "Preparedness for Child Care Providers 儿童保育员的准备工作",
+      "keywords": ["child care", "daycare", "provider", "school", "children", "kids", "儿童", "保育", "学校"],
+      "content": "Conduct a 'hazard hunt' to secure furniture and objects. Develop a plan for reuniting families and maintain up-to-date emergency contacts. Teach children to Drop, Cover, and Hold. Conduct regular earthquake drills. Prepare an emergency kit specifically for the children in your care, including diapers, wipes, and essential medicines.",
+      "priority": 2
     },
     {
-      "id": "children-safety",
-      "category": "special",
-      "title": "Protecting children during earthquake",
-      "keywords": ["children", "kids", "baby", "child", "孩子", "儿童"],
-      "content": "Practice DROP, COVER, HOLD ON with children regularly. During quake, protect infants by curling body around them. Teach children their full name, parents' names, and address. Keep comfort items accessible. Explain aftershocks simply. Maintain routines when possible. Watch for signs of trauma.",
-      "priority": 3
-    },
-    {
-      "id": "pets-safety",
-      "category": "special",
-      "title": "Pet safety during earthquake",
-      "keywords": ["pet", "dog", "cat", "animal", "宠物"],
-      "content": "Secure pets quickly after shaking stops - they may be frightened and run. Keep leashes/carriers accessible. Never leave pets tied up. Include pet supplies in emergency kit. Animals may behave strangely - approach carefully. Keep pets away from hazards. Have current photos for identification.",
-      "priority": 4
-    },
-    {
-      "id": "document-protection",
-      "category": "preparation",
-      "title": "Protecting important documents",
-      "keywords": ["documents", "papers", "ID", "passport", "文件", "证件"],
-      "content": "Keep copies of important documents in waterproof container: IDs, insurance policies, medical records, bank info. Store copies in multiple locations or cloud. Take photos of documents with phone. Have cash in small bills. Keep list of important phone numbers written down.",
-      "priority": 4
+      "id": "child-emotional-support",
+      "category": "recovery",
+      "title": "Children's emotional support after an earthquake 地震后儿童的心理安抚",
+      "keywords": ["children", "emotional", "trauma", "fear", "reassure", "psychological", "儿童", "心理", "恐惧", "安抚"],
+      "content": "Earthquakes can be terrifying. It is natural for children and adults to be afraid. During and after an earthquake, children will usually become tearful and clinging. Deal with the situation as calmly as you can. Let the children know that you understand why they are scared. Comfort them with a hug or reassuring words. Reassure them that their parents will come for them. Return to a normal routine as soon as possible.",
+      "priority": 2
     },
     {
       "id": "psychological-care",
       "category": "recovery",
-      "title": "Managing stress and trauma",
+      "title": "Managing stress and trauma 管理压力和创伤",
       "keywords": ["stress", "scared", "trauma", "anxiety", "fear", "恐惧", "焦虑"],
-      "content": "Normal reactions include fear, anxiety, difficulty sleeping. Take deep breaths to calm down. Talk about experiences. Maintain routines. Limit media exposure. Help others - it aids your recovery. Seek professional help if symptoms persist. Children may regress - be patient and reassuring.",
-      "priority": 4
+      "content": "Normal reactions include fear, anxiety, and difficulty sleeping. Take deep breaths to calm down. Talk about your experiences. Maintain routines. Limit media exposure. Helping others can aid your own recovery. Seek professional help if symptoms persist. Children may regress; be patient and reassuring.",
+      "priority": 3
     },
     {
       "id": "building-inspection",
       "category": "after",
-      "title": "Checking building safety",
+      "title": "Checking building safety 检查建筑物安全",
       "keywords": ["building", "house", "structure", "safe", "damage", "建筑", "房屋"],
-      "content": "Look for: visible cracks in walls/foundation, doors/windows that don't close properly, sagging ceilings, leaning walls, gaps between walls and floors. If any present, evacuate and get professional inspection. Check chimney from distance. Document damage with photos for insurance.",
+      "content": "Look for: visible cracks in walls/foundation, doors/windows that don't close properly, sagging ceilings, leaning walls, gaps between walls and floors. If any are present, evacuate and get a professional inspection. Check the chimney from a distance. Document all damage with photos for insurance purposes.",
+      "priority": 2
+    },
+    {
+      "id": "earthquake-drill",
+      "category": "preparation",
+      "title": "Practice earthquake drills 练习地震演习",
+      "keywords": ["drill", "practice", "exercise", "演练", "练习"],
+      "content": "Practice DROP, COVER, and HOLD ON regularly with your family. Get everyone to participate, especially children. Practice what to do if you're in different rooms. Make sure children understand their school's emergency procedures. Coordinate reunion plans. Regular practice helps create an automatic response during a real emergency.",
+      "priority": 1
+    },
+    {
+      "id": "safe-spots",
+      "category": "preparation",
+      "title": "Identify safe spots in your home 确定家中的安全点",
+      "keywords": ["safe", "spot", "location", "place", "安全", "位置"],
+      "content": "Identify safe spots in each room: Under sturdy tables away from walls, under covers with a pillow if in bed, near interior walls away from windows. Avoid: areas near windows, mirrors, heavy objects that could fall, bookcases, cabinets, and heating units. Most injuries come from falling objects, not building collapse.",
+      "priority": 2
+    },
+    {
+      "id": "emergency-kit",
+      "category": "preparation",
+      "title": "Build an emergency supply kit 准备应急物资包",
+      "keywords": ["kit", "supplies", "emergency", "prepared", "应急包", "物资"],
+      "content": "Assemble an emergency kit with: First aid supplies, 3+ days of water (one gallon per person per day) and non-perishable food, flashlight and batteries, battery-powered or hand-crank radio, phone charger, cash, copies of important documents, medications, and pet supplies. Additional items: wrench to turn off utilities, sturdy shoes, gloves, fire extinguisher, and whistle. Store in an accessible location.",
+      "priority": 2
+    },
+    {
+      "id": "secure-hazards",
+      "category": "preparation",
+      "title": "Secure home hazards 固定家中的危险品",
+      "keywords": ["secure", "hazards", "furniture", "objects", "固定", "危险"],
+      "content": "Secure potential hazards: Fasten bookcases, shelves, and tall cabinets to wall studs. Use flexible connectors for gas appliances. Move heavy objects to lower shelves. Secure heavy items like TVs with straps. Install latches on cabinet doors. Move beds and cribs away from windows.",
+      "priority": 2
+    },
+    {
+      "id": "water-heater-restraint",
+      "category": "structural-hazards",
+      "title": "Restrain your water heater 固定热水器",
+      "keywords": ["water heater", "secure", "restrain", "brace", "gas line", "fire hazard", "热水器", "固定", "燃气"],
+      "content": "Water heaters are a common source of damage, ranging from fire ignited by damaged gas lines to water damage from tank fractures. They are also a source of emergency water. Water heaters should be braced to adjacent walls with straps, and flexible lines should be used for water and gas connections. Pre-manufactured seismic strapping kits are available.",
+      "priority": 2
+    },
+    {
+      "id": "masonry-chimney-hazard",
+      "category": "structural-hazards",
+      "title": "Masonry chimney hazards 砖石烟囱的危险",
+      "keywords": ["chimney", "masonry", "brick", "collapse", "hazard", "retrofit", "烟囱", "砖石", "危险", "倒塌"],
+      "content": "Masonry (brick or stone) chimneys are frequently damaged and can collapse in moderate to large earthquakes, posing a risk of injury if they fall. Short of full reconstruction, it is generally considered infeasible to retrofit chimneys to meet modern earthquake bracing requirements. The best retrofit is partial or complete removal of the masonry.",
       "priority": 3
+    },
+    {
+      "id": "weak-cripple-walls",
+      "category": "structural-hazards",
+      "title": "Weak cripple walls 薄弱的矮墙",
+      "keywords": ["cripple wall", "foundation", "retrofit", "collapse", "sliding", "矮墙", "地基", "加固", "结构"],
+      "content": "A cripple wall is a short wood foundation wall that is vulnerable to damage. Inadequately anchored homes can slide off their foundations, and inadequately braced cripple walls can deflect horizontally, causing significant damage and potential collapse. These can be retrofitted by strengthening the walls with plywood and anchoring them to the foundation.",
+      "priority": 3
+    },
+    {
+      "id": "living-space-over-garage",
+      "category": "structural-hazards",
+      "title": "Living space over garage (soft story) 车库上方的居住空间（软层）",
+      "keywords": ["garage", "soft story", "retrofit", "collapse", "living space", "车库", "软层", "加固", "倒塌"],
+      "content": "The garage area of a home often has less earthquake bracing than other areas, particularly at the large garage door opening. Homes with living spaces over a garage can sway and collapse. These homes can be retrofitted by strengthening the walls around the garage perimeter with steel frames or plywood shear walls.",
+      "priority": 3
+    },
+    {
+      "id": "earthquake-insurance",
+      "category": "preparation",
+      "title": "Consider earthquake insurance 考虑购买地震保险",
+      "keywords": ["insurance", "financial", "damage", "policy", "recover", "保险", "地震险", "经济损失", "赔偿"],
+      "content": "Damage to your home and personal property caused by an earthquake is not covered by a standard homeowners' insurance policy. By not having earthquake insurance, you risk losing everything you own or being unable to afford repairs. Consider purchasing earthquake insurance to protect the financial investment in your home and personal property.",
+      "priority": 4
+    },
+    {
+      "id": "utility-shutoff",
+      "category": "preparation",
+      "title": "Know utility shut-off procedures 了解公共设施关闭程序",
+      "keywords": ["utilities", "gas", "electricity", "water", "shut", "off", "水电", "关闭"],
+      "content": "Learn how to shut off your utilities. Know the location of your main gas valve, electrical panel, and water main. Teach all capable family members the procedures. Gas: Turn off only if you smell gas or hear hissing. Electricity: Turn off the main breaker. Water: Turn off the main valve. Keep necessary tools (like a crescent wrench) accessible.",
+      "priority": 2
+    },
+    {
+      "id": "tsunami",
+      "category": "secondary-hazards",
+      "title": "Tsunami response after an earthquake 地震后应对海啸",
+      "keywords": ["tsunami", "sea", "wave", "escape", "high ground", "coastal", "海啸", "波浪", "逃生", "高地", "沿海"],
+      "content": "Tsunamis happen when the seafloor changes shape, displacing water. If you feel a strong earthquake near the coast and notice the sea receding or a large wave approaching, evacuate inland or to higher ground immediately. If swept into the water, find floating objects and avoid other debris. Lie on your back to conserve energy and keep your body afloat. Do not drink seawater.",
+      "priority": 1
+    },
+    {
+      "id": "landslide",
+      "category": "secondary-hazards",
+      "title": "Landslide response after an earthquake 地震后应对山体滑坡",
+      "keywords": ["landslide", "rockfall", "mountain", "slope", "escape", "山体滑坡", "落石", "山坡", "逃生"],
+      "content": "Watch for signs of falling rocks or soil movement after an earthquake. Listen for unusual sounds like rocks or trees falling. If a landslide occurs, quickly move to a safer location away from the slope. If caught by falling rocks or soil, take cover behind large rocks or sturdy objects.",
+      "priority": 2
+    },
+    {
+      "id": "fire",
+      "category": "secondary-hazards",
+      "title": "Fire response after an earthquake 地震后应对火灾",
+      "keywords": ["fire", "smoke", "escape", "burning", "extinguisher", "火灾", "烟雾", "逃生", "燃烧", "灭火器"],
+      "content": "If possible, turn off electricity and gas immediately after an earthquake to prevent fires. If a fire starts, try to put it out with a fire extinguisher if it is small. If not, evacuate immediately. Cover yourself with wet clothes or bedding and move quickly towards a safe exit. Do not use elevators. If smoke is present, cover your mouth and nose with a wet towel, stay low to the ground, and crawl to escape.",
+      "priority": 1
     }
   ],
   "categories": {
-    "during": "During the earthquake",
-    "after": "Immediately after earthquake", 
-    "first-aid": "Medical and first aid",
-    "special": "Special situations",
-    "preparation": "Preparation and planning",
-    "recovery": "Recovery and psychological care"
+    "during": "During the Earthquake",
+    "after": "Immediately After",
+    "first-aid": "First Aid",
+    "special-populations": "Special Populations",
+    "preparation": "Preparation & Planning",
+    "recovery": "Recovery & Psychological Care",
+    "science-concepts": "Science & Concepts",
+    "secondary-hazards": "Secondary Hazards",
+    "structural-hazards": "Structural Hazards"
   },
   "sources": [
     "FEMA (Federal Emergency Management Agency)",
     "American Red Cross",
     "USGS (United States Geological Survey)",
     "CDC (Centers for Disease Control and Prevention)",
-    "Ready.gov Emergency Preparedness"
+    "Ready.gov Emergency Preparedness",
+    "中国地震学会",
+    "科普圆地",
+    "云南省人口和卫生健康宣传教育中心"
   ]
 }

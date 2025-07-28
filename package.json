@@ -4,9 +4,6 @@
   "main": "node_modules/expo/AppEntry.js",
   "expo": {
     "plugins": [
-      "plugin-one",
-      "plugin-two",
-      "expo-speech-recognition",
       [
         "expo-speech-recognition",
         {
@@ -58,7 +55,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/runtime": "^7.27.6",
-    "@types/react": "~18.2.45",
+    "@types/react": "~19.0.10",
     "@types/react-native": "^0.73.0",
     "jetifier": "^2.0.0",
     "typescript": "~5.3.3"

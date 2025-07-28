@@ -46,7 +46,7 @@ export class GemmaClient {
         throw new Error('当前实现不支持stream模式');
       }
       const completion = await this.openai.chat.completions.create({
-        model: 'google/gemma-3n-E2B',
+        model: 'google/gemma-3n-E2B-it',
         messages: params.messages.map(msg => ({
           role: msg.role as 'user' | 'assistant',
           content: msg.content
@@ -68,4 +68,4 @@ export class GemmaClient {
       throw new Error(`在线API调用失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
   }
-}
+} 
