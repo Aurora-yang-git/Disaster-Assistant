@@ -64,37 +64,75 @@ export class GemmaClient {
       return;
     }
     this.isLoading = true;
-    console.log("Loading TinyLlama model...");
+    console.log("Loading Gemma 3n model...");
+    
     try {
       const documentsDirectory = FileSystem.documentDirectory;
-      const localModelPath = documentsDirectory + 'tinyllama.gguf';
       
-      console.log("=== SIMULATOR DOCUMENT DIRECTORY ===");
-      console.log("Document directory:", documentsDirectory);
-      console.log("Expected model path:", localModelPath);
-      console.log("=====================================");
+      // Try multiple model names and locations
+      const modelNames = [
+        'gemma-3n-Q4_K_M.gguf',  // Primary Gemma 3n model
+        'gemma-3n.gguf',         // Alternative name
+        'tinyllama.gguf'         // Fallback for testing
+      ];
       
-      // Check if model exists in document directory
-      const fileInfo = await FileSystem.getInfoAsync(localModelPath);
+      let modelPath: string | null = null;
+      let modelFound = false;
       
-      if (!fileInfo.exists) {
-        throw new Error(`Model not found at ${localModelPath}. Please manually copy tinyllama.gguf to this location.`);
+      // Check each possible model name
+      for (const modelName of modelNames) {
+        const candidatePath = documentsDirectory + modelName;
+        const fileInfo = await FileSystem.getInfoAsync(candidatePath);
+        
+        if (fileInfo.exists) {
+          modelPath = candidatePath;
+          modelFound = true;
+          console.log(`✅ Found model: ${modelName}`);
+          console.log(`   Path: ${candidatePath}`);
+          console.log(`   Size: ${(fileInfo.size! / 1073741824).toFixed(2)} GB`);
+          break;
+        }
       }
       
-      console.log("Initializing Llama with model at:", localModelPath);
+      if (!modelFound || !modelPath) {
+        console.error("❌ Model not found in any expected location");
+        console.error("\n📱 Model Deployment Instructions:");
+        console.error("==================================");
+        console.error("1. Make sure you have the Gemma 3n model file (Q4_K_M format, ~3GB)");
+        console.error("2. Run the deployment script from project root:");
+        console.error("   ./scripts/deploy-model.sh");
+        console.error("\n🔍 Expected locations:");
+        modelNames.forEach(name => {
+          console.error(`   - ${documentsDirectory}${name}`);
+        });
+        console.error("\n💡 For simulators:");
+        console.error("   iOS: The script will use xcrun simctl");
+        console.error("   Android: The script will use adb push");
+        console.error("\n⚠️  Note: The model file is >2GB, so it must be deployed");
+        console.error("   using native tools, not through Node.js/Metro bundler");
+        
+        throw new Error(
+          "Model not found. Please run ./scripts/deploy-model.sh to deploy the Gemma 3n model."
+        );
+      }
+      
+      console.log("Initializing Llama with model at:", modelPath);
       const llama = await initLlama({
-        model: localModelPath,
+        model: modelPath,
         use_mlock: true,
         n_ctx: 2048,
         n_batch: 512,
         n_threads: 4,
       });
+      
       this.context = llama;
       this.isModelLoaded = true;
-      console.log("TinyLlama model loaded successfully");
+      console.log("✅ Gemma 3n model loaded successfully!");
+      
     } catch (e) {
-      console.error("Failed to load TinyLlama model:", e);
+      console.error("❌ Failed to load Gemma 3n model:", e);
       this.isModelLoaded = false;
+      throw e; // Re-throw to handle in UI
     } finally {
       this.isLoading = false;
     }
@@ -126,27 +164,32 @@ export class GemmaClient {
       console.log("No RAG context found. Calling Gemma...");
       if (!this.context) {
         responseContent =
-          "Gemma model is not loaded. Cannot generate a response.";
+          "The AI model is not loaded yet. Please wait a moment and try again.";
       } else {
         try {
-          // TinyLlama chat format
-          const prompt = `<|system|>
-You are a helpful disaster response assistant. Provide clear, actionable guidance in Chinese.
-<|user|>
-${lastUserMessage}
-<|assistant|>`;
+          // Gemma chat format with conversation history in English
+          const prompt = `You are a professional disaster response AI assistant. Provide clear, actionable guidance for emergency situations.
+
+${conversationHistory}${lastUserMessage}
+
+Assistant:`;
           
           const completion = await this.context.completion({
             prompt: prompt,
             temperature: 0.7,
             n_predict: 256, // Max tokens to generate
-            stop: ["<|user|>", "<|system|>"], // Stop sequences
+            stop: ["\nUser:", "\nHuman:", "\n\nUser:", "\n\nHuman:"], // Stop sequences
           });
-          responseContent = completion.text;
+          responseContent = completion.text.trim();
+          
+          // Ensure we have a valid response
+          if (!responseContent || responseContent.length < 5) {
+            responseContent = "I apologize, but I couldn't generate a valid response. Please try rephrasing your question.";
+          }
         } catch (e) {
           console.error("Error during Gemma completion:", e);
           responseContent =
-            "An error occurred while generating a response from Gemma.";
+            "An error occurred while generating a response. Please ensure the model is properly loaded or try restarting the app.";
         }
       }
     }
@@ -223,24 +266,24 @@ ${lastUserMessage}
     return response;
   }
 
-  // 对话历史格式化：构建完整的对话上下文
+  // Format conversation history in English for better model understanding
   private formatConversationHistory(messages: Message[]): string {
     if (messages.length === 0) return '';
     
-    // 只保留最近6轮对话，避免上下文过长
-    const recentMessages = messages.slice(-12); // 6轮对话 = 12条消息（用户+助手）
+    // Keep last 6 rounds of conversation to avoid context being too long
+    const recentMessages = messages.slice(-12); // 6 rounds = 12 messages (user + assistant)
     
-    let conversationContext = '对话历史:\n';
+    let conversationContext = 'Conversation History:\n';
     
     for (const msg of recentMessages) {
       if (msg.role === 'user') {
-        conversationContext += `用户: ${msg.content}\n`;
+        conversationContext += `User: ${msg.content}\n`;
       } else if (msg.role === 'assistant') {
-        conversationContext += `助手: ${msg.content}\n`;
+        conversationContext += `Assistant: ${msg.content}\n`;
       }
     }
     
-    conversationContext += '\n当前问题: ';
+    conversationContext += '\nCurrent Question: ';
     return conversationContext;
   }
 }

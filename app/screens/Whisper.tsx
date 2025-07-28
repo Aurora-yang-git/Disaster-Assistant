@@ -72,7 +72,7 @@ export default function Whisper() {
   const handleStartRecording = async () => {
     const success = await startRecording();
     if (!success) {
-      Alert.alert("权限被拒绝", "需要麦克风权限才能使用语音功能");
+      Alert.alert("Permission Denied", "Microphone permission is required to use voice features");
     }
   };
 
@@ -185,9 +185,9 @@ export default function Whisper() {
               size={64}
               color={COLORS.bubbleAI + "99"}
             />
-            <Text style={styles.emptyStateText}>开始对话</Text>
+            <Text style={styles.emptyStateText}>Start Conversation</Text>
             <Text style={styles.emptyStateSubtext}>
-              长按录音按钮开始语音输入
+              Long press the record button to start voice input
             </Text>
           </View>
         ) : (
@@ -201,7 +201,7 @@ export default function Whisper() {
                 <View style={styles.typingDot} />
                 <View style={styles.typingDot} />
               </View>
-              <Text style={styles.processingText}>AI正在思考中...</Text>
+              <Text style={styles.processingText}>AI is thinking...</Text>
             </View>
           </View>
         )}
@@ -214,7 +214,7 @@ export default function Whisper() {
         keyboardVerticalOffset={90}>
         <TextInput
           style={styles.textInput}
-          placeholder="或在此输入文字测试..."
+          placeholder="Or type here to test..."
           placeholderTextColor={COLORS.textSub}
           value={textInput}
           onChangeText={setTextInput}
@@ -254,7 +254,7 @@ export default function Whisper() {
             </TouchableOpacity>
           </Animated.View>
           <Text style={styles.instructionText}>
-            {isRecording ? "松开停止录音" : "长按开始录音"}
+            {isRecording ? "Release to stop recording" : "Long press to start recording"}
           </Text>
         </View>
       </View>

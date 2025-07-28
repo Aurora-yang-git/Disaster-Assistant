@@ -140,51 +140,53 @@ export class GemmaClient {
     return response;
   }
 
-  // 对话历史格式化：构建完整的对话上下文
+  // Format conversation history in English for consistency
   private formatConversationHistory(messages: Message[]): string {
     if (messages.length === 0) return '';
     
-    // 只保留最近6轮对话，避免上下文过长
-    const recentMessages = messages.slice(-12); // 6轮对话 = 12条消息（用户+助手）
+    // Keep last 6 rounds of conversation to avoid context being too long
+    const recentMessages = messages.slice(-12); // 6 rounds = 12 messages (user + assistant)
     
-    let conversationContext = '对话历史:\n';
+    let conversationContext = 'Conversation History:\n';
     
     for (const msg of recentMessages) {
       if (msg.role === 'user') {
-        conversationContext += `用户: ${msg.content}\n`;
+        conversationContext += `User: ${msg.content}\n`;
       } else if (msg.role === 'assistant') {
-        conversationContext += `助手: ${msg.content}\n`;
+        conversationContext += `Assistant: ${msg.content}\n`;
       }
     }
     
-    conversationContext += '\n当前问题: ';
+    conversationContext += '\nCurrent Question: ';
     return conversationContext;
   }
 
-  // 生成上下文相关的降级回复
+  // Generate contextual fallback response in English
   private generateContextualFallback(currentMessage: string, messages: Message[]): string {
     const hasEarthquakeContext = messages.some(msg => 
-      msg.content.toLowerCase().includes('地震') || 
-      msg.content.toLowerCase().includes('earthquake')
+      msg.content.toLowerCase().includes('earthquake') ||
+      msg.content.toLowerCase().includes('quake') ||
+      msg.content.toLowerCase().includes('tremor')
     );
     
     const hasDisasterContext = messages.some(msg => 
-      msg.content.toLowerCase().includes('灾难') || 
+      msg.content.toLowerCase().includes('disaster') || 
       msg.content.toLowerCase().includes('emergency') ||
-      msg.content.toLowerCase().includes('救援')
+      msg.content.toLowerCase().includes('rescue') ||
+      msg.content.toLowerCase().includes('survival')
     );
 
     let contextualResponse = '[Web Mock] ';
     
     if (hasEarthquakeContext) {
-      contextualResponse += `我注意到您之前询问了地震相关的问题。关于"${currentMessage}"，我在地震知识库中没有找到具体信息。`;
+      contextualResponse += `I noticed you asked about earthquake-related topics earlier. Regarding "${currentMessage}", I couldn't find specific information in the earthquake knowledge base.`;
     } else if (hasDisasterContext) {
-      contextualResponse += `基于我们之前关于灾难应急的对话，关于"${currentMessage}"，我需要更多具体信息才能提供准确建议。`;
+      contextualResponse += `Based on our previous conversation about emergency preparedness, regarding "${currentMessage}", I need more specific information to provide accurate guidance.`;
     } else {
-      contextualResponse += `关于"${currentMessage}"，我在知识库中没有找到相关信息。`;
+      contextualResponse += `Regarding "${currentMessage}", I couldn't find relevant information in the knowledge base.`;
     }
     
-    contextualResponse += `\n\n💡 提示：在Web版本中，我主要能回答地震安全和灾难应急相关的问题。\n\n🚀 要获得完整的AI对话能力，请在Android设备上运行此应用。\n\n🔍 您可以尝试问我：\n- "地震时应该怎么办？"\n- "如何准备应急包？"\n- "高楼遇到地震怎么办？"`;
+    contextualResponse += `\n\n💡 Note: In the web version, I primarily answer earthquake safety and disaster preparedness questions.\n\n🚀 For full AI conversation capabilities, please run this app on an Android device.\n\n🔍 You can try asking me:\n- "What should I do during an earthquake?"\n- "How to prepare an emergency kit?"\n- "What to do in a high-rise during earthquake?"`;
     
     return contextualResponse;
   }
