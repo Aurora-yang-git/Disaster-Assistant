@@ -16,6 +16,7 @@ export interface ChatCompletionParams {
   max_tokens?: number;
   temperature?: number;
   stream?: boolean;
+  userContext?: string; // Added for user context injection
 }
 
 export interface ChatCompletionResponse {
@@ -71,6 +72,7 @@ export class GemmaClient {
 
     const lastUserMessage = params.messages.filter(msg => msg.role === 'user').pop()?.content || '';
     const conversationHistory = this.formatConversationHistory(params.messages);
+    const contextInfo = params.userContext || '';
     
     // Use RAG service to process the query
     const ragContext = await this.ragService.processQuery(lastUserMessage);
@@ -84,7 +86,7 @@ export class GemmaClient {
     } else {
       // For web version, provide a contextual fallback response
       console.log('[Web Mock] No RAG context found. Using contextual fallback response');
-      responseContent = this.generateContextualFallback(lastUserMessage, params.messages);
+      responseContent = this.generateContextualFallback(lastUserMessage, params.messages, contextInfo);
     }
     
     // Validate response for safety
@@ -137,6 +139,14 @@ export class GemmaClient {
       response += `\n\n*Source: ${topKnowledge.source}*`;
     }
 
+    // Clean up any model-specific tokens
+    response = response
+      .replace(/<end_of_turn>/g, '')
+      .replace(/<start_of_turn>/g, '')
+      .replace(/<eos>/g, '')
+      .replace(/<bos>/g, '')
+      .trim();
+
     return response;
   }
 
@@ -162,7 +172,7 @@ export class GemmaClient {
   }
 
   // Generate contextual fallback response in English
-  private generateContextualFallback(currentMessage: string, messages: Message[]): string {
+  private generateContextualFallback(currentMessage: string, messages: Message[], contextInfo: string): string {
     const hasEarthquakeContext = messages.some(msg => 
       msg.content.toLowerCase().includes('earthquake') ||
       msg.content.toLowerCase().includes('quake') ||
@@ -177,6 +187,11 @@ export class GemmaClient {
     );
 
     let contextualResponse = '[Web Mock] ';
+    
+    // Include user context if available
+    if (contextInfo) {
+      contextualResponse += `I understand your current situation: ${contextInfo}\n\n`;
+    }
     
     if (hasEarthquakeContext) {
       contextualResponse += `I noticed you asked about earthquake-related topics earlier. Regarding "${currentMessage}", I couldn't find specific information in the earthquake knowledge base.`;

@@ -16,6 +16,7 @@ export interface ChatCompletionParams {
   max_tokens?: number;
   temperature?: number;
   stream?: boolean;
+  userContext?: string; // Added for user context injection
 }
 
 export interface ChatCompletionResponse {
@@ -168,7 +169,18 @@ export class GemmaClient {
       } else {
         try {
           // Gemma chat format with conversation history in English
+          const contextInfo = params.userContext || '';
+          
+          if (contextInfo) {
+            console.log('=== INJECTING USER CONTEXT INTO PROMPT ===');
+            console.log('User context:', contextInfo);
+            console.log('=========================================');
+          }
+          
           const prompt = `You are a professional disaster response AI assistant. Provide clear, actionable guidance for emergency situations.
+${contextInfo}
+IMPORTANT: If user context is provided above, reference it in your response when relevant.
+Example: "Since you're on the 5th floor..." or "Given that you're injured..."
 
 ${conversationHistory}${lastUserMessage}
 
@@ -181,6 +193,14 @@ Assistant:`;
             stop: ["\nUser:", "\nHuman:", "\n\nUser:", "\n\nHuman:"], // Stop sequences
           });
           responseContent = completion.text.trim();
+          
+          // Clean up model-specific tokens
+          responseContent = responseContent
+            .replace(/<end_of_turn>/g, '')
+            .replace(/<start_of_turn>/g, '')
+            .replace(/<eos>/g, '')
+            .replace(/<bos>/g, '')
+            .trim();
           
           // Ensure we have a valid response
           if (!responseContent || responseContent.length < 5) {
@@ -262,6 +282,14 @@ Assistant:`;
     } else if (ragContext.emergencyPriority === "urgent") {
       response = `⚠️ URGENT: ${response}`;
     }
+
+    // Clean up any model-specific tokens
+    response = response
+      .replace(/<end_of_turn>/g, '')
+      .replace(/<start_of_turn>/g, '')
+      .replace(/<eos>/g, '')
+      .replace(/<bos>/g, '')
+      .trim();
 
     return response;
   }

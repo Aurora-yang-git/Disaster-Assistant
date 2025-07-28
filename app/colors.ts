@@ -1,11 +1,31 @@
-// 统一管理全局配色，方便后续换色
+// Global color scheme optimized for emergency/disaster response
 export const COLORS = {
-  background: '#210F37',      // 主背景色
-  bubbleUser: '#A55B4B',     // 用户气泡
-  bubbleAI: '#4F1C51',       // AI气泡
-  button: '#A55B4B',         // 主按钮色
-  buttonActive: '#DCA06D',   // 按钮高亮
-  text: '#FFFFFF',           // 主要文字色
-  textSub: '#DCA06D',        // 次要文字色
-  border: '#4F1C51',         // 边框色
+  // Core colors - high contrast for emergency situations
+  background: '#0F0F0F',      // Pure dark background for maximum contrast
+  backgroundSecondary: '#1A1A1A', // Slightly lighter dark
+  
+  // Message bubbles - clear distinction
+  bubbleUser: '#2563EB',     // Clear blue for user messages
+  bubbleAI: '#1F2937',       // Dark gray for AI messages
+  
+  // Interactive elements
+  button: '#DC2626',         // Emergency red for primary actions
+  buttonActive: '#EF4444',   // Brighter red when active
+  
+  // Text hierarchy
+  text: '#FFFFFF',           // Primary text white
+  textSub: '#A0A0A0',        // Secondary text gray
+  
+  // UI elements
+  border: 'rgba(255, 255, 255, 0.1)', // Subtle borders
+  
+  // Status colors
+  success: '#10B981',        // Green for positive/safe status
+  warning: '#F59E0B',        // Orange for warnings
+  danger: '#DC2626',         // Red for danger/emergency
+  
+  // Additional UI components
+  contextBar: '#1E293B',     // Dark blue-gray for context display
+  quickAction: '#374151',    // Gray for quick action buttons
+  quickActionActive: '#4B5563', // Darker gray when pressed
 }; 

@@ -11,13 +11,17 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Vibration,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Markdown from 'react-native-markdown-display';
 import { useOfflineVoice } from "../hooks/useOfflineVoice";
 // import { KnowledgeLoader } from '../data/knowledgeLoader'; // Replaced by GemmaClient
 import { GemmaOpenAIWrapper } from '../services/gemma/GemmaClient';
 import { Message, Role } from "../hooks/useApi"; // GemmaClient uses this type
 import { COLORS } from "../colors";
+import { useUserContext } from "../hooks/useUserContext";
 
 const { width } = Dimensions.get("window");
 
@@ -42,6 +46,8 @@ export default function Whisper() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [pulseAnim] = useState(new Animated.Value(1));
   const [textInput, setTextInput] = useState("");
+  const { updateContext, formatContextForPrompt, context } = useUserContext();
+  const scrollViewRef = useRef<ScrollView>(null);
   const gemmaClientRef = useRef<GemmaOpenAIWrapper | null>(null);
   if (!gemmaClientRef.current) {
     gemmaClientRef.current = new GemmaOpenAIWrapper();
@@ -70,6 +76,10 @@ export default function Whisper() {
   }, [isRecording]);
 
   const handleStartRecording = async () => {
+    // Haptic feedback for button press
+    if (Platform.OS !== 'web') {
+      Vibration.vibrate(10);
+    }
     const success = await startRecording();
     if (!success) {
       Alert.alert("Permission Denied", "Microphone permission is required to use voice features");
@@ -78,6 +88,9 @@ export default function Whisper() {
 
   const processMessage = (text: string) => {
     if (!text || text.trim().length === 0) return;
+
+    // Update user context based on the message
+    updateContext(text);
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -100,11 +113,15 @@ export default function Whisper() {
       { role: Role.User, content: text },
     ];
 
-    // Call the GemmaClient (which currently simulates the decision engine)
+    // Get formatted context for the prompt
+    const userContext = formatContextForPrompt();
+
+    // Call the GemmaClient with user context
     gemmaClient.chat.completions
       .create({
         model: "gemma-3n",
         messages: messages,
+        userContext: userContext,
       })
       .then((completion: any) => {
         const aiResponseText =
@@ -122,6 +139,10 @@ export default function Whisper() {
         setTimeout(() => {
           setChatMessages((prev) => [...prev, aiMessage]);
           setIsProcessing(false);
+          // Auto-scroll to bottom
+          setTimeout(() => {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+          }, 100);
         }, 500);
       })
       .catch((error: any) => {
@@ -138,8 +159,22 @@ export default function Whisper() {
   };
 
   const handleSendText = () => {
-    processMessage(textInput);
-    setTextInput("");
+    if (textInput.trim()) {
+      // Haptic feedback
+      if (Platform.OS !== 'web') {
+        Vibration.vibrate(10);
+      }
+      processMessage(textInput);
+      setTextInput("");
+    }
+  };
+
+  const handleQuickAction = (action: string) => {
+    // Haptic feedback
+    if (Platform.OS !== 'web') {
+      Vibration.vibrate(10);
+    }
+    processMessage(action);
   };
 
   const handleStopRecording = async () => {
@@ -163,7 +198,15 @@ export default function Whisper() {
           styles.messageBubble,
           message.isUser ? styles.userMessageBubble : styles.aiMessageBubble,
         ]}>
-        <Text style={styles.messageText}>{message.text}</Text>
+        {message.isUser ? (
+          <Text style={styles.messageText}>{message.text}</Text>
+        ) : (
+          <Markdown 
+            style={markdownStyles}
+          >
+            {message.text}
+          </Markdown>
+        )}
         <Text style={styles.timestampText}>
           {message.timestamp.toLocaleTimeString([], {
             hour: "2-digit",
@@ -176,8 +219,28 @@ export default function Whisper() {
 
   return (
     <View style={styles.container}>
-      {/* 聊天区 */}
-      <ScrollView style={styles.chatArea} showsVerticalScrollIndicator={false}>
+      {/* Context awareness bar */}
+      {(context.location || context.status) && (
+        <View style={styles.contextBar}>
+          <Text style={styles.contextText}>
+            {context.location?.floor !== undefined && (
+              <Text>📍 Floor {context.location.floor} </Text>
+            )}
+            {context.status?.isInjured && <Text>• 🚑 Injured </Text>}
+            {context.status?.isTrapped && <Text>• ⚠️ Trapped </Text>}
+            {context.companions?.count && context.companions.count > 0 && (
+              <Text>• 👥 {context.companions.count} people </Text>
+            )}
+          </Text>
+        </View>
+      )}
+
+      {/* Chat area */}
+      <ScrollView 
+        ref={scrollViewRef}
+        style={styles.chatArea} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.chatContent}>
         {chatMessages.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons
@@ -196,16 +259,38 @@ export default function Whisper() {
         {isProcessing && (
           <View style={styles.processingContainer}>
             <View style={styles.processingBubble}>
-              <View style={styles.typingIndicator}>
-                <View style={styles.typingDot} />
-                <View style={styles.typingDot} />
-                <View style={styles.typingDot} />
-              </View>
-              <Text style={styles.processingText}>AI is thinking...</Text>
+              <ActivityIndicator size="small" color={COLORS.warning} style={styles.loadingIndicator} />
+              <Text style={styles.processingText}>Analyzing your situation...</Text>
             </View>
           </View>
         )}
       </ScrollView>
+
+      {/* Quick Actions */}
+      <View style={styles.quickActionsContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickActions}>
+          <TouchableOpacity 
+            style={styles.quickButton} 
+            onPress={() => handleQuickAction("I need immediate help!")}>
+            <Text style={styles.quickButtonText}>🚨 Emergency</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.quickButton} 
+            onPress={() => handleQuickAction("I'm injured and need medical help")}>
+            <Text style={styles.quickButtonText}>🏥 Medical Help</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.quickButton} 
+            onPress={() => handleQuickAction("I'm trapped and can't move")}>
+            <Text style={styles.quickButtonText}>🆘 Trapped</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.quickButton} 
+            onPress={() => handleQuickAction("I'm safe but need guidance")}>
+            <Text style={styles.quickButtonText}>✅ Safe</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
 
       {/* Input Panel */}
       <KeyboardAvoidingView
@@ -214,17 +299,20 @@ export default function Whisper() {
         keyboardVerticalOffset={90}>
         <TextInput
           style={styles.textInput}
-          placeholder="Or type here to test..."
+          placeholder="Type your message..."
           placeholderTextColor={COLORS.textSub}
           value={textInput}
           onChangeText={setTextInput}
-          onSubmitEditing={handleSendText} // Allow sending with keyboard 'return' key
+          onSubmitEditing={handleSendText}
+          returnKeyType="send"
+          accessibilityLabel="Message input field"
         />
         <TouchableOpacity
-          style={styles.sendButton}
+          style={[styles.sendButton, !textInput.trim() && styles.sendButtonDisabled]}
           onPress={handleSendText}
-          disabled={!textInput.trim()}>
-          <Ionicons name="send" size={20} color={COLORS.text} />
+          disabled={!textInput.trim()}
+          accessibilityLabel="Send message button">
+          <Ionicons name="send" size={24} color={COLORS.text} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
 
@@ -243,19 +331,17 @@ export default function Whisper() {
               ]}
               onPressIn={handleStartRecording}
               onPressOut={handleStopRecording}
-              disabled={isProcessing}>
+              disabled={isProcessing}
+              accessibilityLabel="Hold to record voice message">
               <View style={styles.recordButtonContent}>
                 <Ionicons
                   name={isRecording ? "stop" : "mic"}
-                  size={32}
+                  size={28}
                   color={COLORS.text}
                 />
               </View>
             </TouchableOpacity>
           </Animated.View>
-          <Text style={styles.instructionText}>
-            {isRecording ? "Release to stop recording" : "Long press to start recording"}
-          </Text>
         </View>
       </View>
     </View>
@@ -267,9 +353,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
+  contextBar: {
+    backgroundColor: COLORS.contextBar,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  contextText: {
+    fontSize: 14,
+    color: COLORS.text,
+    fontWeight: '500',
+  },
   chatArea: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+  },
+  chatContent: {
+    paddingVertical: 16,
   },
   emptyState: {
     flex: 1,
@@ -284,9 +385,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   emptyStateSubtext: {
-    fontSize: 16,
+    fontSize: 18,
     color: COLORS.textSub,
     marginTop: 8,
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   messageContainer: {
     marginBottom: 16,
@@ -298,21 +401,28 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   messageBubble: {
-    maxWidth: width * 0.75,
+    maxWidth: width * 0.8,
     padding: 16,
-    borderRadius: 20,
+    borderRadius: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   userMessageBubble: {
     backgroundColor: COLORS.bubbleUser,
-    borderBottomRightRadius: 8,
+    borderBottomRightRadius: 4,
   },
   aiMessageBubble: {
     backgroundColor: COLORS.bubbleAI,
-    borderBottomLeftRadius: 8,
+    borderBottomLeftRadius: 4,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   messageText: {
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: 18,
+    lineHeight: 24,
     color: COLORS.text,
   },
   timestampText: {
@@ -328,43 +438,61 @@ const styles = StyleSheet.create({
   processingBubble: {
     backgroundColor: COLORS.bubbleAI,
     padding: 16,
-    borderRadius: 20,
-    borderBottomLeftRadius: 8,
+    borderRadius: 16,
+    borderBottomLeftRadius: 4,
     flexDirection: "row",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  typingIndicator: {
-    flexDirection: "row",
+  loadingIndicator: {
     marginRight: 12,
   },
-  typingDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: COLORS.textSub,
-    marginHorizontal: 2,
-  },
   processingText: {
-    color: COLORS.textSub,
-    fontSize: 14,
+    color: COLORS.text,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  quickActionsContainer: {
+    paddingVertical: 8,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  quickActions: {
+    paddingHorizontal: 16,
+  },
+  quickButton: {
+    backgroundColor: COLORS.quickAction,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginRight: 8,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  quickButtonText: {
+    color: COLORS.text,
+    fontSize: 16,
+    fontWeight: '600',
   },
   controlPanel: {
     paddingHorizontal: 24,
-    paddingBottom: 40,
+    paddingVertical: 16,
   },
   voiceButtonContainer: {
     alignItems: "center",
-    marginBottom: 24,
   },
   recordButtonWrapper: {
-    marginBottom: 16,
   },
   recordButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     elevation: 8,
-    shadowColor: COLORS.bubbleUser,
+    shadowColor: COLORS.button,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -377,39 +505,107 @@ const styles = StyleSheet.create({
   recordButtonContent: {
     width: "100%",
     height: "100%",
-    borderRadius: 40,
+    borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
   },
   instructionText: {
-    fontSize: 16,
+    fontSize: 18,
     color: COLORS.text,
-    fontWeight: "500",
+    fontWeight: "600",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderTopWidth: 1,
-    borderColor: COLORS.bubbleAI,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.backgroundSecondary,
   },
   textInput: {
     flex: 1,
-    height: 40,
-    backgroundColor: COLORS.bubbleAI,
-    borderRadius: 20,
-    paddingHorizontal: 16,
+    height: 48,
+    backgroundColor: COLORS.background,
+    borderRadius: 24,
+    paddingHorizontal: 20,
     color: COLORS.text,
-    fontSize: 16,
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   sendButton: {
     marginLeft: 12,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.bubbleUser,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: COLORS.button,
     justifyContent: "center",
     alignItems: "center",
   },
+  sendButtonDisabled: {
+    opacity: 0.5,
+  },
 });
+
+// Markdown styles
+const markdownStyles = {
+  body: {
+    color: COLORS.text,
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  heading1: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: COLORS.text,
+  },
+  heading2: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: COLORS.text,
+  },
+  strong: {
+    fontWeight: 'bold',
+  },
+  em: {
+    fontStyle: 'italic',
+  },
+  list_item: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  ordered_list_icon: {
+    color: COLORS.text,
+    marginRight: 8,
+  },
+  bullet_list_icon: {
+    color: COLORS.text,
+    marginRight: 8,
+  },
+  code_inline: {
+    backgroundColor: COLORS.border,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 4,
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    fontSize: 16,
+  },
+  code_block: {
+    backgroundColor: COLORS.background,
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  blockquote: {
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.warning,
+    paddingLeft: 12,
+    marginVertical: 8,
+    fontStyle: 'italic',
+  },
+};
