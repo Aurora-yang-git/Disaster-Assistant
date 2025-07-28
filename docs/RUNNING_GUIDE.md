@@ -1,188 +1,210 @@
-# 🚀 Voice Assistant 运行指南
+# 🚀 Voice Assistant Running Guide
 
-本指南详细说明如何在 iOS 和 Android 模拟器上运行 Voice Assistant 应用，包括 Gemma 3n 模型的部署。
+This guide explains how to run the Voice Assistant app on iOS and Android simulators, including Gemma 3n model deployment.
 
-## 📋 目录
+## 📋 Table of Contents
 
-- [前置准备](#前置准备)
-- [iOS 模拟器运行流程](#ios-模拟器运行流程)
-- [Android 模拟器运行流程](#android-模拟器运行流程)
-- [常见问题解决](#常见问题解决)
-- [功能测试指南](#功能测试指南)
+- [Prerequisites](#prerequisites)
+- [iOS Simulator Setup](#ios-simulator-setup)
+- [Android Emulator Setup](#android-emulator-setup)
+- [Troubleshooting](#troubleshooting)
+- [Testing Guide](#testing-guide)
 
-## 前置准备
+## Prerequisites
 
-### 1. 环境要求
+### 1. System Requirements
 
-- **macOS**（iOS 开发必需）
-- **Node.js** 18+ 和 npm/yarn
-- **Xcode** 14+（iOS）
-- **Android Studio**（Android）
-- **Expo CLI**：`npm install -g expo-cli`
+- **macOS** (required for iOS development)
+- **Node.js** 18+ and npm/yarn
+- **Xcode** 14+ (for iOS)
+- **Android Studio** (for Android)
+- **Expo CLI**: `npm install -g expo-cli`
 
-### 2. 克隆项目并安装依赖
+### 2. Clone Project and Install Dependencies
 
 ```bash
-# 克隆项目
-git clone [项目地址]
+# Clone the project
+git clone [project-url]
 cd gemma-3n
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# iOS 特定依赖
+# iOS specific dependencies
 cd ios
 pod install
 cd ..
 ```
 
-### 3. 准备模型文件
+### 3. Prepare Model Files
 
+#### Download Gemma 3n Model
+
+1. **Download from Hugging Face**
+   - Visit: https://huggingface.co/mlx-community/quantized-gemma-3n/tree/main
+   - Download file: `gemma-3n-Q4_K_M.gguf` (approximately 3GB)
+   - Or use command line:
+   ```bash
+   # Install huggingface-cli first
+   pip install huggingface-hub
+   
+   # Download model file
+   huggingface-cli download mlx-community/quantized-gemma-3n gemma-3n-Q4_K_M.gguf --local-dir ./models
+   ```
+
+2. **Prepare Model Directory**
+   ```bash
+   # Create model directory
+   mkdir -p ./models
+   
+   # Verify model file is downloaded
+   ls -lh ./models/gemma-3n-Q4_K_M.gguf
+   # Should show a file of approximately 3GB
+   ```
+
+3. **Configure Deployment Script**
+   ```bash
+   # Set environment variables for deployment script
+   export MODEL_DIR="./models"
+   export MODEL_NAME="gemma-3n-Q4_K_M.gguf"
+   ```
+
+⚠️ **Important Notes**:
+- Model files are NOT included in the Git repository (too large)
+- Due to Node.js 2GB Buffer limit, native deployment scripts must be used
+- First model load may take 10-30 seconds
+
+## iOS Simulator Setup
+
+### Method 1: Using Xcode (Recommended for First Run)
+
+#### Step 1: Open Project
 ```bash
-# 创建模型目录
-mkdir -p ./assets/models
-
-# 下载模型文件（选择其一）：
-# - Gemma 3n Q4_K_M 量化版（约 3GB）
-# - TinyLlama GGUF（测试用，约 600MB）
-
-# 将模型文件放入 assets/models 目录
-# 重命名为：gemma-3n-Q4_K_M.gguf
-```
-
-⚠️ **重要**：由于 Node.js 的 2GB 文件限制，模型文件必须通过原生工具部署，不能通过 Metro bundler。
-
-## iOS 模拟器运行流程
-
-### 方法 1：使用 Xcode（推荐首次运行）
-
-#### 步骤 1：打开项目
-```bash
-# 在项目根目录
+# From project root directory
 open ios/VoiceAssistant.xcworkspace
 ```
-⚠️ 注意：是 `.xcworkspace` 而不是 `.xcodeproj`
+⚠️ Note: Use `.xcworkspace` not `.xcodeproj`
 
-#### 步骤 2：配置和运行
-1. 在 Xcode 顶部选择模拟器（推荐 iPhone 14 或 15）
-2. 点击运行按钮（▶️）或按 `Cmd + R`
-3. 等待构建完成（首次约 3-5 分钟）
+#### Step 2: Configure and Run
+1. Select simulator from Xcode top bar (recommend iPhone 14 or 15)
+2. Click Run button (▶️) or press `Cmd + R`
+3. Wait for build to complete (first time takes 3-5 minutes)
 
-#### 步骤 3：部署模型
+#### Step 3: Deploy Model
 ```bash
-# 应用安装后，在新终端窗口运行
+# After app is installed, run in new terminal
 ./scripts/deploy-model.sh
 
-# 选择选项 1（iOS 模拟器）
-# 脚本会自动找到运行中的模拟器并部署模型
+# Select option 1 (iOS Simulator)
+# Script will automatically find running simulator and deploy model
 ```
 
-#### 步骤 4：启动 Metro
+#### Step 4: Start Metro
 ```bash
-# 在项目根目录
+# From project root
 npx expo start --dev-client
 ```
 
-#### 步骤 5：连接应用
-1. 在模拟器中打开 Voice Assistant 应用
-2. 点击 `http://localhost:8081`
-3. 等待 JavaScript bundle 加载
+#### Step 5: Connect App
+1. Open Voice Assistant app in simulator
+2. Click `http://localhost:8081`
+3. Wait for JavaScript bundle to load
 
-### 方法 2：使用 Expo CLI
+### Method 2: Using Expo CLI
 
-#### 步骤 1：构建和运行
+#### Step 1: Build and Run
 ```bash
-# 清理并构建
+# Clean build
 npx expo run:ios --device
 
-# 或直接运行（如果之前已构建）
+# Or run directly (if previously built)
 npx expo run:ios
 ```
 
-#### 步骤 2：部署模型
-同方法 1 的步骤 3
+#### Step 2: Deploy Model
+Same as Method 1 Step 3
 
-#### 步骤 3：后续运行
+#### Step 3: Subsequent Runs
 ```bash
-# 之后可以直接使用
+# Can use directly after first build
 npx expo start --dev-client
 ```
 
-## Android 模拟器运行流程
+## Android Emulator Setup
 
-### 前置设置
+### Initial Setup
 
-#### 1. 启动 Android 模拟器
-- 打开 Android Studio
+#### 1. Start Android Emulator
+- Open Android Studio
 - Tools → AVD Manager
-- 创建或启动一个模拟器（推荐 Pixel 5 API 33）
+- Create or start an emulator (recommend Pixel 5 API 33)
 
-#### 2. 确认 ADB 连接
+#### 2. Verify ADB Connection
 ```bash
-# 检查设备连接
+# Check device connection
 adb devices
-# 应该显示：emulator-5554 device
+# Should show: emulator-5554 device
 ```
 
-### 运行步骤
+### Running Steps
 
-#### 步骤 1：构建和安装
+#### Step 1: Build and Install
 ```bash
-# 首次运行
+# First run
 npx expo run:android
 
-# 或使用 Android Studio
-# 打开 android 目录作为项目
-# 点击运行按钮
+# Or use Android Studio
+# Open android directory as project
+# Click Run button
 ```
 
-#### 步骤 2：部署模型
+#### Step 2: Deploy Model
 ```bash
-# 运行部署脚本
+# Run deployment script
 ./scripts/deploy-model.sh
 
-# 选择选项 2（Android 模拟器）
-# 等待上传完成（3GB 约需 2-5 分钟）
+# Select option 2 (Android Emulator)
+# Wait for upload to complete (3GB takes 2-5 minutes)
 ```
 
-#### 步骤 3：启动应用
+#### Step 3: Start App
 ```bash
-# 启动 Metro
+# Start Metro
 npx expo start --dev-client
 ```
 
-#### 步骤 4：连接应用
-1. 在模拟器中打开 Voice Assistant
-2. 点击 `http://10.0.2.2:8081`（Android 模拟器专用地址）
-3. 或使用本机 IP：`http://[你的IP]:8081`
+#### Step 4: Connect App
+1. Open Voice Assistant in emulator
+2. Click `http://10.0.2.2:8081` (Android emulator specific address)
+3. Or use local IP: `http://[your-IP]:8081`
 
-## 常见问题解决
+## Troubleshooting
 
-### iOS 问题
+### iOS Issues
 
-#### 1. Pod 安装失败
+#### 1. Pod Installation Failed
 ```bash
 cd ios
 rm -rf Pods Podfile.lock
 pod install --repo-update
 ```
 
-#### 2. 签名错误
+#### 2. Signing Errors
 - Xcode → VoiceAssistant → Signing & Capabilities
-- Team 选择 "Personal Team"
+- Select "Personal Team" for Team
 
-#### 3. 架构错误
-- Build Settings → Architectures → 确保包含 arm64
+#### 3. Architecture Errors
+- Build Settings → Architectures → Ensure arm64 is included
 
-### Android 问题
+### Android Issues
 
-#### 1. Metro 连接失败
+#### 1. Metro Connection Failed
 ```bash
-# 反向代理端口
+# Reverse proxy port
 adb reverse tcp:8081 tcp:8081
 ```
 
-#### 2. 构建失败
+#### 2. Build Failed
 ```bash
 cd android
 ./gradlew clean
@@ -190,10 +212,10 @@ cd ..
 npx expo run:android --clear
 ```
 
-### 模型部署问题
+### Model Deployment Issues
 
-#### 1. 模型未找到
-检查部署路径：
+#### 1. Model Not Found
+Check deployment paths:
 ```bash
 # iOS
 xcrun simctl get_app_container booted com.voiceassistant.app data
@@ -202,90 +224,90 @@ xcrun simctl get_app_container booted com.voiceassistant.app data
 adb shell ls /sdcard/Android/data/com.voiceassistant.app/files/Documents/
 ```
 
-#### 2. 手动部署模型
+#### 2. Manual Model Deployment
 ```bash
 # iOS
-cp ./assets/models/*.gguf "[APP_CONTAINER]/Documents/"
+cp ./models/*.gguf "[APP_CONTAINER]/Documents/"
 
 # Android
-adb push ./assets/models/*.gguf /sdcard/Android/data/com.voiceassistant.app/files/Documents/
+adb push ./models/*.gguf /sdcard/Android/data/com.voiceassistant.app/files/Documents/
 ```
 
-## 功能测试指南
+## Testing Guide
 
-### 1. 基础功能测试
+### 1. Basic Functionality Tests
 
-#### RAG 系统测试（知识库）
+#### RAG System Test (Knowledge Base)
 ```
-输入：Earthquake!
-预期：紧急 DROP, COVER, HOLD ON 指令
+Input: Earthquake!
+Expected: Emergency DROP, COVER, HOLD ON instructions
 
-输入：I'm trapped
-预期：保持冷静、敲击管道等建议
+Input: I'm trapped
+Expected: Stay calm, tap on pipes advice
 
-输入：How to find water?
-预期：水源查找方法
-```
-
-#### Gemma 模型测试（通用对话）
-```
-输入：What's the weather?
-预期：模型生成的回复（非知识库）
-
-输入：Tell me a story
-预期：创造性内容生成
+Input: How to find water?
+Expected: Water source finding methods
 ```
 
-### 2. 语音功能测试
-- 长按麦克风按钮
-- 说出测试短语
-- 松开查看识别结果
+#### Gemma Model Test (General Conversation)
+```
+Input: What's the weather?
+Expected: Model-generated response (not from knowledge base)
 
-### 3. 性能验证
-- [ ] 模型加载时间 < 5 秒
-- [ ] 响应时间 < 2 秒
-- [ ] 内存使用稳定
-- [ ] 连续对话无崩溃
+Input: Tell me a story
+Expected: Creative content generation
+```
 
-## 🎯 快速检查清单
+### 2. Voice Function Test
+- Long press microphone button
+- Speak test phrase
+- Release to see recognition result
 
-### iOS 运行检查
-- [ ] Xcode 已安装
-- [ ] iOS 模拟器已启动
-- [ ] 应用成功构建安装
-- [ ] 模型文件已部署
-- [ ] Metro 服务器运行中
-- [ ] 应用可正常对话
+### 3. Performance Verification
+- [ ] Model load time < 5 seconds
+- [ ] Response time < 2 seconds
+- [ ] Stable memory usage
+- [ ] No crashes during continuous conversation
 
-### Android 运行检查
-- [ ] Android Studio 已安装
-- [ ] Android 模拟器已启动
-- [ ] ADB 连接正常
-- [ ] 应用成功构建安装
-- [ ] 模型文件已部署
-- [ ] Metro 服务器运行中
-- [ ] 应用可正常对话
+## 🎯 Quick Checklist
 
-## 📝 提示与技巧
+### iOS Running Checklist
+- [ ] Xcode installed
+- [ ] iOS simulator launched
+- [ ] App successfully built and installed
+- [ ] Model file deployed
+- [ ] Metro server running
+- [ ] App can have normal conversations
 
-1. **开发效率**
-   - 使用 Xcode/Android Studio 首次构建
-   - 后续使用 `npx expo start --dev-client`
-   - 保持模拟器开启，避免重复部署模型
+### Android Running Checklist
+- [ ] Android Studio installed
+- [ ] Android emulator launched
+- [ ] ADB connection normal
+- [ ] App successfully built and installed
+- [ ] Model file deployed
+- [ ] Metro server running
+- [ ] App can have normal conversations
 
-2. **调试技巧**
-   - iOS: Xcode 控制台查看日志
+## 📝 Tips & Tricks
+
+1. **Development Efficiency**
+   - Use Xcode/Android Studio for first build
+   - Use `npx expo start --dev-client` for subsequent runs
+   - Keep simulator open to avoid redeploying model
+
+2. **Debugging Tips**
+   - iOS: Check Xcode console for logs
    - Android: `adb logcat | grep -i llama`
-   - Metro: 查看终端输出
+   - Metro: Check terminal output
 
-3. **模型管理**
-   - 使用部署脚本的清理功能管理空间
-   - 测试可先用小模型（TinyLlama）
-   - 生产环境再换大模型（Gemma 3n）
+3. **Model Management**
+   - Use deployment script's cleanup function to manage space
+   - Test with smaller model first (TinyLlama)
+   - Switch to larger model (Gemma 3n) for production
 
 ---
 
-如遇到未列出的问题，请查看：
-- [模型部署文档](./MODEL_DEPLOYMENT.md)
-- [项目 README](./README.md)
-- 提交 Issue 到项目仓库
+For unlisted issues, please refer to:
+- [Model Deployment Documentation](./MODEL_DEPLOYMENT.md)
+- [Project README](../README.md)
+- Submit an Issue to the project repository
