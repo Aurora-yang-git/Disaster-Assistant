@@ -6,7 +6,7 @@ A React Native + Expo application that runs Gemma 3n entirely on-device for life
 
 ### Android APK Download
 - **Download APK**: [mazu-v1.0.0.apk](https://github.com/Aurora-yang-git/Disaster-Assistant/releases/latest) (210MB)
-- **Model File**: Due to size (2.3GB), the AI model must be downloaded separately
+- **Model File**: [gemma-3n-E2B-it-Q4_K_M.gguf](https://huggingface.co/unsloth/gemma-3n-E2B-it-GGUF?show_file_info=gemma-3n-E2B-it-Q4_K_M.gguf) (2.3GB)
 - **Installation**: Enable "Install from Unknown Sources" in Android settings
 
 ### Important Setup Steps
@@ -79,7 +79,7 @@ cd mazu
 ```
 
 #### Option 2: Manual Deployment
-1. Download the model: `gemma-3n-Q4_K_M.gguf` from [Hugging Face](https://huggingface.co/google/gemma-2-2b-it-GGUF)
+1. Download the model: `gemma-3n-E2B-it-Q4_K_M.gguf` from [Hugging Face](https://huggingface.co/unsloth/gemma-3n-E2B-it-GGUF?show_file_info=gemma-3n-E2B-it-Q4_K_M.gguf)
 2. Connect your Android device via USB
 3. Copy the model file to: `/sdcard/Android/data/com.mazu.app/files/Documents/`
 

@@ -79,7 +79,7 @@ cd mazu
 ```
 
 #### Option 2: Manual Deployment
-1. Download the model: `gemma-3n-Q4_K_M.gguf` from [Hugging Face](https://huggingface.co/google/gemma-2-2b-it-GGUF)
+1. Download the model: `gemma-3n-E2B-it-Q4_K_M.gguf` from [Hugging Face](https://huggingface.co/unsloth/gemma-3n-E2B-it-GGUF?show_file_info=gemma-3n-E2B-it-Q4_K_M.gguf)
 2. Connect your Android device via USB
 3. Copy the model file to: `/sdcard/Android/data/com.mazu.app/files/Documents/`
 

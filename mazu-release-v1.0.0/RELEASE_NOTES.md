@@ -10,7 +10,7 @@ Mazu is an offline AI assistant that provides life-saving guidance during disast
 2. **Enable "Install from Unknown Sources"** in your Android settings
 3. **Install the APK** on your device
 4. **Download the AI Model** (2.3GB):
-   - Download `gemma-3n-Q4_K_M.gguf` from [this link](#) 
+   - Download `gemma-3n-Q4_K_M.gguf` from [this link](#)
    - Or use the model file from `assets/models/` if you cloned the repo
 5. **Deploy the Model**:
    - Connect your device via USB
@@ -58,6 +58,7 @@ Mazu is an offline AI assistant that provides life-saving guidance during disast
 ### 🙏 Acknowledgments
 
 Built for the Google Gemma Developer Contest 2024 using:
+
 - Gemma 3n by Google
 - llama.rn for on-device inference
 - React Native + Expo
