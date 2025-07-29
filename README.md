@@ -5,7 +5,7 @@ A React Native + Expo application that runs Gemma 3n entirely on-device for life
 ## 📲 Quick Start - Try Mazu Now
 
 ### Android APK Download
-- **Download APK**: [mazu-debug.apk](https://github.com/yourusername/mazu/releases/download/v1.0/mazu-debug.apk) (210MB)
+- **Download APK**: [mazu-v1.0.0.apk](https://github.com/Aurora-yang-git/Disaster-Assistant/releases/latest) (210MB)
 - **Model File**: Due to size (2.3GB), the AI model must be downloaded separately
 - **Installation**: Enable "Install from Unknown Sources" in Android settings
 
