@@ -21,8 +21,8 @@ A React Native + Expo application that runs Gemma 3n entirely on-device for life
 - **Edge-Optimized Performance**: <2 second response time using quantized models
 - **Disaster Response Chat**: Context-aware survival guidance based on user's situation
 - **Intelligent Memory System**: Tracks location, injuries, and resources throughout crisis
-- **Voice Interaction**: Hands-free operation for injured users
-- **Zero Network Dependency**: True edge computing - works in airplane mode
+- **Voice Interaction**: Hands-free operation for injured users (requires offline language packs or network for speech recognition)
+- **Zero Network Dependency for AI**: Core AI inference works in airplane mode
 
 ## 📱 Supported Platforms
 
@@ -173,6 +173,22 @@ MIT License - see [LICENSE](LICENSE) file for details
 - This app provides guidance but cannot replace professional rescue services
 
 **Current Version**: Focuses on earthquake scenarios as the primary use case, with plans to expand to comprehensive disaster coverage.
+
+## 📋 Technical Notes
+
+### Offline Capabilities
+- **AI Inference**: 100% offline using on-device Gemma 3n model (GGUF quantized version)
+- **Voice Input**: 
+  - Uses device's speech recognition service (expo-speech-recognition)
+  - For true offline voice: Download offline language packs in device settings
+  - Without language packs: Requires network connection for speech-to-text
+  - Text input always available as primary interaction method
+- **Core Functionality**: All AI responses and emergency guidance work completely offline
+
+### Known Limitations
+- GGUF version of Gemma 3n supports text-only (original model supports audio/vision)
+- Voice recognition depends on device capabilities and language pack availability
+- First model load may take 10-20 seconds
 
 ## 📚 Documentation
 
