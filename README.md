@@ -1,4 +1,4 @@
-# Disaster Response Assistant
+# Mazu - AI Guardian for Earthquake Emergencies
 
 A React Native + Expo offline application designed for earthquake and natural disaster scenarios. This app integrates offline AI technology to provide real-time survival advice and safety guidance without requiring internet connectivity.
 

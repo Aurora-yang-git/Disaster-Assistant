@@ -12,8 +12,8 @@ echo ""
 # 配置
 MODEL_NAME="gemma-3n-Q4_K_M.gguf"  # 更新为你的实际模型文件名
 MODEL_DIR="./assets/models"
-ANDROID_PACKAGE="com.voiceassistant.app"  # 从 app.json 获取
-IOS_BUNDLE_ID="com.voiceassistant.app"
+ANDROID_PACKAGE="com.mazu.app"  # 从 app.json 获取
+IOS_BUNDLE_ID="com.mazu.app"
 
 # 颜色定义
 RED='\033[0;31m'

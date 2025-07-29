@@ -30,7 +30,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         <View style={styles.container}>
             <DrawerContentScrollView {...props}>
                 <DrawerItem
-                    label='Voice Assistant'
+                    label='Mazu Emergency Chat'
                     labelStyle={styles.drawerItemLabel}
                     icon={() => <Ionicons name='mic' size={24} color='white' />}
                     onPress={() => props.navigation.navigate('Whisper')}
@@ -59,7 +59,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 const WhisperHeaderTitle = () => {
     return (
         <View style={headerStyles.container}>
-            <Text style={headerStyles.title}>Voice Assistant</Text>
+            <Text style={headerStyles.title}>Mazu</Text>
             <View style={headerStyles.badge}>
                 <Text style={headerStyles.badgeText}>Powered by Gemma 3n</Text>
                 <View style={headerStyles.dot} />

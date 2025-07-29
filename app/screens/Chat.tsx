@@ -65,8 +65,8 @@ const ChatPage = () => {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.header}>
-        <Text style={styles.title}>🚨 Earthquake Survival Assistant</Text>
-        <Text style={styles.subtitle}>RAG + ChatGPT Integration</Text>
+        <Text style={styles.title}>🚨 Mazu Emergency Assistant</Text>
+        <Text style={styles.subtitle}>Offline AI Guardian</Text>
       </View>
       <FlatList
         ref={flatListRef}

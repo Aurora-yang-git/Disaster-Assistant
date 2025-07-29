@@ -204,7 +204,7 @@ Empathy (1-2 sentences):
 • [Critical safety reminder]
 • DO NOT: [Critical prohibition]
 
-End: "[Personalized encouragement]"
+[End with personalized encouragement based on their situation]
 
 PRIORITIES: Air/Safety → Bleeding → Signaling → Shelter → Resources
 

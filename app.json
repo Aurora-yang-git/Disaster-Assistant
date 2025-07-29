@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Voice Assistant",
-    "slug": "VoiceAssistant",
+    "name": "Mazu",
+    "slug": "mazu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.voiceassistant.app",
+      "bundleIdentifier": "com.mazu.app",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "需要使用麦克风进行语音识别",
         "NSSpeechRecognitionUsageDescription": "需要使用语音识别功能将语音转换为文字"
@@ -27,7 +27,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.voiceassistant.app",
+      "package": "com.mazu.app",
       "permissions": [
         "RECORD_AUDIO",
         "INTERNET",
@@ -50,7 +50,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "voice-assistant"
+        "projectId": "mazu-emergency-ai"
       }
     }
   }
