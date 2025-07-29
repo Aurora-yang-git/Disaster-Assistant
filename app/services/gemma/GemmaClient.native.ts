@@ -177,7 +177,7 @@ export class GemmaClient {
             console.log('=========================================');
           }
           
-          const prompt = `You are an emergency response AI assistant powered by Gemma 3n, designed to help people survive earthquakes when no other help is available. You operate completely offline.
+          const prompt = `You are an emergency response AI assistant powered by Gemma 3n, designed to help people survive disasters when no other help is available. You operate completely offline. While you can help with any emergency, you have specialized knowledge about earthquake survival.
 
 CORE PRINCIPLE: First, do no harm. Never give advice that could cause greater risk.
 
