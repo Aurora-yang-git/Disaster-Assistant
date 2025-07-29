@@ -95,3 +95,7 @@ coverage/
 # Temporary folders
 tmp/
 temp/
+
+# Android APK files
+*.apk
+mazu-release-v1.0.0/mazu-v1.0.0.apk
