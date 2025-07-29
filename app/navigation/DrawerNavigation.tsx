@@ -1,4 +1,4 @@
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Text } from 'react-native';
 import {
     DrawerContentComponentProps,
     DrawerContentScrollView,
@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import ApiKeyPage from '../screens/ApiKey';
 import Whisper from '../screens/Whisper';
+import { COLORS } from '../colors';
 
 
 type DrawerParamList = {
@@ -53,6 +54,59 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </View>
     );
 };
+
+// Custom header component with Gemma 3n badge
+const WhisperHeaderTitle = () => {
+    return (
+        <View style={headerStyles.container}>
+            <Text style={headerStyles.title}>Voice Assistant</Text>
+            <View style={headerStyles.badge}>
+                <Text style={headerStyles.badgeText}>Powered by Gemma 3n</Text>
+                <View style={headerStyles.dot} />
+            </View>
+        </View>
+    );
+};
+
+const headerStyles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#fff',
+        marginBottom: 4,
+    },
+    badge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    badgeText: {
+        fontSize: 12,
+        fontWeight: '500',
+        color: '#fff',
+        opacity: 0.9,
+    },
+    dot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        backgroundColor: '#4CAF50',
+        marginLeft: 6,
+        shadowColor: '#4CAF50',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 1,
+        shadowRadius: 3,
+        elevation: 3,
+    },
+});
 
 const styles = StyleSheet.create({
     container: {
@@ -100,7 +154,13 @@ export default function DrawerNavigation() {
                     />
             }}
         >
-            <Drawer.Screen name='Whisper' component={Whisper} options={{ headerTitle: "Voice Assistant" }} />
+            <Drawer.Screen 
+                name='Whisper' 
+                component={Whisper} 
+                options={{ 
+                    headerTitle: () => <WhisperHeaderTitle />,
+                }} 
+            />
             <Drawer.Screen name='ApiKeyPage' component={ApiKeyPage} options={{ headerTitle: "API Settings" }} />
         </Drawer.Navigator >
     );

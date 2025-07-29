@@ -45,7 +45,12 @@ export default function Whisper() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [pulseAnim] = useState(new Animated.Value(1));
+  const [breathingAnim] = useState(new Animated.Value(0.8));
   const [textInput, setTextInput] = useState("");
+  const [emergencyStartTime] = useState(Date.now());
+  const [elapsedTime, setElapsedTime] = useState("00:00");
+  const [batteryLevel, setBatteryLevel] = useState(100);
+  const [responseTime, setResponseTime] = useState<number | null>(null);
   const { updateContext, formatContextForPrompt, context } = useUserContext();
   const scrollViewRef = useRef<ScrollView>(null);
   const gemmaClientRef = useRef<GemmaOpenAIWrapper | null>(null);
@@ -74,6 +79,36 @@ export default function Whisper() {
       pulseAnim.setValue(1);
     }
   }, [isRecording]);
+
+  // Timer effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - emergencyStartTime;
+      const minutes = Math.floor(elapsed / 60000);
+      const seconds = Math.floor((elapsed % 60000) / 1000);
+      setElapsedTime(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [emergencyStartTime]);
+
+  // Breathing animation
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(breathingAnim, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(breathingAnim, {
+          toValue: 0.8,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
 
   const handleStartRecording = async () => {
     // Haptic feedback for button press
@@ -116,6 +151,9 @@ export default function Whisper() {
     // Get formatted context for the prompt
     const userContext = formatContextForPrompt();
 
+    // Track response time
+    const requestStartTime = Date.now();
+
     // Call the GemmaClient with user context
     gemmaClient.chat.completions
       .create({
@@ -124,6 +162,9 @@ export default function Whisper() {
         userContext: userContext,
       })
       .then((completion: any) => {
+        // Calculate response time
+        const responseTimeMs = Date.now() - requestStartTime;
+        setResponseTime(responseTimeMs / 1000); // Convert to seconds
         const aiResponseText =
           completion.choices[0]?.message?.content ||
           "Sorry, I couldn't generate a response.";
@@ -213,27 +254,49 @@ export default function Whisper() {
             minute: "2-digit",
           })}
         </Text>
+        {!message.isUser && responseTime && (
+          <Text style={styles.metadataText}>
+            Gemma 3n • {responseTime.toFixed(1)}s • Offline mode • Based on Red Cross protocols
+          </Text>
+        )}
       </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      {/* Context awareness bar */}
-      {(context.location || context.status) && (
-        <View style={styles.contextBar}>
-          <Text style={styles.contextText}>
-            {context.location?.floor !== undefined && (
-              <Text>📍 Floor {context.location.floor} </Text>
-            )}
-            {context.status?.isInjured && <Text>• 🚑 Injured </Text>}
-            {context.status?.isTrapped && <Text>• ⚠️ Trapped </Text>}
-            {context.companions?.count && context.companions.count > 0 && (
-              <Text>• 👥 {context.companions.count} people </Text>
-            )}
-          </Text>
+      {/* Emergency Survival Dashboard */}
+      <Animated.View style={[styles.survivalDashboard, { opacity: breathingAnim }]}>
+        <View style={styles.dashboardContent}>
+          <Text style={styles.emergencyTimer}>🔴 Post-earthquake {elapsedTime}</Text>
+          <Text style={styles.dashboardDivider}>|</Text>
+          {context.location?.floor !== undefined && (
+            <>
+              <Text style={styles.dashboardText}>📍 Floor {context.location.floor}</Text>
+              <Text style={styles.dashboardDivider}>|</Text>
+            </>
+          )}
+          {context.status?.isInjured && (
+            <>
+              <Text style={styles.dashboardText}>🩹 Injured</Text>
+              <Text style={styles.dashboardDivider}>|</Text>
+            </>
+          )}
+          {context.status?.isTrapped && (
+            <>
+              <Text style={styles.dashboardText}>⚠️ Trapped</Text>
+              <Text style={styles.dashboardDivider}>|</Text>
+            </>
+          )}
+          {context.companions?.count && context.companions.count > 0 && (
+            <>
+              <Text style={styles.dashboardText}>👥 {context.companions.count}</Text>
+              <Text style={styles.dashboardDivider}>|</Text>
+            </>
+          )}
+          <Text style={styles.batteryText}>🔋 {batteryLevel}%</Text>
         </View>
-      )}
+      </Animated.View>
 
       {/* Chat area */}
       <ScrollView 
@@ -353,17 +416,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  contextBar: {
-    backgroundColor: COLORS.contextBar,
+  survivalDashboard: {
+    backgroundColor: '#DD0000',
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    paddingVertical: 12,
+    borderBottomWidth: 2,
+    borderBottomColor: '#AA0000',
+    shadowColor: '#FF0000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  contextText: {
+  dashboardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+  emergencyTimer: {
     fontSize: 14,
-    color: COLORS.text,
-    fontWeight: '500',
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  dashboardText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  dashboardDivider: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 0.5,
+    marginHorizontal: 8,
+  },
+  batteryText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
   },
   chatArea: {
     flex: 1,
@@ -430,6 +520,12 @@ const styles = StyleSheet.create({
     color: COLORS.textSub,
     marginTop: 4,
     textAlign: "right",
+  },
+  metadataText: {
+    fontSize: 12,
+    color: '#888888',
+    marginTop: 8,
+    fontStyle: 'italic',
   },
   processingContainer: {
     alignItems: "flex-start",
