@@ -99,3 +99,8 @@ temp/
 # Android APK files
 *.apk
 mazu-release-v1.0.0/mazu-v1.0.0.apk
+
+# Video production documents (internal use only)
+VIDEO_*.md
+TEAM_SUPPORT_NEEDS.md
+QUICK_QUESTIONS.md
