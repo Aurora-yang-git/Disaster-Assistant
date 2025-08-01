@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, Platform } from 'react-native';
 import { GemmaClient } from '../services/gemma/GemmaClient';
+import { callOpenRouterAPI } from '../services/disaster-api';
 
 // Enum for message roles
 export enum Role {
@@ -20,7 +21,7 @@ export const useGemmaApi = () => {
     // State to store all chat messages
     const [messages, setMessages] = useState<Message[]>([]);
 
-    // Function to get a completion from Gemma
+    // Function to get a completion from Gemma or OpenRouter
     const getCompletion = async (prompt: string) => {
 
         // Create a new user message with the prompt

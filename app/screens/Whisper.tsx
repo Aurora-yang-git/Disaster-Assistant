@@ -22,7 +22,6 @@ import { OnlineGemmaClient } from '../services/gemma/OnlineGemmaClient';
 import { GemmaClient } from '../services/gemma/GemmaClient.native';
 import { Message, Role } from "../hooks/useApi"; // GemmaClient uses this type
 import { COLORS } from "../colors";
-import { useUserContext } from "../hooks/useUserContext";
 
 const { width } = Dimensions.get("window");
 
@@ -47,7 +46,6 @@ export default function Whisper() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [pulseAnim] = useState(new Animated.Value(1));
   const [textInput, setTextInput] = useState("");
-  const { updateContext, formatContextForPrompt, context } = useUserContext();
   const scrollViewRef = useRef<ScrollView>(null);
   const gemmaClientRef = useRef<OnlineGemmaClient | null>(null);
   if (!gemmaClientRef.current) {
@@ -87,11 +85,8 @@ export default function Whisper() {
     }
   };
 
-  const processMessage = (text: string) => {
+  const processMessage = async (text: string) => {
     if (!text || text.trim().length === 0) return;
-
-    // Update user context based on the message
-    updateContext(text);
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -114,75 +109,73 @@ export default function Whisper() {
       { role: Role.User, content: text },
     ];
 
-    // Get formatted context for the prompt
-    const userContext = formatContextForPrompt();
-
-    // Call the GemmaClient (which uses online API)
-    gemmaClient
-      .createChatCompletion({
-        model: "google/gemma-3n-E2B-it",
+    try {
+      // 使用更新后的OnlineGemmaClient，它会自动处理OpenRouter和Hugging Face的回退
+      const completion = await gemmaClient.createChatCompletion({
+        model: "google/gemma-3n-e4b-it:free",
         messages: messages,
-      })
-      .then((completion: any) => {
-        console.log('API Response:', completion);
-        console.log('Choices:', completion.choices);
-        console.log('First choice:', completion.choices?.[0]);
-        console.log('Message content:', completion.choices?.[0]?.message?.content);
-        
-        const aiResponseText =
-          completion.choices[0]?.message?.content ||
-          "Sorry, I couldn't generate a response.";
-
-        console.log('Final AI response text:', aiResponseText);
-
-        const aiMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          text: aiResponseText,
-          isUser: false,
-          timestamp: new Date(),
-        };
-
-        // Use a short timeout to allow the UI to update before the AI message appears
-        setTimeout(() => {
-          setChatMessages((prev) => [...prev, aiMessage]);
-          setIsProcessing(false);
-          // Auto-scroll to bottom
-          setTimeout(() => {
-            scrollViewRef.current?.scrollToEnd({ animated: true });
-          }, 100);
-        }, 500);
-      })
-      .catch((error: any) => {
-        console.error("Error getting completion from GemmaClient:", error);
-        
-        // 根据错误类型提供更友好的错误信息
-        let errorText = "处理请求时发生错误。";
-        
-        if (error.message) {
-          if (error.message.includes('API密钥未配置')) {
-            errorText = "API密钥未配置。请检查环境变量设置。";
-          } else if (error.message.includes('模型不可用')) {
-            errorText = "模型暂时不可用，请稍后重试。";
-          } else if (error.message.includes('401')) {
-            errorText = "API密钥无效，请检查配置。";
-          } else if (error.message.includes('429')) {
-            errorText = "请求频率过高，请稍后重试。";
-          } else if (error.message.includes('503')) {
-            errorText = "服务暂时不可用，模型正在加载中。";
-          } else if (error.message.includes('网络')) {
-            errorText = "网络连接失败，请检查网络设置。";
-          }
-        }
-        
-        const errorMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          text: errorText,
-          isUser: false,
-          timestamp: new Date(),
-        };
-        setChatMessages((prev) => [...prev, errorMessage]);
-        setIsProcessing(false);
+        max_tokens: 300,
+        temperature: 0.7,
       });
+
+      console.log('API Response:', completion);
+      console.log('Choices:', completion.choices);
+      console.log('First choice:', completion.choices?.[0]);
+      console.log('Message content:', completion.choices?.[0]?.message?.content);
+      
+      const aiResponseText =
+        completion.choices[0]?.message?.content ||
+        "Sorry, I couldn't generate a response.";
+
+      console.log('Final AI response text:', aiResponseText);
+
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        text: aiResponseText,
+        isUser: false,
+        timestamp: new Date(),
+      };
+
+      // Use a short timeout to allow the UI to update before the AI message appears
+      setTimeout(() => {
+        setChatMessages((prev) => [...prev, aiMessage]);
+        setIsProcessing(false);
+        // Auto-scroll to bottom
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      }, 500);
+    } catch (error: any) {
+      console.error("Error getting completion from GemmaClient:", error);
+      
+      // 根据错误类型提供更友好的错误信息
+      let errorText = "处理请求时发生错误。";
+      
+      if (error.message) {
+        if (error.message.includes('API密钥未配置')) {
+          errorText = "API密钥未配置。请检查环境变量设置。";
+        } else if (error.message.includes('模型不可用')) {
+          errorText = "模型暂时不可用，请稍后重试。";
+        } else if (error.message.includes('401')) {
+          errorText = "API密钥无效，请检查配置。";
+        } else if (error.message.includes('429')) {
+          errorText = "请求频率过高，请稍后重试。";
+        } else if (error.message.includes('503')) {
+          errorText = "服务暂时不可用，模型正在加载中。";
+        } else if (error.message.includes('网络')) {
+          errorText = "网络连接失败，请检查网络设置。";
+        }
+      }
+      
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        text: errorText,
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setChatMessages((prev) => [...prev, errorMessage]);
+      setIsProcessing(false);
+    }
   };
 
   const handleSendText = () => {
@@ -246,22 +239,6 @@ export default function Whisper() {
 
   return (
     <View style={styles.container}>
-      {/* Context awareness bar */}
-      {(context.location || context.status) && (
-        <View style={styles.contextBar}>
-          <Text style={styles.contextText}>
-            {context.location?.floor !== undefined && (
-              <Text>📍 Floor {context.location.floor} </Text>
-            )}
-            {context.status?.isInjured && <Text>• 🚑 Injured </Text>}
-            {context.status?.isTrapped && <Text>• ⚠️ Trapped </Text>}
-            {context.companions?.count && context.companions.count > 0 && (
-              <Text>• 👥 {context.companions.count} people </Text>
-            )}
-          </Text>
-        </View>
-      )}
-
       {/* Chat area */}
       <ScrollView 
         ref={scrollViewRef}
@@ -379,18 +356,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
-  },
-  contextBar: {
-    backgroundColor: COLORS.contextBar,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-  },
-  contextText: {
-    fontSize: 14,
-    color: COLORS.text,
-    fontWeight: '500',
   },
   chatArea: {
     flex: 1,
@@ -584,24 +549,24 @@ const markdownStyles = {
   },
   heading1: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: 'bold' as const,
     marginBottom: 8,
     color: COLORS.text,
   },
   heading2: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: 'bold' as const,
     marginBottom: 6,
     color: COLORS.text,
   },
   strong: {
-    fontWeight: 'bold',
+    fontWeight: 'bold' as const,
   },
   em: {
-    fontStyle: 'italic',
+    fontStyle: 'italic' as const,
   },
   list_item: {
-    flexDirection: 'row',
+    flexDirection: 'row' as const,
     marginBottom: 4,
   },
   ordered_list_icon: {
@@ -633,6 +598,6 @@ const markdownStyles = {
     borderLeftColor: COLORS.warning,
     paddingLeft: 12,
     marginVertical: 8,
-    fontStyle: 'italic',
+    fontStyle: 'italic' as const,
   },
 };
