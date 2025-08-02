@@ -40,12 +40,12 @@ The user interaction follows this offline process:
     -   [x] Locate and analyze the offline knowledge base (`KnowledgeLoader`, JSON files).
     -   [x] Integrate the `KnowledgeLoader` into the `Whisper.tsx` chat screen.
     -   [x] Replace placeholder AI responses with real data from the RAG system.
--   [ ] **Phase 3: Offline LLM (Gemma) Integration**
-    -   [ ] Place the `gemma-3n-E2B-it-Q4_K_M.gguf` model file into the `assets/models` directory.
-    -   [ ] Create a new service/hook to manage the `llama.rn` context (loading the model, managing state).
-    -   [ ] Modify the `Whisper.tsx` screen to call the Gemma service for general questions (when RAG returns no results).
--   [ ] **Phase 4: Decision Engine**
-    -   [ ] Implement the logic to decide whether to use RAG-only or RAG+Gemma based on the user's query.
--   [ ] **Phase 5: Final Testing & Refinement**
-    -   [ ] Thoroughly test all components on an Android device.
-    -   [ ] Refine prompts and logic for the best user experience.
+-   [x] **Phase 3: Offline LLM (Gemma) Integration**
+    -   [x] Place the `gemma-3n-E2B-it-Q4_K_M.gguf` model file into the `assets/models` directory.
+    -   [x] Create a new service/hook to manage the `llama.rn` context (loading the model, managing state).
+    -   [x] Modify the `Whisper.tsx` screen to call the Gemma service for general questions (when RAG returns no results).
+-   [x] **Phase 4: Decision Engine**
+    -   [x] Implement the logic to decide whether to use RAG-only or RAG+Gemma based on the user's query.
+-   [x] **Phase 5: Final Testing & Refinement**
+    -   [x] Thoroughly test all components on ~~an Android~~ iOS device.
+    -   [x] Refine prompts and logic for the best user experience.

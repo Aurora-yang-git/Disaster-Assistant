@@ -95,7 +95,7 @@ npx expo start
 
 2. **模型部署位置**
    ```
-   /sdcard/Android/data/com.voiceassistant.app/files/Documents/
+   /sdcard/Android/data/com.mazu.app/files/
    ```
 
 3. **常见问题**
@@ -109,7 +109,7 @@ npx expo start
 **iOS:**
 ```bash
 # 获取应用容器路径
-xcrun simctl get_app_container booted com.voiceassistant.app data
+xcrun simctl get_app_container booted com.mazu.app data
 
 # 列出文档目录
 ls -la [容器路径]/Documents/
@@ -118,7 +118,7 @@ ls -la [容器路径]/Documents/
 **Android:**
 ```bash
 # 列出模型文件
-adb shell ls -la /sdcard/Android/data/com.voiceassistant.app/files/Documents/
+adb shell ls -la /sdcard/Android/data/com.mazu.app/files/
 ```
 
 ### 应用内验证
@@ -143,7 +143,7 @@ adb shell ls -la /sdcard/Android/data/com.voiceassistant.app/files/Documents/
 2. **检查文件大小**
    ```bash
    # Android
-   adb shell du -h /sdcard/Android/data/com.voiceassistant.app/files/Documents/*.gguf
+   adb shell du -h /sdcard/Android/data/com.mazu.app/files/*.gguf
    ```
 
 3. **重启应用**

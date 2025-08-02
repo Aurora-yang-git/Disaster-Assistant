@@ -85,12 +85,15 @@ The Disaster Response Assistant is built with an offline-first architecture, ens
 - `RAGService.ts` - Query processing and knowledge retrieval
 - `KnowledgeLoader.ts` - Singleton knowledge base manager
 - `ResponseValidator.ts` - Response verification
+- `useUserContext.ts` - User context tracking hook
 
 **Features**:
 - Keyword-based search (no vector DB required)
-- Priority classification (critical/urgent/normal)
+- Priority classification (critical/urgent/important/normal)
 - Multi-language support
 - Quick action suggestions
+- User context extraction (location, injuries, companions)
+- Conversation history management
 
 ### 4. Data Layer
 
@@ -144,8 +147,8 @@ The Disaster Response Assistant is built with an offline-first architecture, ens
 
 ### Solution: Native Deployment
 ```bash
-iOS:    xcrun simctl → App Container
-Android: adb push → /sdcard/.../Documents/
+iOS:    xcrun simctl → App Container/Documents/
+Android: adb push → /sdcard/Android/data/com.mazu.app/files/
 ```
 
 ### Model Loading Process

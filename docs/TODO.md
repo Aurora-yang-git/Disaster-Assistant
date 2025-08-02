@@ -1,62 +1,62 @@
 # Earthquake Survival Chat App - TODO List
 
-## Phase 1: Foundation (Week 1)
+## Phase 1: Foundation (Week 1) ✅
 
 ### Model Integration
-- [ ] Research Gemma 3n model formats and download options
-- [ ] **CRITICAL: Verify model size after quantization (expect ~1.3GB for INT4)**
-- [ ] Choose inference runtime (TensorFlow Lite vs ONNX vs MediaPipe)
-- [ ] Set up model loading and basic inference pipeline
-- [ ] Create mock Gemma API interface matching OpenAI structure
-- [ ] Test basic text generation on device
-- [ ] Measure inference speed and memory usage
-- [ ] Decide on app distribution strategy if model > 500MB
+- [x] Research Gemma 3n model formats and download options
+- [x] **CRITICAL: Verify model size after quantization (expect ~1.3GB for INT4)** *(Actual: ~3GB for Q4_K_M)*
+- [x] Choose inference runtime ~~(TensorFlow Lite vs ONNX vs MediaPipe)~~ *(Using llama.rn)*
+- [x] Set up model loading and basic inference pipeline
+- [x] Create ~~mock~~ Gemma API interface matching OpenAI structure
+- [x] Test basic text generation on device
+- [x] Measure inference speed and memory usage *(~2 seconds response time)*
+- [x] Decide on app distribution strategy if model > 500MB *(Separate deployment script)*
 
 ### Project Setup
-- [ ] Fork and clone the ChatGPT Assistant template
-- [ ] Remove OpenAI dependencies from package.json
-- [ ] Set up development environment for chosen ML runtime
-- [ ] Create project structure for knowledge base
-- [ ] Document setup process for teammate
+- [x] Fork and clone the ChatGPT Assistant template
+- [x] Remove OpenAI dependencies from package.json
+- [x] Set up development environment for chosen ML runtime
+- [x] Create project structure for knowledge base
+- [x] Document setup process for teammate
 
-## Phase 2: Knowledge & RAG (Week 2)
+## Phase 2: Knowledge & RAG (Week 2) ✅
 
 ### Knowledge Base Development
-- [ ] Research authoritative earthquake survival sources (FEMA, Red Cross)
-- [ ] Compile 10-20 essential survival tips
-- [ ] Structure knowledge in categories (During, After, First Aid, Water, Shelter)
-- [ ] Create JSON/SQLite schema for knowledge storage
-- [ ] Write clear, concise survival instructions
-- [ ] Validate information with emergency response guidelines
+- [x] Research authoritative earthquake survival sources (FEMA, Red Cross)
+- [x] Compile 10-20 essential survival tips *(50+ tips compiled)*
+- [x] Structure knowledge in categories (During, After, First Aid, Water, Shelter)
+- [x] Create JSON/~~SQLite~~ schema for knowledge storage
+- [x] Write clear, concise survival instructions
+- [x] Validate information with emergency response guidelines
 
 ### RAG Implementation
-- [ ] **Plan A: Implement lightweight vector search using MiniLM TFLite**
-  - [ ] Pre-compute embeddings for all knowledge base entries
-  - [ ] Implement cosine similarity search
-- [ ] **Plan B (Fallback): Enhanced keyword system**
-  - [ ] Design keyword extraction with synonyms
-  - [ ] Add multiple phrasings per knowledge item ("被困", "压住", "trapped")
-- [ ] Create mapping between queries and knowledge topics
-- [ ] Implement retrieval logic with semantic understanding
-- [ ] Add context injection into prompts
-- [ ] Test retrieval accuracy with panic-scenario queries
-- [ ] Optimize for mobile performance
+- [ ] ~~**Plan A: Implement lightweight vector search using MiniLM TFLite**~~
+  - [ ] ~~Pre-compute embeddings for all knowledge base entries~~
+  - [ ] ~~Implement cosine similarity search~~
+- [x] **Plan B (Fallback): Enhanced keyword system** *(Implemented as primary approach)*
+  - [x] Design keyword extraction with synonyms
+  - [x] Add multiple phrasings per knowledge item ("被困", "压住", "trapped")
+- [x] Create mapping between queries and knowledge topics
+- [x] Implement retrieval logic with semantic understanding
+- [x] Add context injection into prompts
+- [x] Test retrieval accuracy with panic-scenario queries
+- [x] Optimize for mobile performance
 
-## Phase 3: Integration & Polish (Week 3)
+## Phase 3: Integration & Polish (Week 3) ✅
 
 ### App Integration
-- [ ] Replace OpenAI calls with Gemma 3n interface
-- [ ] Connect RAG system to chat flow
-- [ ] Implement offline storage for chat history
-- [ ] Add loading states and error handling
-- [ ] **Add Quick Action Buttons for panic scenarios:**
-  - [ ] "我被困住了" (I'm trapped)
-  - [ ] "我正在流血" (I'm bleeding)
-  - [ ] "如何找水？" (How to find water?)
-  - [ ] "余震来了怎么办？" (What to do in aftershock?)
-- [ ] **Implement high-contrast, large-button panic UI mode**
-- [ ] Ensure app works fully offline
-- [ ] Test on physical Android device
+- [x] Replace OpenAI calls with Gemma 3n interface
+- [x] Connect RAG system to chat flow
+- [x] Implement offline storage for chat history
+- [x] Add loading states and error handling
+- [x] **Add Quick Action Buttons for panic scenarios:**
+  - [x] "🚨 Emergency" (I need immediate help!)
+  - [x] "🏥 Medical Help" (I'm injured and need medical help)
+  - [x] "🆘 Trapped" (I'm trapped and can't move)
+  - [x] "✅ Safe" (I'm safe but need guidance)
+- [x] **Implement high-contrast, large-button panic UI mode**
+- [x] Ensure app works fully offline
+- [ ] Test on physical Android device *(iOS tested, Android has deployment issues)*
 
 ### Demo Preparation
 - [ ] Create compelling demo scenarios
@@ -104,12 +104,12 @@
 - [ ] **Validate all advice with multiple authoritative sources**
 
 ## Nice-to-Have (If Time Permits)
-- [ ] Add voice input using device microphone
+- [x] Add voice input using device microphone *(Implemented with useOfflineVoice)*
 - [ ] Implement image recognition for injuries
 - [ ] Create Spanish language support
 - [ ] Add battery-saving mode
-- [ ] Build iOS version
-- [ ] Create web demo
+- [x] Build iOS version *(Full support implemented)*
+- [x] Create web demo *(Development mode available)*
 
 ## Team Coordination
 - [ ] Daily sync on progress
