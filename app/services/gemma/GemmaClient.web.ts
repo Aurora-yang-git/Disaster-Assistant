@@ -1,4 +1,4 @@
-import { Message } from '../../hooks/useApi';
+import { Message } from '../../types/chat';
 import { RAGService } from '../rag/RAGService';
 import { ResponseValidator } from '../rag/ResponseValidator';
 

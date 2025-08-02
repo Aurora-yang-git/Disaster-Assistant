@@ -129,15 +129,17 @@ deploy_android() {
             echo -e "${YELLOW}⚠️  应用尚未安装，将创建目录结构${NC}"
         fi
         
+        # 使用应用专属外部存储目录（不需要权限）
+        TARGET_DIR="/sdcard/Android/data/$ANDROID_PACKAGE/files"
+        
         # 创建目录
-        TARGET_DIR="/sdcard/Android/data/$ANDROID_PACKAGE/files/Documents"
+        echo "📁 创建应用专属目录..."
         adb -s "$DEVICE" shell mkdir -p "$TARGET_DIR"
         
         # 推送模型文件
         echo "📤 正在上传模型文件 (约 3GB，请耐心等待)..."
-        echo "   使用 adb push 直接传输，不受 Node.js 限制"
+        echo "   目标路径: $TARGET_DIR/$MODEL_NAME"
         
-        # 显示进度
         adb -s "$DEVICE" push "$MODEL_DIR/$MODEL_NAME" "$TARGET_DIR/$MODEL_NAME"
         
         if [ $? -eq 0 ]; then
@@ -149,6 +151,7 @@ deploy_android() {
             echo "   远程文件大小: $REMOTE_SIZE bytes"
         else
             echo -e "${RED}❌ 部署失败${NC}"
+            echo "   可能原因：存储空间不足"
         fi
     done
 }
@@ -179,9 +182,16 @@ cleanup_model() {
     if command -v adb &> /dev/null; then
         DEVICES=$(adb devices | grep -E "device$|emulator" | cut -f1)
         echo "$DEVICES" | while read -r DEVICE; do
-            TARGET_FILE="/sdcard/Android/data/$ANDROID_PACKAGE/files/Documents/$MODEL_NAME"
-            adb -s "$DEVICE" shell rm -f "$TARGET_FILE"
-            echo "已清理 Android 设备 $DEVICE"
+            # 清理应用私有目录中的模型
+            adb -s "$DEVICE" shell run-as "$ANDROID_PACKAGE" rm -f "files/$MODEL_NAME" 2>/dev/null
+            if [ $? -eq 0 ]; then
+                echo "已清理 Android 设备 $DEVICE (应用私有目录)"
+            else
+                # 如果失败，尝试清理旧的外部存储位置
+                TARGET_FILE="/sdcard/Android/data/$ANDROID_PACKAGE/files/Documents/$MODEL_NAME"
+                adb -s "$DEVICE" shell rm -f "$TARGET_FILE" 2>/dev/null
+                echo "已清理 Android 设备 $DEVICE (外部存储)"
+            fi
         done
     fi
 }

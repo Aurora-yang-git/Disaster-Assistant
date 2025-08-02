@@ -21,11 +21,6 @@ type DrawerParamList = {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-
-    const openUsagePage = () => {
-        WebBrowser.openBrowserAsync('https://platform.openai.com/account/usage');
-    };
-
     return (
         <View style={styles.container}>
             <DrawerContentScrollView {...props}>
@@ -39,16 +34,16 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
             <View style={styles.footerContainer}>
                 <DrawerItem
-                    label='API Settings'
+                    label='About Mazu'
                     labelStyle={styles.drawerItemLabel}
-                    icon={() => <Ionicons name='key-outline' size={24} color='white' />}
+                    icon={() => <Ionicons name='information-circle-outline' size={24} color='white' />}
                     onPress={() => props.navigation.navigate('ApiKeyPage')}
                 />
                 <DrawerItem
-                    label='Usage Stats'
+                    label='GitHub'
                     labelStyle={styles.drawerItemLabel}
-                    icon={() => <Ionicons name='podium-outline' size={24} color='white' />}
-                    onPress={openUsagePage}
+                    icon={() => <Ionicons name='logo-github' size={24} color='white' />}
+                    onPress={() => WebBrowser.openBrowserAsync('https://github.com/Aurora-yang-git/Disaster-Assistant')}
                 />
             </View>
         </View>
@@ -161,7 +156,7 @@ export default function DrawerNavigation() {
                     headerTitle: () => <WhisperHeaderTitle />,
                 }} 
             />
-            <Drawer.Screen name='ApiKeyPage' component={ApiKeyPage} options={{ headerTitle: "API Settings" }} />
+            <Drawer.Screen name='ApiKeyPage' component={ApiKeyPage} options={{ headerTitle: "About Mazu" }} />
         </Drawer.Navigator >
     );
 }

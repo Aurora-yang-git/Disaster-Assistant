@@ -272,13 +272,13 @@ export const useOfflineVoice = () => {
       latestResultsRef.current.partialResults = [];
       
       const recognitionOptions = {
-        lang: "en-US", // 使用中文识别
-        interimResults: true, // 启用实时结果显示
+        lang: "en-US", // Using English recognition
+        interimResults: true, // Enable real-time results
         maxAlternatives: 1,
-        continuous: false, // 单次识别，不连续
-        requiresOnDeviceRecognition: false, // 使用离线识别
-        addsPunctuation: true, // 添加标点符号
-        contextualStrings: [], // 可以添加上下文提示词
+        continuous: false, // Single recognition session
+        requiresOnDeviceRecognition: true, // Force offline recognition
+        addsPunctuation: true, // Add punctuation
+        contextualStrings: ["earthquake", "help", "trapped", "injured", "emergency", "bleeding", "fire", "rescue", "safe", "danger"], // Context hints
       };
       
       console.log('Recognition options:', recognitionOptions);

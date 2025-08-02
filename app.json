@@ -31,7 +31,9 @@
       "permissions": [
         "RECORD_AUDIO",
         "INTERNET",
-        "MODIFY_AUDIO_SETTINGS"
+        "MODIFY_AUDIO_SETTINGS",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
       ]
     },
     "web": {

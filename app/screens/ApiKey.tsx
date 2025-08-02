@@ -1,69 +1,44 @@
-import { View, Text, Alert, StyleSheet, TextInput, Pressable } from 'react-native';
-import React, { useState } from 'react';
-import Toast from 'react-native-root-toast';
-import * as WebBrowser from 'expo-web-browser';
-import { useApiKeyContext } from '../contexts/apiKeyContext';
+import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { COLORS } from '../colors';
 
 const ApiKeyPage = () => {
-
-  const { apiKey, setApiKey } = useApiKeyContext();
-  const [apiKeyInput, setApiKeyInput] = useState(apiKey);
-
-  // Function to open the OpenAI API keys page in a browser
-  const openApiKeysPage = () => {
-    WebBrowser.openBrowserAsync('https://platform.openai.com/api-keys');
-  };
-
-  // Save API key to context
-  const saveApiKey = async () => {
-    if (apiKeyInput.trim().length > 0) {
-      setApiKey(apiKeyInput);
-      Toast.show('API key saved', { duration: Toast.durations.SHORT });
-    } else {
-      Alert.alert('Error', 'Please enter a valid API key');
-    }
-  };
-
-  // Remove API key from context
-  const removeApiKey = async () => {
-    setApiKey('');
-    setApiKeyInput('');
-    Toast.show('API key removed', { duration: Toast.durations.SHORT });
-  };
-
-  // Function to handle button press
-  const handleButtonPress = () => {
-    if (apiKey) {
-      removeApiKey();
-    } else {
-      saveApiKey();
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
-        To connect with AI, add an API key. You can obtain an API key from
-        {' '}
-        <Text style={styles.linkText} onPress={openApiKeysPage}>
-          https://platform.openai.com/api-keys
+      <View style={styles.content}>
+        <Text style={styles.title}>No API Key Required! 🎉</Text>
+        
+        <View style={styles.infoCard}>
+          <Text style={styles.emoji}>🤖</Text>
+          <Text style={styles.infoTitle}>100% Offline AI</Text>
+          <Text style={styles.infoText}>
+            Mazu uses Google's Gemma 3n model running entirely on your device. 
+            No internet connection, no API keys, no subscriptions needed.
+          </Text>
+        </View>
+
+        <View style={styles.infoCard}>
+          <Text style={styles.emoji}>🔒</Text>
+          <Text style={styles.infoTitle}>Your Privacy Protected</Text>
+          <Text style={styles.infoText}>
+            All conversations stay on your device. Your emergency data is never 
+            sent to any server or cloud service.
+          </Text>
+        </View>
+
+        <View style={styles.infoCard}>
+          <Text style={styles.emoji}>⚡</Text>
+          <Text style={styles.infoTitle}>Always Ready</Text>
+          <Text style={styles.infoText}>
+            Works in airplane mode, underground, or anywhere without signal. 
+            The 2.3GB AI model is stored directly on your phone.
+          </Text>
+        </View>
+
+        <Text style={styles.footer}>
+          Powered by Gemma 3n • Built for Google Gemma Developer Contest
         </Text>
-        .
-      </Text>
-      <TextInput
-        value={apiKeyInput}
-        onChangeText={setApiKeyInput}
-        placeholder='Enter your API key'
-        autoCorrect={false}
-        autoCapitalize='none'
-        style={styles.input}
-        editable={!apiKey}
-      />
-      <Pressable onPress={handleButtonPress} style={styles.button}>
-        <Text style={styles.buttonText}>
-          {apiKey ? 'Remove' : 'Save'}
-        </Text>
-      </Pressable>
+      </View>
     </View>
   );
 };
@@ -71,40 +46,52 @@ const ApiKeyPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 24,
-    backgroundColor: '#0D0D0D',
+    backgroundColor: COLORS.background || '#0D0D0D',
   },
-  label: {
-    fontSize: 16,
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
     color: '#fff',
-  },
-  linkText: {
-    color: '#0F66CC',
-    textDecorationLine: 'underline',
-  },
-  input: {
-    fontSize: 16,
-    borderWidth: 2,
-    borderColor: '#2F2F2F',
-    borderRadius: 8,
-    padding: 8,
-    marginVertical: 24,
-    backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: '#18191a',
-    borderColor: '#2F2F2F',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 24,
-    alignSelf: 'center',
-    borderWidth: 2,
-  },
-  buttonText: {
-    color: '#fff',
+    marginBottom: 30,
     textAlign: 'center',
-    fontSize: 16,
+  },
+  infoCard: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
+    width: '100%',
+    maxWidth: 400,
+    alignItems: 'center',
+  },
+  emoji: {
+    fontSize: 48,
+    marginBottom: 10,
+  },
+  infoTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#B0B0B0',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  footer: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 30,
   },
 });
 

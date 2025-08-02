@@ -1,8 +1,10 @@
 import { LlamaContext, initLlama } from "llama.rn";
-import { Message } from "../../hooks/useApi";
+import { Platform } from 'react-native';
+import { Message } from "../../types/chat";
 import { RAGService } from "../rag/RAGService";
 import { ResponseValidator } from "../rag/ResponseValidator";
 import * as FileSystem from 'expo-file-system';
+import { requestStoragePermission } from '../../utils/requestStoragePermission';
 
 interface GemmaConfig {
   modelPath?: string; // This will now point to the asset path
@@ -68,6 +70,14 @@ export class GemmaClient {
     console.log("Loading Gemma 3n model...");
     
     try {
+      // Request storage permission on Android
+      if (Platform.OS === 'android') {
+        const hasPermission = await requestStoragePermission();
+        if (!hasPermission) {
+          console.warn("Storage permission denied, will try app-specific directories only");
+        }
+      }
+      
       const documentsDirectory = FileSystem.documentDirectory;
       
       // Try multiple model names and locations
@@ -82,6 +92,7 @@ export class GemmaClient {
       
       // Check each possible model name
       for (const modelName of modelNames) {
+        // First try app's document directory (works on both platforms)
         const candidatePath = documentsDirectory + modelName;
         const fileInfo = await FileSystem.getInfoAsync(candidatePath);
         
@@ -95,6 +106,28 @@ export class GemmaClient {
         }
       }
       
+      // Android: Check app-specific external storage (no permissions needed)
+      if (!modelFound && Platform.OS === 'android') {
+        const appExternalPath = '/sdcard/Android/data/com.mazu.app/files/gemma-3n-Q4_K_M.gguf';
+        console.log(`Checking Android app-specific path: ${appExternalPath}`);
+        // Let's check if this file exists using a different approach
+        try {
+          const fileUri = `file://${appExternalPath}`;
+          const fileInfo = await FileSystem.getInfoAsync(fileUri);
+          if (fileInfo.exists) {
+            modelPath = appExternalPath; // Use path without file:// for llama.rn
+            modelFound = true;
+            console.log(`✅ Found model in app-specific external storage`);
+            console.log(`   Size: ${(fileInfo.size! / 1073741824).toFixed(2)} GB`);
+          }
+        } catch (e) {
+          // If FileSystem check fails, try using the path directly
+          modelPath = appExternalPath;
+          modelFound = true;
+          console.log(`📱 Using Android app-specific path (will verify during load)`);
+        }
+      }
+      
       if (!modelFound || !modelPath) {
         console.error("❌ Model not found in any expected location");
         console.error("\n📱 Model Deployment Instructions:");
@@ -103,9 +136,10 @@ export class GemmaClient {
         console.error("2. Run the deployment script from project root:");
         console.error("   ./scripts/deploy-model.sh");
         console.error("\n🔍 Expected locations:");
-        modelNames.forEach(name => {
-          console.error(`   - ${documentsDirectory}${name}`);
-        });
+        console.error(`   - ${documentsDirectory}gemma-3n-Q4_K_M.gguf`);
+        if (Platform.OS === 'android') {
+          console.error(`   - /sdcard/Android/data/com.mazu.app/files/gemma-3n-Q4_K_M.gguf`);
+        }
         console.error("\n💡 For simulators:");
         console.error("   iOS: The script will use xcrun simctl");
         console.error("   Android: The script will use adb push");
@@ -118,17 +152,44 @@ export class GemmaClient {
       }
       
       console.log("Initializing Llama with model at:", modelPath);
-      const llama = await initLlama({
-        model: modelPath,
-        use_mlock: true,
-        n_ctx: 2048,
-        n_batch: 512,
-        n_threads: 4,
-      });
       
-      this.context = llama;
-      this.isModelLoaded = true;
-      console.log("✅ Gemma 3n model loaded successfully!");
+      try {
+        const llama = await initLlama({
+          model: modelPath,
+          use_mlock: false,  // Disable memory locking for compatibility
+          n_ctx: 1024,       // Reduce context size
+          n_batch: 256,      // Reduce batch size
+          n_threads: 2,      // Reduce threads for stability
+          // Add Android-specific settings if needed
+          ...(Platform.OS === 'android' ? {
+            n_gpu_layers: 0  // Disable GPU on Android for stability
+          } : {})
+        });
+        
+        this.context = llama;
+        this.isModelLoaded = true;
+        console.log("✅ Gemma 3n model loaded successfully!");
+      } catch (initError) {
+        console.error("Failed to initialize Llama:", initError);
+        // Try with even more conservative settings
+        console.log("Retrying with minimal settings...");
+        try {
+          const llama = await initLlama({
+            model: modelPath,
+            use_mlock: false,
+            n_ctx: 512,
+            n_batch: 128,
+            n_threads: 1,
+          });
+          
+          this.context = llama;
+          this.isModelLoaded = true;
+          console.log("✅ Gemma 3n model loaded with minimal settings");
+        } catch (retryError) {
+          console.error("Failed to load model even with minimal settings:", retryError);
+          throw retryError;
+        }
+      }
       
     } catch (e) {
       console.error("❌ Failed to load Gemma 3n model:", e);

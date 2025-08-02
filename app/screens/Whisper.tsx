@@ -19,7 +19,7 @@ import Markdown from 'react-native-markdown-display';
 import { useOfflineVoice } from "../hooks/useOfflineVoice";
 // import { KnowledgeLoader } from '../data/knowledgeLoader'; // Replaced by GemmaClient
 import { GemmaOpenAIWrapper } from '../services/gemma/GemmaClient';
-import { Message, Role } from "../hooks/useApi"; // GemmaClient uses this type
+import { Message, Role } from "../types/chat";
 import { COLORS } from "../colors";
 import { useUserContext } from "../hooks/useUserContext";
 
